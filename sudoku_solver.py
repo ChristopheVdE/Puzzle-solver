@@ -69,8 +69,8 @@ def column(board, col):
 # FIND VALUES FROM BOX ---------------------------------------------------------------------------------
 def box(board, empty_pos):
     # search 3x3 box
-    box_x = empty_pos[1] // 3
-    box_y = empty_pos[0] // 3
+    box_x = empty_pos[0] // 3
+    box_y = empty_pos[1] // 3
     # make list of values in box
     box_values = []
     for j in range(box_x * 3, box_x * 3 + 3):
@@ -83,6 +83,9 @@ def box(board, empty_pos):
 def certain(board):
     for i in find_empty(board):  # i = tuple(row, col)
         test = []
+        print("row = {}".format(board[i[0]]))
+        print("col = {}".format(column(board, i[1])))
+        print("box = {}".format(box(board, i)))
         # check values
         for value in range(1, 10):
             # search row and column
