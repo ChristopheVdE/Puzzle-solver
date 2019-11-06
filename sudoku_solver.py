@@ -130,7 +130,9 @@ def brute_force(board):
             # try a value in the next empty position if a valid value was inserted
             if brute_force(board):
                 return True
+            # reset value if next empty has no valid number
             board[empty_pos[0]][empty_pos[1]] = 0
+    # required for recursive, says that next empty has no valid number
     return False
 
 
