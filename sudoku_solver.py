@@ -1,6 +1,13 @@
 # SUDOKU SOLVER
 
 # INPUT THE BOARD ======================================================================================
+print(
+    "\nINSTRUCTIONS:"
+    "\n  - Please input the board (row by row) below"
+    "\n  - Use 0 for an empty space"
+    "\n  - Don't type separators between numbers"
+    "\n  Example: 123000456\n"
+)
 board = []
 for i in range(1, 10):
     line = input("Line {}: ".format(i))
@@ -12,8 +19,14 @@ for i in range(1, 10):
             print("[ERROR] Line is to long, a line must contain 9 numbers")
         if not line.isdigit():
             print("[ERROR] Line can only contain numbers")
-        if line.count(i) > 1:
-            print("[ERROR] Line can only contain one instance of a number")
+        for j in range(1, 10):
+            count = str(line).count("{}".format(j))
+            if count > 1:
+                print(
+                    "[ERROR] Line can only contain one instance of a number: found {} instances of number {}".format(
+                        count, j
+                    )
+                )
         line = input("Line {}: ".format(i))
     # SAVE INPUT INTO BOARD ----------------------------------------------------------------------------
     row = []
@@ -179,8 +192,8 @@ if (len(find_empty(board)) != 0) and (og_board == board) and (possible == True):
         print("\nSolution:")
         print_sudoku(board)
     else:
-        print("Impossible sudoku, there is no solution.")
+        print("\nImpossible sudoku, there is no solution.")
 else:
-    print("Impossible sudoku, there is no solution.")
+    print("\nImpossible sudoku, there is no solution.")
 
 # ======================================================================================================
