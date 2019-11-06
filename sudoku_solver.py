@@ -1,27 +1,29 @@
 # SUDOKU SOLVER
 
-# # INPUT THE BOARD ======================================================================================
-# board = []
-# for i in range(1, 10):
-#     line = input("Line {}: ".format(i))
-#     # CHECK IF INPUT MEETS REQUIREMENTS-----------------------------------------------------------------
-#     while not len(line) == 9 or not line.isdigit():
-#         if len(line) < 9:
-#             print("[ERROR] Line is to short, a line must contain 9 numbers")
-#         if len(line) > 9:
-#             print("[ERROR] Line is to long, a line must contain 9 numbers")
-#         if not line.isdigit():
-#             print("[ERROR] Line can only contain numbers")
-#         line = input("Line {}: ".format(i))
-#     # SAVE INPUT INTO BOARD ----------------------------------------------------------------------------
-#     row = []
-#     for num in line:
-#         row.append(num)
-#     board.append(row)
-# # ======================================================================================================
+# INPUT THE BOARD ======================================================================================
+board = []
+for i in range(1, 10):
+    line = input("Line {}: ".format(i))
+    # CHECK IF INPUT MEETS REQUIREMENTS-----------------------------------------------------------------
+    while not len(line) == 9 or not line.isdigit():
+        if len(line) < 9:
+            print("[ERROR] Line is to short, a line must contain 9 numbers")
+        if len(line) > 9:
+            print("[ERROR] Line is to long, a line must contain 9 numbers")
+        if not line.isdigit():
+            print("[ERROR] Line can only contain numbers")
+        if line.count(i) > 1:
+            print("[ERROR] Line can only contain one instance of a number")
+        line = input("Line {}: ".format(i))
+    # SAVE INPUT INTO BOARD ----------------------------------------------------------------------------
+    row = []
+    for num in line:
+        row.append(num)
+    board.append(row)
+# ======================================================================================================
 
 # board = [
-#     [7, 8, 0, 4, 0, 0, 1, 2, 0],
+#     [7, 8, 8, 4, 0, 0, 1, 2, 0],
 #     [6, 0, 0, 0, 7, 5, 0, 0, 9],
 #     [0, 0, 0, 6, 0, 1, 0, 7, 8],
 #     [0, 0, 7, 0, 4, 0, 2, 6, 0],
@@ -33,17 +35,17 @@
 # ]
 
 # Hardest sudoku ever
-board = [
-    [8, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 3, 6, 0, 0, 0, 0, 0],
-    [0, 7, 0, 0, 9, 0, 2, 0, 0],
-    [0, 5, 0, 0, 0, 7, 0, 0, 0],
-    [0, 0, 0, 0, 4, 5, 7, 0, 0],
-    [0, 0, 0, 1, 0, 0, 0, 3, 0],
-    [0, 0, 1, 0, 0, 0, 0, 6, 8],
-    [0, 0, 8, 5, 0, 0, 0, 1, 0],
-    [0, 9, 0, 0, 0, 0, 4, 0, 0],
-]
+# board = [
+#     [8, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 3, 6, 0, 0, 0, 0, 0],
+#     [0, 7, 0, 0, 9, 0, 2, 0, 0],
+#     [0, 5, 0, 0, 0, 7, 0, 0, 0],
+#     [0, 0, 0, 0, 4, 5, 7, 0, 0],
+#     [0, 0, 0, 1, 0, 0, 0, 3, 0],
+#     [0, 0, 1, 0, 0, 0, 0, 6, 8],
+#     [0, 0, 8, 5, 0, 0, 0, 1, 0],
+#     [0, 9, 0, 0, 0, 0, 4, 0, 0],
+# ]
 
 # FUNCTIONS ============================================================================================
 # PRINT SUDOKU BOARD -----------------------------------------------------------------------------------
@@ -92,8 +94,8 @@ def box(board, empty_pos):
     return box_values
 
 
-# TEST FOR CERTAIN VALUES ------------------------------------------------------------------------------
-def certain(board, empty_pos):
+# TEST FOR VALID VALUES ------------------------------------------------------------------------------
+def valid(board, empty_pos):
     test = []
     # check for possible values (1-9)
     for value in range(1, 10):
@@ -141,29 +143,44 @@ def brute_force(board):
 
 # SOLVE ================================================================================================
 # PRINT ORIGINAL BOARD ---------------------------------------------------------------------------------
+print("Original:")
 print_sudoku(board)
 
-# CHECK FOR CERTAIN VALUES & UPDATE BOARD IF FOUND -----------------------------------------------------
+# CHECK FOR VALID VALUES & UPDATE BOARD IF FOUND -------------------------------------------------------
 while len(find_empty(board)) != 0:
     og_board = board
-    # SEARCH FOR CERTAIN VALUES AND UPDATE BOARD IF FOUND ----------------------------------------------
+    # SEARCH FOR VALID VALUES AND UPDATE BOARD IF FOUND ------------------------------------------------
     for empty_pos in find_empty(board):
         # print("row = {}".format(board[empty_pos[0]]))
         # print("col = {}".format(column(board, empty_pos[1])))
         # print("box = {}".format(box(board, empty_pos)))
-        # print(empty_pos, certain(board, empty_pos))
-        if len(certain(board, empty_pos)) == 1:
-            board[empty_pos[0]][empty_pos[1]] = certain(board, empty_pos)[0][0]
-    # BREAK LOOP IF NO MORE CERTAIN VALUES (NO BOARD UPDATES) ------------------------------------------
+        # print(empty_pos, valid(board, empty_pos))
+
+        # NO VALID OPTIONS FOR EMPTY CEL: SUDOKU IS IMPOSIIBLE -----------------------------------------
+        if len(valid(board, empty_pos)) == 0:
+            possible = False
+            break
+        # CERTAIN OPTIONS FOUND: UPDATE BOARD ----------------------------------------------------------
+        elif len(valid(board, empty_pos)) == 1:
+            board[empty_pos[0]][empty_pos[1]] = valid(board, empty_pos)[0][0]
+            possible = True
+        # ONLY VALID OPTIONS FOUND, NO CERTAIN OPTIONS -------------------------------------------------
+        else:
+            possible = True
+
+    # BREAK LOOP IF NO MORE VALID VALUES (NO BOARD UPDATES) --------------------------------------------
     if og_board == board:
         break
 
-# USE BRUTE FORCE IF THERE ARE STILL EMPTY VALUES AND THERE ARE NO MORE CERTAIN VALUES -----------------
-if (len(find_empty(board)) != 0) and (og_board == board):
-    brute_force(board)
-
-# PRINT SOLVED BOARD -----------------------------------------------------------------------------------
-print()
-print_sudoku(board)
+# BRUTE FORCE A SOLUTION -------------------------------------------------------------------------------
+# if still empty values AND no more certain values AND board isn't impossible
+if (len(find_empty(board)) != 0) and (og_board == board) and (possible == True):
+    if brute_force(board):
+        print("\nSolution:")
+        print_sudoku(board)
+    else:
+        print("Impossible sudoku, there is no solution.")
+else:
+    print("Impossible sudoku, there is no solution.")
 
 # ======================================================================================================
