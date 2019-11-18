@@ -57,7 +57,7 @@ for i in range(1, board_size + 1):
                     )
                 )
                 break
-        # ERROR PRINTING -----------------------------------------------------------------------------------
+        # ERROR PRINTING -------------------------------------------------------------------------------
         # NO ERRORS --> SKIP TO INPUT NEXT LINE
         if len(errors) == 0:
             break
