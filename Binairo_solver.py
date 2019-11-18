@@ -73,12 +73,114 @@ for i in range(1, board_size + 1):
     board.append(row)
 # ======================================================================================================
 
-# CERTAIN VALUES
+# FUNCTIONS ============================================================================================
+# BOARD PRINTING ---------------------------------------------------------------------------------------
+def print_board(board):
+    for i in board:
+        print(i)
 
-# for row in rows:
-#     if 0,0 in row:
-#     if 1,1 in row:
-#     if 0, ,0 in row:
-#     if 1, ,1 in row:
 
-# for col in columns:
+# FIND EMPTY VALUES ------------------------------------------------------------------------------------
+def find_empty(board):
+    empty_values = []
+    for i in range(len(board)):  # row
+        for j in range(len(board[i])):  # column
+            if board[i][j] == ".":
+                empty_values.append((i, j))
+    return empty_values
+
+
+# CREATE LIST OF ALL VALUES OF A COLUMN ----------------------------------------------------------------
+def column(board, col):
+    column_values = []
+    for row in board:
+        column_values.append(row[col])
+    return column_values
+
+
+# ======================================================================================================
+
+# VALID VALUES -----------------------------------------------------------------------------------------
+def valid(board, empty_value):
+    # CHECK ROW ----------------------------------------------------------------------------------------
+    if empty_value[1] >= 0 and empty_value[1] < (len(board) - 2):
+        # .00 --> 100
+        if (
+            board[empty_value[0]][empty_value[1] + 1] == "0"
+            and board[empty_value[0]][empty_value[1] + 2] == "0"
+        ):
+            return "1"
+        # .11 --> 011
+        elif (
+            board[empty_value[0]][empty_value[1] + 1] == "1"
+            and board[empty_value[0]][empty_value[1] + 2] == "1"
+        ):
+            return "0"
+    if empty_value[1] > 1 and empty_value[1] <= (len(board) - 1):
+        # 00. --> 001
+        if (
+            board[empty_value[0]][empty_value[1] - 1] == "0"
+            and board[empty_value[0]][empty_value[1] - 2] == "0"
+        ):
+            return "1"
+        # 11. --> 110
+        elif (
+            board[empty_value[0]][empty_value[1] - 1] == "1"
+            and board[empty_value[0]][empty_value[1] - 2] == "1"
+        ):
+            return "0"
+        # else:
+        #     return "."
+    if empty_value[1] > 0 and empty_value[1] < (len(board) - 1):
+        # 0.0 --> 010
+        if (
+            board[empty_value[0]][empty_value[1] - 1] == "0"
+            and board[empty_value[0]][empty_value[1] + 1] == "0"
+        ):
+            return "1"
+        # 1.1 --> 101
+        elif (
+            board[empty_value[0]][empty_value[1] - 1] == "1"
+            and board[empty_value[0]][empty_value[1] + 1] == "1"
+        ):
+            return "0"
+        else:
+            return "."
+    # CHECK COLUMN --------------------------------------------------------------------------------------
+    # elif empty_value[1] == 0:
+    # .00 --> 100
+    # .11 --> 011
+    # elif empty_value[1] == len(board):
+    # 00. --> 001
+    # .11 --> 100
+    # elif empty_value[1] != 0 and empty_value[1] != len(board)
+    # .00 --> 100
+    # 00. --> 001
+    # .11 --> 011
+    # 11. --> 110
+    # 0.0 --> 010
+    # 1.1 --> 101
+    else:
+        return "."
+
+
+# SOLVE ================================================================================================
+# PRINT ORIGINAL BOARD ---------------------------------------------------------------------------------
+print("Original:")
+print_board(board)
+
+# CHECK FOR VALID VALUES & UPDATE BOARD IF FOUND -------------------------------------------------------
+while len(find_empty(board)) != 0:
+    og_board = board
+
+    # SEARCH FOR VALID VALUES AND UPDATE BOARD IF FOUND ------------------------------------------------
+    for empty_pos in find_empty(board):
+
+        # CERTAIN OPTIONS FOUND: UPDATE BOARD ----------------------------------------------------------
+        board[empty_pos[0]][empty_pos[1]] = valid(board, empty_pos)
+        print(board)
+
+    # BREAK LOOP IF NO MORE VALID VALUES (NO BOARD UPDATES) --------------------------------------------
+    if og_board == board:
+        break
+
