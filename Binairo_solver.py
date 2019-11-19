@@ -201,17 +201,13 @@ print_board(board)
 
 # CHECK FOR VALID VALUES & UPDATE BOARD IF FOUND -------------------------------------------------------
 while len(find_empty(board)) != 0:
-    og_board = board
-
+    total_empty = len(find_empty(board))
     # SEARCH FOR VALID VALUES AND UPDATE BOARD IF FOUND ------------------------------------------------
     for empty_pos in find_empty(board):
-
         # CERTAIN OPTIONS FOUND: UPDATE BOARD ----------------------------------------------------------
         board[empty_pos[0]][empty_pos[1]] = valid(board, empty_pos)
-        print(board)
-
     # BREAK LOOP IF NO MORE VALID VALUES (NO BOARD UPDATES) --------------------------------------------
-    if og_board == board:
+    if total_empty == len(find_empty(board)):
         break
 
 print("new board")
