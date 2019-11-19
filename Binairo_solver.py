@@ -101,101 +101,100 @@ def column(board, col):
 # ======================================================================================================
 
 # VALID VALUES -----------------------------------------------------------------------------------------
-def valid(board, empty_value):
+def valid(board):
     # empty_value[0] = x =  row
     # empty_value[1] = y =  col
-    # CHECK ROW ----------------------------------------------------------------------------------------
-    # AVOID TRIPLE (FRONT)
-    if empty_value[1] >= 0 and empty_value[1] < (len(board) - 2):
-        # AVOID TRIPLE 0 (FRONT): .00 --> 100
-        if (
-            board[empty_value[0]][empty_value[1] + 1] == "0"
-            and board[empty_value[0]][empty_value[1] + 2] == "0"
-        ):
-            return "1"
-        # AVOID TRIPLE 1 (FRONT): .11 --> 011
-        elif (
-            board[empty_value[0]][empty_value[1] + 1] == "1"
-            and board[empty_value[0]][empty_value[1] + 2] == "1"
-        ):
-            return "0"
-    # AVOID TRIPLE (BACK)
-    if empty_value[1] > 1 and empty_value[1] <= (len(board) - 1):
-        # AVOID TRIPLE 0 (BACK): 00. --> 001
-        if (
-            board[empty_value[0]][empty_value[1] - 1] == "0"
-            and board[empty_value[0]][empty_value[1] - 2] == "0"
-        ):
-            return "1"
-        # AVOID TRIPLE 1 (BACK): 11. --> 110
-        elif (
-            board[empty_value[0]][empty_value[1] - 1] == "1"
-            and board[empty_value[0]][empty_value[1] - 2] == "1"
-        ):
-            return "0"
-        # else:
-        #     return "."
-    # AVOID TRIPLE (MIDDLE)
-    if empty_value[1] > 0 and empty_value[1] < (len(board) - 1):
-        # # AVOID TRIPLE 0 (MIDDLE)/ 0.0 --> 010
-        if (
-            board[empty_value[0]][empty_value[1] - 1] == "0"
-            and board[empty_value[0]][empty_value[1] + 1] == "0"
-        ):
-            return "1"
-        # # AVOID TRIPLE 1 (MIDDLE)/ 1.1 --> 101
-        elif (
-            board[empty_value[0]][empty_value[1] - 1] == "1"
-            and board[empty_value[0]][empty_value[1] + 1] == "1"
-        ):
-            return "0"
-    # CHECK COLUMN --------------------------------------------------------------------------------------
-    # AVOID TRIPLE (FRONT)
-    if empty_value[0] >= 0 and empty_value[0] < (len(board) - 2):
-        # AVOID TRIPLE 0 (FRONT)/ .00 --> 100
-        if (
-            board[empty_value[0] + 1][empty_value[1]] == "0"
-            and board[empty_value[0] + 2][empty_value[1]] == "0"
-        ):
-            return "1"
-        # AVOID TRIPLE 1 (FRONT)/ .11 --> 011
-        elif (
-            board[empty_value[0] + 1][empty_value[1]] == "1"
-            and board[empty_value[0] + 2][empty_value[1]] == "1"
-        ):
-            return "0"
-    # AVOID TRIPLE (BACK)
-    if empty_value[0] > 1 and empty_value[0] <= (len(board) - 1):
-        # AVOID TRIPLE 0 (BACK): 00. --> 001
-        if (
-            board[empty_value[0] - 1][empty_value[1]] == "0"
-            and board[empty_value[0] - 2][empty_value[1]] == "0"
-        ):
-            return "1"
-        # AVOID TRIPLE 1 (BACK): 11. --> 110
-        elif (
-            board[empty_value[0] - 1][empty_value[1]] == "1"
-            and board[empty_value[0] - 2][empty_value[1]] == "1"
-        ):
-            return "0"
-    # AVOID TRIPLE (MIDDLE)
-    if empty_value[0] > 0 and empty_value[0] < (len(board) - 1):
-        # AVOID TRIPLE 0 (MIDDLE): 0.0 --> 010
-        if (
-            board[empty_value[0] - 1][empty_value[1]] == "0"
-            and board[empty_value[0] + 1][empty_value[1]] == "0"
-        ):
-            return "1"
-        # AVOID TRIPLE 1 (MIDDLE): 1.1 --> 101
-        elif (
-            board[empty_value[0] - 1][empty_value[1]] == "1"
-            and board[empty_value[0] + 1][empty_value[1]] == "1"
-        ):
-            return "0"
-        else:
-            return "."
-    else:
-        return "."
+    solutions = []
+    for empty_value in find_empty(board):
+        # CHECK ROW ----------------------------------------------------------------------------------------
+        # AVOID TRIPLE (FRONT)
+        if empty_value[1] >= 0 and empty_value[1] < (len(board) - 2):
+            # AVOID TRIPLE 0 (FRONT): .00 --> 100
+            if (
+                board[empty_value[0]][empty_value[1] + 1] == "0"
+                and board[empty_value[0]][empty_value[1] + 2] == "0"
+            ):
+                solutions.append((empty_value, "1"))
+            # AVOID TRIPLE 1 (FRONT): .11 --> 011
+            elif (
+                board[empty_value[0]][empty_value[1] + 1] == "1"
+                and board[empty_value[0]][empty_value[1] + 2] == "1"
+            ):
+                solutions.append((empty_value, "0"))
+        # AVOID TRIPLE (BACK)
+        if empty_value[1] > 1 and empty_value[1] <= (len(board) - 1):
+            # AVOID TRIPLE 0 (BACK): 00. --> 001
+            if (
+                board[empty_value[0]][empty_value[1] - 1] == "0"
+                and board[empty_value[0]][empty_value[1] - 2] == "0"
+            ):
+                solutions.append((empty_value, "1"))
+            # AVOID TRIPLE 1 (BACK): 11. --> 110
+            elif (
+                board[empty_value[0]][empty_value[1] - 1] == "1"
+                and board[empty_value[0]][empty_value[1] - 2] == "1"
+            ):
+                solutions.append((empty_value, "0"))
+            # else:
+            #     return "."
+        # AVOID TRIPLE (MIDDLE)
+        if empty_value[1] > 0 and empty_value[1] < (len(board) - 1):
+            # # AVOID TRIPLE 0 (MIDDLE)/ 0.0 --> 010
+            if (
+                board[empty_value[0]][empty_value[1] - 1] == "0"
+                and board[empty_value[0]][empty_value[1] + 1] == "0"
+            ):
+                solutions.append((empty_value, "1"))
+            # # AVOID TRIPLE 1 (MIDDLE)/ 1.1 --> 101
+            elif (
+                board[empty_value[0]][empty_value[1] - 1] == "1"
+                and board[empty_value[0]][empty_value[1] + 1] == "1"
+            ):
+                solutions.append((empty_value, "0"))
+        # CHECK COLUMN --------------------------------------------------------------------------------------
+        # AVOID TRIPLE (FRONT)
+        if empty_value[0] >= 0 and empty_value[0] < (len(board) - 2):
+            # AVOID TRIPLE 0 (FRONT)/ .00 --> 100
+            if (
+                board[empty_value[0] + 1][empty_value[1]] == "0"
+                and board[empty_value[0] + 2][empty_value[1]] == "0"
+            ):
+                solutions.append((empty_value, "1"))
+            # AVOID TRIPLE 1 (FRONT)/ .11 --> 011
+            elif (
+                board[empty_value[0] + 1][empty_value[1]] == "1"
+                and board[empty_value[0] + 2][empty_value[1]] == "1"
+            ):
+                solutions.append((empty_value, "0"))
+        # AVOID TRIPLE (BACK)
+        if empty_value[0] > 1 and empty_value[0] <= (len(board) - 1):
+            # AVOID TRIPLE 0 (BACK): 00. --> 001
+            if (
+                board[empty_value[0] - 1][empty_value[1]] == "0"
+                and board[empty_value[0] - 2][empty_value[1]] == "0"
+            ):
+                solutions.append((empty_value, "1"))
+            # AVOID TRIPLE 1 (BACK): 11. --> 110
+            elif (
+                board[empty_value[0] - 1][empty_value[1]] == "1"
+                and board[empty_value[0] - 2][empty_value[1]] == "1"
+            ):
+                solutions.append((empty_value, "0"))
+        # AVOID TRIPLE (MIDDLE)
+        if empty_value[0] > 0 and empty_value[0] < (len(board) - 1):
+            # AVOID TRIPLE 0 (MIDDLE): 0.0 --> 010
+            if (
+                board[empty_value[0] - 1][empty_value[1]] == "0"
+                and board[empty_value[0] + 1][empty_value[1]] == "0"
+            ):
+                solutions.append((empty_value, "1"))
+            # AVOID TRIPLE 1 (MIDDLE): 1.1 --> 101
+            elif (
+                board[empty_value[0] - 1][empty_value[1]] == "1"
+                and board[empty_value[0] + 1][empty_value[1]] == "1"
+            ):
+                solutions.append((empty_value, "0"))
+    return solutions
 
 
 # SOLVE ================================================================================================
@@ -207,9 +206,9 @@ print_board(board)
 while len(find_empty(board)) != 0:
     total_empty = len(find_empty(board))
     # SEARCH FOR VALID VALUES AND UPDATE BOARD IF FOUND ------------------------------------------------
-    for empty_pos in find_empty(board):
+    for solution in valid(board):
         # CERTAIN OPTIONS FOUND: UPDATE BOARD ----------------------------------------------------------
-        board[empty_pos[0]][empty_pos[1]] = valid(board, empty_pos)
+        board[solution[0][0]][solution[0][1]] = solution[1]
     # BREAK LOOP IF NO MORE VALID VALUES (NO BOARD UPDATES) --------------------------------------------
     if total_empty == len(find_empty(board)):
         break
