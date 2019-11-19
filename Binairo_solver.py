@@ -40,6 +40,11 @@ for i in range(1, board_size + 1):
                         board_size
                     )
                 )
+        # CHECK IF LINE CONTAINS MORE THEN 2 OF THE SAME CHARACTER NEXT TO EACHOTHER -------------------
+        if "000" in line or "111" in line:
+            errors.append(
+                '[ERROR] To many instances of the same character (0 or 1) next to eachoter, only 2 instances of 0 or 1 can be next to eachoter.
+            )
         # CHECK IF LINE CONTAINS UNWANTED CHARACTERS (lETTERS) -----------------------------------------
         for j in line:
             if j != "0" and j != "1" and j != ".":
