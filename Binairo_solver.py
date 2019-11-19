@@ -98,15 +98,13 @@ def column(board, col):
     return column_values
 
 
-# ======================================================================================================
-
 # VALID VALUES -----------------------------------------------------------------------------------------
 def valid(board, board_size):
     # empty_value[0] = x =  row
     # empty_value[1] = y =  col
     solutions = []
     for empty_value in find_empty(board):
-        # CHECK ROW ----------------------------------------------------------------------------------------
+        # CHECK ROW FOR TRIPLE VALUES------------------------------------------------------------------------
         # AVOID TRIPLE (FRONT)
         if empty_value[1] >= 0 and empty_value[1] < (board_size - 2):
             # AVOID TRIPLE 0 (FRONT): .00 --> 100
@@ -151,13 +149,7 @@ def valid(board, board_size):
                 and board[empty_value[0]][empty_value[1] + 1] == "1"
             ):
                 solutions.append((empty_value, "0"))
-        # COMPLETE THE ROW IF ALL 0 ARE FOUND
-        if board[empty_value[1]].count("0") == board_size / 2:
-            solutions.append((empty_value, "1"))
-        # COMPLETE THE ROW IF ALL 1 ARE FOUND
-        if board[empty_value[1]].count("1") == board_size / 2:
-            solutions.append((empty_value, "0"))
-        # CHECK COLUMN --------------------------------------------------------------------------------------
+        # CHECK COLUMN FOR TRIPLE VALUES---------------------------------------------------------------------
         # AVOID TRIPLE (FRONT)
         if empty_value[0] >= 0 and empty_value[0] < (board_size - 2):
             # AVOID TRIPLE 0 (FRONT)/ .00 --> 100
@@ -200,14 +192,29 @@ def valid(board, board_size):
                 and board[empty_value[0] + 1][empty_value[1]] == "1"
             ):
                 solutions.append((empty_value, "0"))
-        # COMPLETE THE COLUMN IF ALL 0 ARE FOUND
-        if column(board, empty_value[1]).count("0") == board_size / 2:
+    return solutions
+
+
+# COMPLETE ROWS IF ALL 1 OR 0 ARE KNOWN ---------------------------------------------------------------------
+def complete(board, board_size):
+    solutions = []
+    for empty_value in find_empty(board):
+        # COMPLETE THE ROW/ COLUMN IF ALL 0 ARE FOUND
+        if (
+            board[empty_value[0]].count("0") == board_size / 2
+            or column(board, empty_value[1]).count("0") == board_size / 2
+        ):
             solutions.append((empty_value, "1"))
-        # COMPLETE THE COLUMN IF ALL 1 ARE FOUND
-        if column(board, empty_value[1]).count("0") == board_size / 2:
+        # COMPLETE THE ROW/ COLUMN IF ALL 1 ARE FOUND
+        elif (
+            board[empty_value[0]].count("1") == board_size / 2
+            or column(board, empty_value[1]).count("0") == board_size / 2
+        ):
             solutions.append((empty_value, "0"))
     return solutions
 
+
+# ======================================================================================================
 
 # SOLVE ================================================================================================
 # PRINT ORIGINAL BOARD ---------------------------------------------------------------------------------
@@ -217,9 +224,12 @@ print_board(board)
 # CHECK FOR VALID VALUES & UPDATE BOARD IF FOUND -------------------------------------------------------
 while len(find_empty(board)) != 0:
     total_empty = len(find_empty(board))
-    # SEARCH FOR VALID VALUES AND UPDATE BOARD IF FOUND ------------------------------------------------
+    # SEARCH FOR CERTAIN VALUES AND UPDATE BOARD IF FOUND ----------------------------------------------
+    # TRIPLE VALUES
     for solution in valid(board, board_size):
-        # CERTAIN OPTIONS FOUND: UPDATE BOARD ----------------------------------------------------------
+        board[solution[0][0]][solution[0][1]] = solution[1]
+    # COMPLETE ROW/ COLUMN
+    for solution in complete(board, board_size):
         board[solution[0][0]][solution[0][1]] = solution[1]
     # BREAK LOOP IF NO MORE VALID VALUES (NO BOARD UPDATES) --------------------------------------------
     if total_empty == len(find_empty(board)):
