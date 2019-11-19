@@ -102,6 +102,8 @@ def column(board, col):
 
 # VALID VALUES -----------------------------------------------------------------------------------------
 def valid(board, empty_value):
+    # empty_value[0] = x =  row
+    # empty_value[1] = y =  col
     # CHECK ROW ----------------------------------------------------------------------------------------
     if empty_value[1] >= 0 and empty_value[1] < (len(board) - 2):
         # .00 --> 100
@@ -144,22 +146,50 @@ def valid(board, empty_value):
             and board[empty_value[0]][empty_value[1] + 1] == "1"
         ):
             return "0"
+    # CHECK COLUMN --------------------------------------------------------------------------------------
+    if empty_value[0] >= 0 and empty_value[0] < (len(board) - 2):
+        # .00 --> 100
+        if (
+            board[empty_value[0] + 1][empty_value[1]] == "0"
+            and board[empty_value[0] + 2][empty_value[1]] == "0"
+        ):
+            return "1"
+        # .11 --> 011
+        elif (
+            board[empty_value[0] + 1][empty_value[1]] == "1"
+            and board[empty_value[0] + 2][empty_value[1]] == "1"
+        ):
+            return "0"
+    if empty_value[0] > 1 and empty_value[0] <= (len(board) - 1):
+        # 00. --> 001
+        if (
+            board[empty_value[0] - 1][empty_value[1]] == "0"
+            and board[empty_value[0] - 2][empty_value[1]] == "0"
+        ):
+            return "1"
+        # 11. --> 110
+        elif (
+            board[empty_value[0] - 1][empty_value[1]] == "1"
+            and board[empty_value[0] - 2][empty_value[1]] == "1"
+        ):
+            return "0"
+        # else:
+        #     return "."
+    if empty_value[0] > 0 and empty_value[0] < (len(board) - 1):
+        # 0.0 --> 010
+        if (
+            board[empty_value[0] - 1][empty_value[1]] == "0"
+            and board[empty_value[0] + 1][empty_value[1]] == "0"
+        ):
+            return "1"
+        # 1.1 --> 101
+        elif (
+            board[empty_value[0] - 1][empty_value[1]] == "1"
+            and board[empty_value[0] + 1][empty_value[1]] == "1"
+        ):
+            return "0"
         else:
             return "."
-    # CHECK COLUMN --------------------------------------------------------------------------------------
-    # elif empty_value[1] == 0:
-    # .00 --> 100
-    # .11 --> 011
-    # elif empty_value[1] == len(board):
-    # 00. --> 001
-    # .11 --> 100
-    # elif empty_value[1] != 0 and empty_value[1] != len(board)
-    # .00 --> 100
-    # 00. --> 001
-    # .11 --> 011
-    # 11. --> 110
-    # 0.0 --> 010
-    # 1.1 --> 101
     else:
         return "."
 
@@ -184,3 +214,5 @@ while len(find_empty(board)) != 0:
     if og_board == board:
         break
 
+print("new board")
+print_board(board)
