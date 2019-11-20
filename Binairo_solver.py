@@ -43,7 +43,7 @@ for i in range(1, board_size + 1):
         # CHECK IF LINE CONTAINS MORE THEN 2 OF THE SAME CHARACTER NEXT TO EACHOTHER -------------------
         if "000" in line or "111" in line:
             errors.append(
-                "[ERROR] To many instances of the same character (0 or 1) next to eachoter, only 2 instances of 0 or 1 can be next to eachoter."
+                "[ERROR] To many instances of the same character (0 or 1) next to eachoter, only 2 instances of 0 or 1 are allowed next to eachoter."
             )
         # CHECK IF LINE CONTAINS UNWANTED CHARACTERS (lETTERS) -----------------------------------------
         for j in line:
@@ -104,12 +104,12 @@ def column(board, col):
 
 
 # VALID VALUES -----------------------------------------------------------------------------------------
-def valid(board, board_size):
+def triple_prevent(board, board_size):
     # empty_value[0] = x =  row
     # empty_value[1] = y =  col
     solutions = []
     for empty_value in find_empty(board):
-        # CHECK ROW FOR TRIPLE VALUES------------------------------------------------------------------------
+        # CHECK ROW FOR POSSIBLE TRIPLE VALUES & PREVENT THEM------------------------------------------------
         # AVOID TRIPLE (FRONT)
         if empty_value[1] >= 0 and empty_value[1] < (board_size - 2):
             # AVOID TRIPLE 0 (FRONT): .00 --> 100
@@ -219,6 +219,48 @@ def complete(board, board_size):
     return solutions
 
 
+# CHECK BOARD FOR ERRORS -------------------------------------------------------------------------------
+def check(board, board_size):
+    errors = []
+    columns = []
+    for i in range(0, board_size):
+        # [PREPARATION] convert row list to string for easy search
+        row = ""
+        for j in board[i]:
+            row += j
+        # [PREPARATION] convert col list to string for easy search
+        col = ""
+        for j in column(board, i):
+            col += j
+        # [ERROR CHECK]check row and column for triple values
+        if ("000" or "111") in (row or col):
+            errors.append(
+                "[ERROR] To many instances of the same character (0 or 1) next to eachoter."
+            )
+        # [ERROR CHECK] if to many 1
+        if (row.count("0") or row.count("1")) > board_size / 2:
+            errors.append(
+                "[ERROR] To many instances of the same character (0 or 1) found in the same row."
+            )
+        # [ERROR CHECK] if to many 0
+        if (col.count("0") or col.count("1")) > board_size / 2:
+            errors.append(
+                "[ERROR] To many instances of the same character (0 or 1) found in the same column."
+            )
+        # [ERROR CHECK] if 2 row are same
+        for row in board:
+            if row == board[i] and board.index(row) != i:
+                errors.append("[ERROR] Identical rows found")
+                break
+        # [ERROR CHECK] if 2 col are same
+        columns.append(column(board, i))
+        for col in columns:
+            if col == columns[i] and columns.index(col) != i:
+                errors.append("[ERROR] Identical columns found")
+                break
+    return errors
+
+
 # ======================================================================================================
 
 # SOLVE ================================================================================================
@@ -231,7 +273,7 @@ while len(find_empty(board)) != 0:
     total_empty = len(find_empty(board))
     # SEARCH FOR CERTAIN VALUES AND UPDATE BOARD IF FOUND ----------------------------------------------
     # TRIPLE VALUES
-    for solution in valid(board, board_size):
+    for solution in triple_prevent(board, board_size):
         board[solution[0][0]][solution[0][1]] = solution[1]
     # COMPLETE ROW/ COLUMN
     for solution in complete(board, board_size):
@@ -240,5 +282,13 @@ while len(find_empty(board)) != 0:
     if total_empty == len(find_empty(board)):
         break
 
-print("new board")
-print_board(board)
+
+# CHECK FOR ERRORSIN FINAL BOARD
+errors = check(board, board_size)
+if len(errors) == 0:
+    print("new board")
+    print_board(board)
+else:
+    print("unsolvable:")
+    for error in errors:
+        print(error)
