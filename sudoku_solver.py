@@ -136,13 +136,13 @@ def brute_force(board):
     for value in range(1, 10):
         # search row, column and box
         if (
-            not value in board[empty_pos[0]]  # rox
+            not value in board[empty_pos[0]]  # row
             and not value in column(board, empty_pos[1])  # column
             and not value in box(board, empty_pos)  # box
         ):
             # update board if value is valid
             board[empty_pos[0]][empty_pos[1]] = value
-            # try a value in the next empty position if a valid value was inserted
+            # try a value in the next empty position if a valid value was inserted, return true if value is possible
             if brute_force(board):
                 return True
             # reset value if next empty has no valid number

@@ -200,6 +200,53 @@ def triple_prevent(board, board_size):
     return solutions
 
 
+# TRIPLE TEST NEW -------------------------------------------------------------------------------------------
+def triple_test(board, board_size, empty_pos, proposed_val):
+    # AVOID TRIPLE (FRONT) - row and column: .00 --> 100 or .11 --> 011
+    if (empty_pos[1] >= 0 and empty_pos[1] < (board_size - 2)) or (
+        empty_pos[0] >= 0 and empty_pos[0] < (board_size - 2)
+    ):
+        if (
+            # row
+            board[empty_pos[0]][empty_pos[1] + 1] == proposed_val
+            and board[empty_pos[0]][empty_pos[1] + 2] == proposed_val
+        ) or (
+            # column
+            board[empty_pos[0] + 1][empty_pos[1]] == proposed_val
+            and board[empty_pos[0] + 2][empty_pos[1]] == proposed_val
+        ):
+            return False
+    # AVOID TRIPLE (BACK) - row and column: 00. --> 001 or 11. --> 110
+    if (empty_pos[1] > 1 and empty_pos[1] <= (board_size - 1)) or (
+        empty_pos[0] > 1 and empty_pos[0] <= (board_size - 1)
+    ):
+        if (
+            # row
+            board[empty_pos[0]][empty_pos[1] - 1] == proposed_val
+            and board[empty_pos[0]][empty_pos[1] - 2] == proposed_val
+        ) or (
+            # column
+            board[empty_pos[0] - 1][empty_pos[1]] == proposed_val
+            and board[empty_pos[0] - 2][empty_pos[1]] == proposed_val
+        ):
+            return False
+    # AVOID TRIPLE (MIDDLE) - row and column: 0.0 --> 010 or 1.1 --> 101
+    if (empty_pos[1] > 0 and empty_pos[1] < (board_size - 1)) or (
+        empty_pos[0] > 0 and empty_pos[0] < (board_size - 1)
+    ):
+        if (
+            # row
+            board[empty_pos[0]][empty_pos[1] - 1] == proposed_val
+            and board[empty_pos[0]][empty_pos[1] + 1] == proposed_val
+        ) or (
+            # col
+            board[empty_pos[0] - 1][empty_pos[1]] == proposed_val
+            and board[empty_pos[0] + 1][empty_pos[1]] == proposed_val
+        ):
+            return False
+    return True
+
+
 # COMPLETE ROWS IF ALL 1 OR 0 ARE KNOWN ---------------------------------------------------------------------
 def complete(board, board_size):
     solutions = []
@@ -261,6 +308,35 @@ def check(board, board_size):
     return errors
 
 
+# BRUTE FORCE (RECURSIVE) ------------------------------------------------------------------------------
+def brute_force(board):
+    # FIND EMPTY POSITIONS ON BOARD --------------------------------------------------------------------
+    all_empty = find_empty(board)
+    if not all_empty:
+        # solution found
+        return True
+    else:
+        empty = all_empty[0]
+
+    # CHECK POSSIBLE VALUES FOR EMPTY POSITION & UPDATE BOARD IF FOUND ---------------------------------
+    for value in range(0, 2):
+        # search row, column and box
+        if (
+            # triple prevention
+            # detecting if added value doesnt exceed maximum ammount of instances of this value in teh row/ column
+            # identical row/ column prevention (only if a row is complete)
+        ):
+            # update board if value is valid
+            board[empty_pos[0]][empty_pos[1]] = value
+            # try a value in the next empty position if a valid value was inserted, return true if value is possible
+            if brute_force(board):
+                return True
+            # reset value if next empty has no valid number
+            board[empty_pos[0]][empty_pos[1]] = "."
+    # required for recursive, says that next empty has no valid number
+    return False
+
+
 # ======================================================================================================
 
 # SOLVE ================================================================================================
@@ -283,7 +359,7 @@ while len(find_empty(board)) != 0:
         break
 
 
-# CHECK FOR ERRORSIN FINAL BOARD
+# CHECK FOR ERRORS IN FINAL BOARD
 errors = check(board, board_size)
 if len(errors) == 0:
     print("new board")
