@@ -105,50 +105,95 @@ def column(board, col):
 
 # TRIPLE TEST NEW -------------------------------------------------------------------------------------------
 def valid(board, board_size, empty_pos, proposed_val):
+    print(proposed_val)
     # AVOID TRIPLE (FRONT) - row: .00 --> 100 or .11 --> 011
     if empty_pos[1] >= 0 and empty_pos[1] < (board_size - 2):
+        print("tripple front row")
         if (
-            board[empty_pos[0]][empty_pos[1] + 1] == proposed_val
-            and board[empty_pos[0]][empty_pos[1] + 2] == proposed_val
+            board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
+            and board[empty_pos[0]][empty_pos[1] + 1] != "."
+        ) and (
+            board[empty_pos[0]][empty_pos[1] + 2] != proposed_val
+            and board[empty_pos[0]][empty_pos[1] + 2] != "."
         ):
-            return False
+            print("good")
+            return True
+        else:
+            print("bad")
     # AVOID TRIPLE (FRONT) - column: .00 --> 100 or .11 --> 011
     if empty_pos[0] >= 0 and empty_pos[0] < (board_size - 2):
+        print("tripple front col")
         if (
-            board[empty_pos[0] + 1][empty_pos[1]] == proposed_val
-            and board[empty_pos[0] + 2][empty_pos[1]] == proposed_val
+            board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
+            and board[empty_pos[0] + 1][empty_pos[1]] != "."
+        ) and (
+            board[empty_pos[0] + 2][empty_pos[1]] != proposed_val
+            and board[empty_pos[0] + 2][empty_pos[1]] != "."
         ):
-            return False
+            print("good")
+            return True
+        else:
+            print("bad")
     # AVOID TRIPLE (BACK) - row: 00. --> 001 or 11. --> 110
     if empty_pos[1] > 1 and empty_pos[1] <= (board_size - 1):
+        print("tripple back row")
         if (
-            board[empty_pos[0]][empty_pos[1] - 1] == proposed_val
-            and board[empty_pos[0]][empty_pos[1] - 2] == proposed_val
+            board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
+            and board[empty_pos[0]][empty_pos[1] - 1] != "."
+        ) and (
+            board[empty_pos[0]][empty_pos[1] - 2] != proposed_val
+            and board[empty_pos[0]][empty_pos[1] - 2] != "."
         ):
-            return False
+            print("good")
+            return True
+        else:
+            print("bad")
     # AVOID TRIPLE (BACK) - col: 00. --> 001 or 11. --> 110
     if empty_pos[0] > 1 and empty_pos[0] <= (board_size - 1):
+        print("tripple back col")
         if (
-            board[empty_pos[0] - 1][empty_pos[1]] == proposed_val
-            and board[empty_pos[0] - 2][empty_pos[1]] == proposed_val
+            board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
+            and board[empty_pos[0] - 1][empty_pos[1]] != "."
+        ) and (
+            board[empty_pos[0] - 2][empty_pos[1]] != proposed_val
+            and board[empty_pos[0] - 2][empty_pos[1]] != "."
         ):
-            return False
+            print("good")
+            return True
+        else:
+            print("bad")
     # AVOID TRIPLE (MIDDLE) - row: 0.0 --> 010 or 1.1 --> 101
     if empty_pos[1] > 0 and empty_pos[1] < (board_size - 1):
+        print("tripple middle row")
         if (
-            # row
-            board[empty_pos[0]][empty_pos[1] - 1] == proposed_val
-            and board[empty_pos[0]][empty_pos[1] + 1] == proposed_val
+            board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
+            and board[empty_pos[0]][empty_pos[1] - 1] != "."
+        ) and (
+            board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
+            and board[empty_pos[0]][empty_pos[1] + 1] != "."
         ):
-            return False
+            print("good")
+            return True
+        else:
+            print("bad")
     # AVOID TRIPLE (MIDDLE) - column: 0.0 --> 010 or 1.1 --> 101
     if empty_pos[0] > 0 and empty_pos[0] < (board_size - 1):
+        print("tripple middle col")
         if (
-            # col
-            board[empty_pos[0] - 1][empty_pos[1]] == proposed_val
-            and board[empty_pos[0] + 1][empty_pos[1]] == proposed_val
+            board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
+            and board[empty_pos[0] - 1][empty_pos[1]] != "."
+        ) and (
+            board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
+            and board[empty_pos[0] - 1][empty_pos[1]] != "."
         ):
-            return False
+            print("good")
+            return True
+        else:
+            print("bad")
+    return False
+
+
+def check_max_instances(board, board_size, empty_pos, proposed_val):
     # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN ROW
     if board[empty_pos[0]].count(proposed_val) + 1 > (board_size / 2):
         return False
@@ -254,6 +299,7 @@ def check(board, board_size):
 # PRINT ORIGINAL BOARD ---------------------------------------------------------------------------------
 print("Original:")
 print_board(board)
+print()
 
 # CHECK FOR VALID VALUES & UPDATE BOARD IF FOUND -------------------------------------------------------
 while len(find_empty(board)) != 0:
@@ -265,8 +311,9 @@ while len(find_empty(board)) != 0:
         for i in range(0, 2):
             if valid(board, board_size, empty_pos, str(i)) == True:
                 board[empty_pos[0]][empty_pos[1]] = str(i)
-        print()
+                break
         print_board(board)
+        print()
     # # COMPLETE ROW/ COLUMN
     # for solution in complete(board, board_size):
     #     board[solution[0][0]][solution[0][1]] = solution[1]
@@ -286,5 +333,5 @@ while len(find_empty(board)) != 0:
 #         print(error)
 
 
-print("new board")
+print("\nnew board")
 print_board(board)
