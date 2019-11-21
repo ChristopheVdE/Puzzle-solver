@@ -103,147 +103,58 @@ def column(board, col):
     return column_values
 
 
-# VALID VALUES -----------------------------------------------------------------------------------------
-def triple_prevent(board, board_size):
-    # empty_value[0] = x =  row
-    # empty_value[1] = y =  col
-    solutions = []
-    for empty_value in find_empty(board):
-        # CHECK ROW FOR POSSIBLE TRIPLE VALUES & PREVENT THEM------------------------------------------------
-        # AVOID TRIPLE (FRONT)
-        if empty_value[1] >= 0 and empty_value[1] < (board_size - 2):
-            # AVOID TRIPLE 0 (FRONT): .00 --> 100
-            if (
-                board[empty_value[0]][empty_value[1] + 1] == "0"
-                and board[empty_value[0]][empty_value[1] + 2] == "0"
-            ):
-                solutions.append((empty_value, "1"))
-            # AVOID TRIPLE 1 (FRONT): .11 --> 011
-            elif (
-                board[empty_value[0]][empty_value[1] + 1] == "1"
-                and board[empty_value[0]][empty_value[1] + 2] == "1"
-            ):
-                solutions.append((empty_value, "0"))
-        # AVOID TRIPLE (BACK)
-        if empty_value[1] > 1 and empty_value[1] <= (board_size - 1):
-            # AVOID TRIPLE 0 (BACK): 00. --> 001
-            if (
-                board[empty_value[0]][empty_value[1] - 1] == "0"
-                and board[empty_value[0]][empty_value[1] - 2] == "0"
-            ):
-                solutions.append((empty_value, "1"))
-            # AVOID TRIPLE 1 (BACK): 11. --> 110
-            elif (
-                board[empty_value[0]][empty_value[1] - 1] == "1"
-                and board[empty_value[0]][empty_value[1] - 2] == "1"
-            ):
-                solutions.append((empty_value, "0"))
-            # else:
-            #     return "."
-        # AVOID TRIPLE (MIDDLE)
-        if empty_value[1] > 0 and empty_value[1] < (board_size - 1):
-            # # AVOID TRIPLE 0 (MIDDLE)/ 0.0 --> 010
-            if (
-                board[empty_value[0]][empty_value[1] - 1] == "0"
-                and board[empty_value[0]][empty_value[1] + 1] == "0"
-            ):
-                solutions.append((empty_value, "1"))
-            # # AVOID TRIPLE 1 (MIDDLE)/ 1.1 --> 101
-            elif (
-                board[empty_value[0]][empty_value[1] - 1] == "1"
-                and board[empty_value[0]][empty_value[1] + 1] == "1"
-            ):
-                solutions.append((empty_value, "0"))
-        # CHECK COLUMN FOR TRIPLE VALUES---------------------------------------------------------------------
-        # AVOID TRIPLE (FRONT)
-        if empty_value[0] >= 0 and empty_value[0] < (board_size - 2):
-            # AVOID TRIPLE 0 (FRONT)/ .00 --> 100
-            if (
-                board[empty_value[0] + 1][empty_value[1]] == "0"
-                and board[empty_value[0] + 2][empty_value[1]] == "0"
-            ):
-                solutions.append((empty_value, "1"))
-            # AVOID TRIPLE 1 (FRONT)/ .11 --> 011
-            elif (
-                board[empty_value[0] + 1][empty_value[1]] == "1"
-                and board[empty_value[0] + 2][empty_value[1]] == "1"
-            ):
-                solutions.append((empty_value, "0"))
-        # AVOID TRIPLE (BACK)
-        if empty_value[0] > 1 and empty_value[0] <= (board_size - 1):
-            # AVOID TRIPLE 0 (BACK): 00. --> 001
-            if (
-                board[empty_value[0] - 1][empty_value[1]] == "0"
-                and board[empty_value[0] - 2][empty_value[1]] == "0"
-            ):
-                solutions.append((empty_value, "1"))
-            # AVOID TRIPLE 1 (BACK): 11. --> 110
-            elif (
-                board[empty_value[0] - 1][empty_value[1]] == "1"
-                and board[empty_value[0] - 2][empty_value[1]] == "1"
-            ):
-                solutions.append((empty_value, "0"))
-        # AVOID TRIPLE (MIDDLE)
-        if empty_value[0] > 0 and empty_value[0] < (board_size - 1):
-            # AVOID TRIPLE 0 (MIDDLE): 0.0 --> 010
-            if (
-                board[empty_value[0] - 1][empty_value[1]] == "0"
-                and board[empty_value[0] + 1][empty_value[1]] == "0"
-            ):
-                solutions.append((empty_value, "1"))
-            # AVOID TRIPLE 1 (MIDDLE): 1.1 --> 101
-            elif (
-                board[empty_value[0] - 1][empty_value[1]] == "1"
-                and board[empty_value[0] + 1][empty_value[1]] == "1"
-            ):
-                solutions.append((empty_value, "0"))
-    return solutions
-
-
 # TRIPLE TEST NEW -------------------------------------------------------------------------------------------
-def triple_test(board, board_size, empty_pos, proposed_val):
-    # AVOID TRIPLE (FRONT) - row and column: .00 --> 100 or .11 --> 011
-    if (empty_pos[1] >= 0 and empty_pos[1] < (board_size - 2)) or (
-        empty_pos[0] >= 0 and empty_pos[0] < (board_size - 2)
-    ):
+def valid(board, board_size, empty_pos, proposed_val):
+    # AVOID TRIPLE (FRONT) - row: .00 --> 100 or .11 --> 011
+    if empty_pos[1] >= 0 and empty_pos[1] < (board_size - 2):
         if (
-            # row
             board[empty_pos[0]][empty_pos[1] + 1] == proposed_val
             and board[empty_pos[0]][empty_pos[1] + 2] == proposed_val
-        ) or (
-            # column
+        ):
+            return False
+    # AVOID TRIPLE (FRONT) - column: .00 --> 100 or .11 --> 011
+    if empty_pos[0] >= 0 and empty_pos[0] < (board_size - 2):
+        if (
             board[empty_pos[0] + 1][empty_pos[1]] == proposed_val
             and board[empty_pos[0] + 2][empty_pos[1]] == proposed_val
         ):
             return False
-    # AVOID TRIPLE (BACK) - row and column: 00. --> 001 or 11. --> 110
-    if (empty_pos[1] > 1 and empty_pos[1] <= (board_size - 1)) or (
-        empty_pos[0] > 1 and empty_pos[0] <= (board_size - 1)
-    ):
+    # AVOID TRIPLE (BACK) - row: 00. --> 001 or 11. --> 110
+    if empty_pos[1] > 1 and empty_pos[1] <= (board_size - 1):
         if (
-            # row
             board[empty_pos[0]][empty_pos[1] - 1] == proposed_val
             and board[empty_pos[0]][empty_pos[1] - 2] == proposed_val
-        ) or (
-            # column
+        ):
+            return False
+    # AVOID TRIPLE (BACK) - col: 00. --> 001 or 11. --> 110
+    if empty_pos[0] > 1 and empty_pos[0] <= (board_size - 1):
+        if (
             board[empty_pos[0] - 1][empty_pos[1]] == proposed_val
             and board[empty_pos[0] - 2][empty_pos[1]] == proposed_val
         ):
             return False
-    # AVOID TRIPLE (MIDDLE) - row and column: 0.0 --> 010 or 1.1 --> 101
-    if (empty_pos[1] > 0 and empty_pos[1] < (board_size - 1)) or (
-        empty_pos[0] > 0 and empty_pos[0] < (board_size - 1)
-    ):
+    # AVOID TRIPLE (MIDDLE) - row: 0.0 --> 010 or 1.1 --> 101
+    if empty_pos[1] > 0 and empty_pos[1] < (board_size - 1):
         if (
             # row
             board[empty_pos[0]][empty_pos[1] - 1] == proposed_val
             and board[empty_pos[0]][empty_pos[1] + 1] == proposed_val
-        ) or (
+        ):
+            return False
+    # AVOID TRIPLE (MIDDLE) - column: 0.0 --> 010 or 1.1 --> 101
+    if empty_pos[0] > 0 and empty_pos[0] < (board_size - 1):
+        if (
             # col
             board[empty_pos[0] - 1][empty_pos[1]] == proposed_val
             and board[empty_pos[0] + 1][empty_pos[1]] == proposed_val
         ):
             return False
+    # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN ROW
+    if board[empty_pos[0]].count(proposed_val) + 1 > (board_size / 2):
+        return False
+    # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN COLUMN
+    if column(board, empty_pos[1]).count(proposed_val) + 1 > (board_size / 2):
+        return False
     return True
 
 
@@ -309,32 +220,32 @@ def check(board, board_size):
 
 
 # BRUTE FORCE (RECURSIVE) ------------------------------------------------------------------------------
-def brute_force(board):
-    # FIND EMPTY POSITIONS ON BOARD --------------------------------------------------------------------
-    all_empty = find_empty(board)
-    if not all_empty:
-        # solution found
-        return True
-    else:
-        empty = all_empty[0]
+# def brute_force(board):
+#     # FIND EMPTY POSITIONS ON BOARD --------------------------------------------------------------------
+#     all_empty = find_empty(board)
+#     if not all_empty:
+#         # solution found
+#         return True
+#     else:
+#         empty = all_empty[0]
 
-    # CHECK POSSIBLE VALUES FOR EMPTY POSITION & UPDATE BOARD IF FOUND ---------------------------------
-    for value in range(0, 2):
-        # search row, column and box
-        if (
-            # triple prevention
-            # detecting if added value doesnt exceed maximum ammount of instances of this value in teh row/ column
-            # identical row/ column prevention (only if a row is complete)
-        ):
-            # update board if value is valid
-            board[empty_pos[0]][empty_pos[1]] = value
-            # try a value in the next empty position if a valid value was inserted, return true if value is possible
-            if brute_force(board):
-                return True
-            # reset value if next empty has no valid number
-            board[empty_pos[0]][empty_pos[1]] = "."
-    # required for recursive, says that next empty has no valid number
-    return False
+#     # CHECK POSSIBLE VALUES FOR EMPTY POSITION & UPDATE BOARD IF FOUND ---------------------------------
+#     for value in range(0, 2):
+#         # search row, column and box
+#         if (
+#             # triple prevention
+#             # detecting if added value doesnt exceed maximum ammount of instances of this value in teh row/ column
+#             # identical row/ column prevention (only if a row is complete)
+#         ):
+#             # update board if value is valid
+#             board[empty_pos[0]][empty_pos[1]] = value
+#             # try a value in the next empty position if a valid value was inserted, return true if value is possible
+#             if brute_force(board):
+#                 return True
+#             # reset value if next empty has no valid number
+#             board[empty_pos[0]][empty_pos[1]] = "."
+#     # required for recursive, says that next empty has no valid number
+#     return False
 
 
 # ======================================================================================================
@@ -349,22 +260,31 @@ while len(find_empty(board)) != 0:
     total_empty = len(find_empty(board))
     # SEARCH FOR CERTAIN VALUES AND UPDATE BOARD IF FOUND ----------------------------------------------
     # TRIPLE VALUES
-    for solution in triple_prevent(board, board_size):
-        board[solution[0][0]][solution[0][1]] = solution[1]
-    # COMPLETE ROW/ COLUMN
-    for solution in complete(board, board_size):
-        board[solution[0][0]][solution[0][1]] = solution[1]
+    for empty_pos in find_empty(board):
+        # print(empty_pos)
+        for i in range(0, 2):
+            if valid(board, board_size, empty_pos, str(i)) == True:
+                board[empty_pos[0]][empty_pos[1]] = str(i)
+        print()
+        print_board(board)
+    # # COMPLETE ROW/ COLUMN
+    # for solution in complete(board, board_size):
+    #     board[solution[0][0]][solution[0][1]] = solution[1]
     # BREAK LOOP IF NO MORE VALID VALUES (NO BOARD UPDATES) --------------------------------------------
     if total_empty == len(find_empty(board)):
         break
 
 
 # CHECK FOR ERRORS IN FINAL BOARD
-errors = check(board, board_size)
-if len(errors) == 0:
-    print("new board")
-    print_board(board)
-else:
-    print("unsolvable:")
-    for error in errors:
-        print(error)
+# errors = check(board, board_size)
+# if len(errors) == 0:
+#     print("new board")
+#     print_board(board)
+# else:
+#     print("unsolvable:")
+#     for error in errors:
+#         print(error)
+
+
+print("new board")
+print_board(board)
