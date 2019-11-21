@@ -116,8 +116,9 @@ def valid(board, board_size, empty_pos, proposed_val):
             board[empty_pos[0]][empty_pos[1] + 2] != proposed_val
             and board[empty_pos[0]][empty_pos[1] + 2] != "."
         ):
-            print("good")
-            return True
+            if check_max_instances(board, board_size, empty_pos, proposed_val):
+                print("good")
+                return True
         else:
             print("bad")
     # AVOID TRIPLE (FRONT) - column: .00 --> 100 or .11 --> 011
@@ -130,8 +131,9 @@ def valid(board, board_size, empty_pos, proposed_val):
             board[empty_pos[0] + 2][empty_pos[1]] != proposed_val
             and board[empty_pos[0] + 2][empty_pos[1]] != "."
         ):
-            print("good")
-            return True
+            if check_max_instances(board, board_size, empty_pos, proposed_val):
+                print("good")
+                return True
         else:
             print("bad")
     # AVOID TRIPLE (BACK) - row: 00. --> 001 or 11. --> 110
@@ -144,8 +146,9 @@ def valid(board, board_size, empty_pos, proposed_val):
             board[empty_pos[0]][empty_pos[1] - 2] != proposed_val
             and board[empty_pos[0]][empty_pos[1] - 2] != "."
         ):
-            print("good")
-            return True
+            if check_max_instances(board, board_size, empty_pos, proposed_val):
+                print("good")
+                return True
         else:
             print("bad")
     # AVOID TRIPLE (BACK) - col: 00. --> 001 or 11. --> 110
@@ -158,8 +161,9 @@ def valid(board, board_size, empty_pos, proposed_val):
             board[empty_pos[0] - 2][empty_pos[1]] != proposed_val
             and board[empty_pos[0] - 2][empty_pos[1]] != "."
         ):
-            print("good")
-            return True
+            if check_max_instances(board, board_size, empty_pos, proposed_val):
+                print("good")
+                return True
         else:
             print("bad")
     # AVOID TRIPLE (MIDDLE) - row: 0.0 --> 010 or 1.1 --> 101
@@ -172,8 +176,9 @@ def valid(board, board_size, empty_pos, proposed_val):
             board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
             and board[empty_pos[0]][empty_pos[1] + 1] != "."
         ):
-            print("good")
-            return True
+            if check_max_instances(board, board_size, empty_pos, proposed_val):
+                print("good")
+                return True
         else:
             print("bad")
     # AVOID TRIPLE (MIDDLE) - column: 0.0 --> 010 or 1.1 --> 101
@@ -186,8 +191,9 @@ def valid(board, board_size, empty_pos, proposed_val):
             board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
             and board[empty_pos[0] - 1][empty_pos[1]] != "."
         ):
-            print("good")
-            return True
+            if check_max_instances(board, board_size, empty_pos, proposed_val):
+                print("good")
+                return True
         else:
             print("bad")
     return False
