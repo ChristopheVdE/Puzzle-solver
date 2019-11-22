@@ -8,76 +8,90 @@ print(
     "\n  - Don't type separators between numbers"
     "\n  Example: 1101...001\n"
 )
-# SET BOARD SIZE ---------------------------------------------------------------------------------------
-board = []
-board_size = input("Size of the board (needs to be an even number): ")
-while not board_size.isdigit() or int(board_size) % 2 != 0:
-    if board_size.isdigit():
-        if int(board_size) % 2 != 0:
-            print("[ERROR] board size must be an even number")
-    else:
-        print("[ERROR] Non-numeric characters found. Board size must be an even number")
-    board_size = input("Size of the board (needs to be an even number): ")
-board_size = int(board_size)
+# # SET BOARD SIZE ---------------------------------------------------------------------------------------
+# board = []
+# board_size = input("Size of the board (needs to be an even number): ")
+# while not board_size.isdigit() or int(board_size) % 2 != 0:
+#     if board_size.isdigit():
+#         if int(board_size) % 2 != 0:
+#             print("[ERROR] board size must be an even number")
+#     else:
+#         print("[ERROR] Non-numeric characters found. Board size must be an even number")
+#     board_size = input("Size of the board (needs to be an even number): ")
+# board_size = int(board_size)
 
-# INPUT ROWS -------------------------------------------------------------------------------------------
-for i in range(1, board_size + 1):
-    line = input("Line {}: ".format(i))
-    # ERROR CHECKS -------------------------------------------------------------------------------------
-    while True:
-        errors = []
-        # CHECK IF INPUT MEETS REQUIRERED LENGHT -------------------------------------------------------
-        if len(line) != board_size:
-            if len(line) < board_size:
-                errors.append(
-                    "[ERROR] Line is to short, a line must contain {} characters".format(
-                        board_size
-                    )
-                )
-            else:
-                errors.append(
-                    "[ERROR] Line is to long, a line must contain {} characters".format(
-                        board_size
-                    )
-                )
-        # CHECK IF LINE CONTAINS MORE THEN 2 OF THE SAME CHARACTER NEXT TO EACHOTHER -------------------
-        if "000" in line or "111" in line:
-            errors.append(
-                "[ERROR] To many instances of the same character (0 or 1) next to eachoter, only 2 instances of 0 or 1 are allowed next to eachoter."
-            )
-        # CHECK IF LINE CONTAINS UNWANTED CHARACTERS (lETTERS) -----------------------------------------
-        for j in line:
-            if j != "0" and j != "1" and j != ".":
-                errors.append(
-                    '[ERROR] Unallowed charaters found, only "0", "1" and "." are allowed'
-                )
-                break
-        # CHECK IF LINE CONTAINS TO MANY INSTANCES OF A CERTAIN NUMBER ---------------------------------
-        for j in range(0, 2):
-            count = str(line).count("{}".format(j))
-            if count > (board_size / 2):
-                errors.append(
-                    "[ERROR] Line can only contain {} instances of '{}': found {} instances of '{}'".format(
-                        int(board_size / 2), j, count, j
-                    )
-                )
-                break
-        # ERROR PRINTING -------------------------------------------------------------------------------
-        # NO ERRORS --> SKIP TO INPUT NEXT LINE
-        if len(errors) == 0:
-            break
-        # ERRORS FOUND --> PRINT ERRORS AND RE-INPUT CURRENT LINE
-        else:
-            for error in errors:
-                print(error)
-            line = input("Line {}: ".format(i))
-    # SAVE INPUT INTO BOARD ----------------------------------------------------------------------------
-    row = []
-    for num in line:
-        row.append(num)
-    board.append(row)
+# # INPUT ROWS -------------------------------------------------------------------------------------------
+# for i in range(1, board_size + 1):
+#     line = input("Line {}: ".format(i))
+#     # ERROR CHECKS -------------------------------------------------------------------------------------
+#     while True:
+#         errors = []
+#         # CHECK IF INPUT MEETS REQUIRERED LENGHT -------------------------------------------------------
+#         if len(line) != board_size:
+#             if len(line) < board_size:
+#                 errors.append(
+#                     "[ERROR] Line is to short, a line must contain {} characters".format(
+#                         board_size
+#                     )
+#                 )
+#             else:
+#                 errors.append(
+#                     "[ERROR] Line is to long, a line must contain {} characters".format(
+#                         board_size
+#                     )
+#                 )
+#         # CHECK IF LINE CONTAINS MORE THEN 2 OF THE SAME CHARACTER NEXT TO EACHOTHER -------------------
+#         if "000" in line or "111" in line:
+#             errors.append(
+#                 "[ERROR] To many instances of the same character (0 or 1) next to eachoter, only 2 instances of 0 or 1 are allowed next to eachoter."
+#             )
+#         # CHECK IF LINE CONTAINS UNWANTED CHARACTERS (lETTERS) -----------------------------------------
+#         for j in line:
+#             if j != "0" and j != "1" and j != ".":
+#                 errors.append(
+#                     '[ERROR] Unallowed charaters found, only "0", "1" and "." are allowed'
+#                 )
+#                 break
+#         # CHECK IF LINE CONTAINS TO MANY INSTANCES OF A CERTAIN NUMBER ---------------------------------
+#         for j in range(0, 2):
+#             count = str(line).count("{}".format(j))
+#             if count > (board_size / 2):
+#                 errors.append(
+#                     "[ERROR] Line can only contain {} instances of '{}': found {} instances of '{}'".format(
+#                         int(board_size / 2), j, count, j
+#                     )
+#                 )
+#                 break
+#         # ERROR PRINTING -------------------------------------------------------------------------------
+#         # NO ERRORS --> SKIP TO INPUT NEXT LINE
+#         if len(errors) == 0:
+#             break
+#         # ERRORS FOUND --> PRINT ERRORS AND RE-INPUT CURRENT LINE
+#         else:
+#             for error in errors:
+#                 print(error)
+#             line = input("Line {}: ".format(i))
+#     # SAVE INPUT INTO BOARD ----------------------------------------------------------------------------
+#     row = []
+#     for num in line:
+#         row.append(num)
+#     board.append(row)
 # ======================================================================================================
-
+board_size = 12
+board = [
+    [".", ".", ".", "1", ".", "0", ".", ".", ".", ".", ".", "."],
+    [".", "1", ".", ".", ".", "1", ".", ".", ".", ".", "1", "."],
+    [".", ".", ".", ".", ".", "1", ".", "1", ".", ".", ".", "."],
+    ["0", ".", ".", ".", ".", ".", ".", ".", ".", ".", "1", "1"],
+    [".", ".", ".", ".", "1", ".", ".", ".", "0", ".", ".", "1"],
+    [".", ".", ".", "1", ".", ".", ".", ".", "0", ".", "0", "."],
+    [".", "1", ".", ".", ".", ".", "0", ".", ".", ".", "0", "."],
+    ["0", ".", ".", "0", "0", ".", ".", ".", ".", ".", ".", "."],
+    [".", "0", ".", "0", ".", ".", ".", ".", ".", ".", ".", "0"],
+    [".", ".", ".", ".", ".", ".", ".", ".", "0", "0", ".", "0"],
+    [".", ".", ".", ".", ".", "0", ".", "1", ".", ".", ".", "."],
+    ["1", ".", ".", "1", "1", ".", ".", ".", "0", ".", "0", "0"],
+]
 # FUNCTIONS ============================================================================================
 # BOARD PRINTING ---------------------------------------------------------------------------------------
 def print_board(board):
@@ -203,6 +217,26 @@ def valid(board, board_size, empty_pos, proposed_val):
                     return True
         # else:
         #     print("bad")
+    # FILL EMPTY POSITIONS IN ROW/ COLUMN WITH "1" IF ALL ALL "0" ARE FOUND IN THAT ROW/ COLUMN
+    if (
+        board[empty_pos[0]].count("0") == board_size / 2
+        or column(board, empty_pos[1]).count("0") == board_size / 2
+        and proposed_val != "0"
+    ):
+        if check_max_instances(board, board_size, empty_pos, proposed_val):
+            # print("good")
+            if check_identical(board, board_size, empty_pos, proposed_val):
+                return True
+    # FILL EMPTY POSITIONS IN ROW/ COLUMN WITH "0" IF ALL ALL "1"" ARE FOUND IN THAT ROW/ COLUMN
+    if (
+        board[empty_pos[0]].count("0") == board_size / 2
+        or column(board, empty_pos[1]).count("0") == board_size / 2
+        and proposed_val != "1"
+    ):
+        if check_max_instances(board, board_size, empty_pos, proposed_val):
+            # print("good")
+            if check_identical(board, board_size, empty_pos, proposed_val):
+                return True
     return False
 
 
@@ -246,8 +280,8 @@ def check_identical(board, board_size, empty_pos, propposed_val):
     return True
 
 
-# COMPLETE ROWS IF ALL 1 OR 0 ARE KNOWN ---------------------------------------------------------------------
-def complete(board, board_size):
+# COMPLETE ROWS/ COlUMNS IF ALL 1 OR 0 ARE KNOWN ---------------------------------------------------------------------
+def complete_line(board, board_size):
     solutions = []
     for empty_value in find_empty(board):
         # COMPLETE THE ROW/ COLUMN IF ALL 0 ARE FOUND
