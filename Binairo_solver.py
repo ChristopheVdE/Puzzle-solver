@@ -105,7 +105,7 @@ def column(board, col):
 
 # VALIDATION OF POSSIBLE VALUES------------------------------------------------------------------------------
 def valid(board, board_size, empty_pos, proposed_val):
-    print(proposed_val)
+    # print(proposed_val)
     # AVOID TRIPLE (FRONT) - row: .00 --> 100 or .11 --> 011
     if empty_pos[1] >= 0 and empty_pos[1] < (board_size - 2):
         # print("tripple front row")
@@ -118,7 +118,8 @@ def valid(board, board_size, empty_pos, proposed_val):
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
                 # print("good")
-                return True
+                if check_identical(board, board_size, empty_pos, proposed_val):
+                    return True
         # else:
         #     print("bad")
     # AVOID TRIPLE (FRONT) - column: .00 --> 100 or .11 --> 011
@@ -133,6 +134,8 @@ def valid(board, board_size, empty_pos, proposed_val):
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
                 # print("good")
+                if check_identical(board, board_size, empty_pos, proposed_val):
+                    return True
                 return True
         # else:
         #     print("bad")
@@ -148,7 +151,8 @@ def valid(board, board_size, empty_pos, proposed_val):
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
                 # print("good")
-                return True
+                if check_identical(board, board_size, empty_pos, proposed_val):
+                    return True
         # else:
         #     print("bad")
     # AVOID TRIPLE (BACK) - col: 00. --> 001 or 11. --> 110
@@ -163,7 +167,8 @@ def valid(board, board_size, empty_pos, proposed_val):
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
                 # print("good")
-                return True
+                if check_identical(board, board_size, empty_pos, proposed_val):
+                    return True
         # else:
         #     print("bad")
     # AVOID TRIPLE (MIDDLE) - row: 0.0 --> 010 or 1.1 --> 101
@@ -178,7 +183,8 @@ def valid(board, board_size, empty_pos, proposed_val):
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
                 # print("good")
-                return True
+                if check_identical(board, board_size, empty_pos, proposed_val):
+                    return True
         # else:
         #     print("bad")
     # AVOID TRIPLE (MIDDLE) - column: 0.0 --> 010 or 1.1 --> 101
@@ -193,7 +199,8 @@ def valid(board, board_size, empty_pos, proposed_val):
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
                 # print("good")
-                return True
+                if check_identical(board, board_size, empty_pos, proposed_val):
+                    return True
         # else:
         #     print("bad")
     return False
@@ -207,6 +214,35 @@ def check_max_instances(board, board_size, empty_pos, proposed_val):
     # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN COLUMN
     if column(board, empty_pos[1]).count(proposed_val) + 1 > (board_size / 2):
         return False
+    return True
+
+
+# VALIDATION OF POSSIBLE VALUES: CHEK IF PROPOSED VALUE CREATES IDENTICAL ROW/ COLUMNS -----------------------
+def check_identical(board, board_size, empty_pos, propposed_val):
+    # insert the proposed value into the (test)-board to test if this creates duplicate rows/ columns
+    board[empty_pos[0]][empty_pos[1]] == propposed_val
+    # create list of columns
+    columns = []
+    for i in range(0, board_size):
+        columns.append(column(board, i))
+    # check for identical rows and columns
+    for i in range(0, board_size):
+        # check if proposed value creates a identical row
+        if (
+            board[empty_pos[0]] == board[i]
+            and empty_pos[0] != i
+            # no empty values allowed
+            and (not "." in board[empty_pos[0]] and not "." in board[i])
+        ):
+            return False
+        # check if poposed value creates an identical column
+        if (
+            columns[empty_pos[1]] == columns[i]
+            and empty_pos[1] != i
+            # no empty values allowed
+            and (not "." in columns[empty_pos[1]] and not "." in columns[i])
+        ):
+            return False
     return True
 
 
