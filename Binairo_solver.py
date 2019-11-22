@@ -77,6 +77,7 @@ print(
 #         row.append(num)
 #     board.append(row)
 # ======================================================================================================
+
 board_size = 12
 board = [
     [".", ".", ".", "1", ".", "0", ".", ".", ".", ".", ".", "."],
@@ -92,6 +93,7 @@ board = [
     [".", ".", ".", ".", ".", "0", ".", "1", ".", ".", ".", "."],
     ["1", ".", ".", "1", "1", ".", ".", ".", "0", ".", "0", "0"],
 ]
+
 # FUNCTIONS ============================================================================================
 # BOARD PRINTING ---------------------------------------------------------------------------------------
 def print_board(board):
@@ -119,10 +121,8 @@ def column(board, col):
 
 # VALIDATION OF POSSIBLE VALUES------------------------------------------------------------------------------
 def valid(board, board_size, empty_pos, proposed_val):
-    # print(proposed_val)
     # AVOID TRIPLE (FRONT) - row: .00 --> 100 or .11 --> 011
     if empty_pos[1] >= 0 and empty_pos[1] < (board_size - 2):
-        # print("tripple front row")
         if (
             board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
             and board[empty_pos[0]][empty_pos[1] + 1] != "."
@@ -131,14 +131,10 @@ def valid(board, board_size, empty_pos, proposed_val):
             and board[empty_pos[0]][empty_pos[1] + 2] != "."
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
-                # print("good")
                 if check_identical(board, board_size, empty_pos, proposed_val):
                     return True
-        # else:
-        #     print("bad")
     # AVOID TRIPLE (FRONT) - column: .00 --> 100 or .11 --> 011
     if empty_pos[0] >= 0 and empty_pos[0] < (board_size - 2):
-        # print("tripple front col")
         if (
             board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
             and board[empty_pos[0] + 1][empty_pos[1]] != "."
@@ -147,15 +143,11 @@ def valid(board, board_size, empty_pos, proposed_val):
             and board[empty_pos[0] + 2][empty_pos[1]] != "."
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
-                # print("good")
                 if check_identical(board, board_size, empty_pos, proposed_val):
                     return True
                 return True
-        # else:
-        #     print("bad")
     # AVOID TRIPLE (BACK) - row: 00. --> 001 or 11. --> 110
     if empty_pos[1] > 1 and empty_pos[1] <= (board_size - 1):
-        # print("tripple back row")
         if (
             board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
             and board[empty_pos[0]][empty_pos[1] - 1] != "."
@@ -164,14 +156,10 @@ def valid(board, board_size, empty_pos, proposed_val):
             and board[empty_pos[0]][empty_pos[1] - 2] != "."
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
-                # print("good")
                 if check_identical(board, board_size, empty_pos, proposed_val):
                     return True
-        # else:
-        #     print("bad")
     # AVOID TRIPLE (BACK) - col: 00. --> 001 or 11. --> 110
     if empty_pos[0] > 1 and empty_pos[0] <= (board_size - 1):
-        # print("tripple back col")
         if (
             board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
             and board[empty_pos[0] - 1][empty_pos[1]] != "."
@@ -180,14 +168,10 @@ def valid(board, board_size, empty_pos, proposed_val):
             and board[empty_pos[0] - 2][empty_pos[1]] != "."
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
-                # print("good")
                 if check_identical(board, board_size, empty_pos, proposed_val):
                     return True
-        # else:
-        #     print("bad")
     # AVOID TRIPLE (MIDDLE) - row: 0.0 --> 010 or 1.1 --> 101
     if empty_pos[1] > 0 and empty_pos[1] < (board_size - 1):
-        # print("tripple middle row")
         if (
             board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
             and board[empty_pos[0]][empty_pos[1] - 1] != "."
@@ -196,14 +180,10 @@ def valid(board, board_size, empty_pos, proposed_val):
             and board[empty_pos[0]][empty_pos[1] + 1] != "."
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
-                # print("good")
                 if check_identical(board, board_size, empty_pos, proposed_val):
                     return True
-        # else:
-        #     print("bad")
     # AVOID TRIPLE (MIDDLE) - column: 0.0 --> 010 or 1.1 --> 101
     if empty_pos[0] > 0 and empty_pos[0] < (board_size - 1):
-        # print("tripple middle col")
         if (
             board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
             and board[empty_pos[0] - 1][empty_pos[1]] != "."
@@ -212,11 +192,8 @@ def valid(board, board_size, empty_pos, proposed_val):
             and board[empty_pos[0] + 1][empty_pos[1]] != "."
         ):
             if check_max_instances(board, board_size, empty_pos, proposed_val):
-                # print("good")
                 if check_identical(board, board_size, empty_pos, proposed_val):
                     return True
-        # else:
-        #     print("bad")
     # FILL EMPTY POSITIONS IN ROW/ COLUMN WITH "1" IF ALL ALL "0" ARE FOUND IN THAT ROW/ COLUMN
     if (
         board[empty_pos[0]].count("0") == board_size / 2
@@ -224,7 +201,6 @@ def valid(board, board_size, empty_pos, proposed_val):
         and proposed_val != "0"
     ):
         if check_max_instances(board, board_size, empty_pos, proposed_val):
-            # print("good")
             if check_identical(board, board_size, empty_pos, proposed_val):
                 return True
     # FILL EMPTY POSITIONS IN ROW/ COLUMN WITH "0" IF ALL ALL "1"" ARE FOUND IN THAT ROW/ COLUMN
@@ -234,7 +210,6 @@ def valid(board, board_size, empty_pos, proposed_val):
         and proposed_val != "1"
     ):
         if check_max_instances(board, board_size, empty_pos, proposed_val):
-            # print("good")
             if check_identical(board, board_size, empty_pos, proposed_val):
                 return True
     return False
@@ -280,27 +255,8 @@ def check_identical(board, board_size, empty_pos, propposed_val):
     return True
 
 
-# COMPLETE ROWS/ COlUMNS IF ALL 1 OR 0 ARE KNOWN ---------------------------------------------------------------------
-def complete_line(board, board_size):
-    solutions = []
-    for empty_value in find_empty(board):
-        # COMPLETE THE ROW/ COLUMN IF ALL 0 ARE FOUND
-        if (
-            board[empty_value[0]].count("0") == board_size / 2
-            or column(board, empty_value[1]).count("0") == board_size / 2
-        ):
-            solutions.append((empty_value, "1"))
-        # COMPLETE THE ROW/ COLUMN IF ALL 1 ARE FOUND
-        elif (
-            board[empty_value[0]].count("1") == board_size / 2
-            or column(board, empty_value[1]).count("0") == board_size / 2
-        ):
-            solutions.append((empty_value, "0"))
-    return solutions
-
-
 # CHECK BOARD FOR ERRORS -------------------------------------------------------------------------------
-def check(board, board_size):
+def final_board_check(board, board_size):
     errors = []
     columns = []
     for i in range(0, board_size):
@@ -349,7 +305,7 @@ def check(board, board_size):
 #         # solution found
 #         return True
 #     else:
-#         empty = all_empty[0]
+#         empty_pos = all_empty[0]
 
 #     # CHECK POSSIBLE VALUES FOR EMPTY POSITION & UPDATE BOARD IF FOUND ---------------------------------
 #     for value in range(0, 2):
