@@ -187,7 +187,7 @@ while len(find_empty(board)) != 0:
 
 # BRUTE FORCE A SOLUTION -------------------------------------------------------------------------------
 # if still empty values AND no more certain values AND board isn't impossible
-if (len(find_empty(board)) != 0) and (og_board == board) and (possible == True):
+if (len(find_empty(board)) != 0) and (possible == True):
     if brute_force(board):
         print("\nSolution:")
         print_sudoku(board)
