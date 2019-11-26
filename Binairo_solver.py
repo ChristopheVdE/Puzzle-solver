@@ -80,18 +80,18 @@ print(
 
 board_size = 12
 board = [
-    [".", ".", ".", "1", ".", "0", ".", ".", ".", ".", ".", "."],
-    [".", "1", ".", ".", ".", "1", ".", ".", ".", ".", "1", "."],
-    [".", ".", ".", ".", ".", "1", ".", "1", ".", ".", ".", "."],
-    ["0", ".", ".", ".", ".", ".", ".", ".", ".", ".", "1", "1"],
-    [".", ".", ".", ".", "1", ".", ".", ".", "0", ".", ".", "1"],
-    [".", ".", ".", "1", ".", ".", ".", ".", "0", ".", "0", "."],
-    [".", "1", ".", ".", ".", ".", "0", ".", ".", ".", "0", "."],
-    ["0", ".", ".", "0", "0", ".", ".", ".", ".", ".", ".", "."],
-    [".", "0", ".", "0", ".", ".", ".", ".", ".", ".", ".", "0"],
-    [".", ".", ".", ".", ".", ".", ".", ".", "0", "0", ".", "0"],
-    [".", ".", ".", ".", ".", "0", ".", "1", ".", ".", ".", "."],
-    ["1", ".", ".", "1", "1", ".", ".", ".", "0", ".", "0", "0"],
+    [".", ".", ".", "1", ".", ".", ".", "1", ".", ".", "1", "."],
+    [".", "0", ".", ".", "0", "1", ".", ".", ".", "0", ".", "."],
+    [".", "0", ".", ".", ".", ".", ".", ".", ".", "0", "0", "."],
+    [".", ".", "0", "0", ".", ".", ".", "0", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", "0", ".", ".", ".", ".", "1"],
+    [".", "1", ".", ".", ".", "1", ".", "1", ".", "0", ".", "."],
+    [".", "1", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "0", ".", "0"],
+    [".", "0", ".", ".", ".", "0", "0", ".", ".", ".", ".", "0"],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", "1", "1", ".", ".", ".", "0", ".", ".", ".", ".", "0"],
+    [".", ".", ".", "0", ".", "1", "0", ".", ".", ".", "1", "."],
 ]
 
 # FUNCTIONS ============================================================================================
@@ -120,200 +120,93 @@ def column(board, col):
 
 
 # VALIDATION OF POSSIBLE VALUES------------------------------------------------------------------------------
-def valid(board, board_size, empty_pos, proposed_val, brute_force):
-    # AVOID TRIPLE (FRONT) - row: .00 --> 100 or .11 --> 011
-    if empty_pos[1] >= 0 and empty_pos[1] < (board_size - 2):
-        if (
-            (
-                brute_force == False
-                and board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
-                and board[empty_pos[0]][empty_pos[1] + 1] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
-            )
-        ) and (
-            (
-                brute_force == False
-                and board[empty_pos[0]][empty_pos[1] + 2] != proposed_val
-                and board[empty_pos[0]][empty_pos[1] + 2] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0]][empty_pos[1] + 2] != proposed_val
-            )
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # AVOID TRIPLE (FRONT) - column: .00 --> 100 or .11 --> 011
-    if empty_pos[0] >= 0 and empty_pos[0] < (board_size - 2):
-        if (
-            (
-                brute_force == False
-                and board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
-                and board[empty_pos[0] + 1][empty_pos[1]] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
-            )
-        ) and (
-            (
-                brute_force == False
-                and board[empty_pos[0] + 2][empty_pos[1]] != proposed_val
-                and board[empty_pos[0] + 2][empty_pos[1]] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0] + 2][empty_pos[1]] != proposed_val
-            )
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-                return True
-    # AVOID TRIPLE (BACK) - row: 00. --> 001 or 11. --> 110
-    if empty_pos[1] > 1 and empty_pos[1] <= (board_size - 1):
-        if (
-            (
-                brute_force == False
-                and board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
-                and board[empty_pos[0]][empty_pos[1] - 1] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
-            )
-        ) and (
-            (
-                brute_force == False
-                and board[empty_pos[0]][empty_pos[1] - 2] != proposed_val
-                and board[empty_pos[0]][empty_pos[1] - 2] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0]][empty_pos[1] - 2] != proposed_val
-            )
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # AVOID TRIPLE (BACK) - col: 00. --> 001 or 11. --> 110
-    if empty_pos[0] > 1 and empty_pos[0] <= (board_size - 1):
-        if (
-            (
-                brute_force == False
-                and board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
-                and board[empty_pos[0] - 1][empty_pos[1]] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
-            )
-        ) and (
-            (
-                brute_force == False
-                and board[empty_pos[0] - 2][empty_pos[1]] != proposed_val
-                and board[empty_pos[0] - 2][empty_pos[1]] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0] - 2][empty_pos[1]] != proposed_val
-            )
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # AVOID TRIPLE (MIDDLE) - row: 0.0 --> 010 or 1.1 --> 101
-    if empty_pos[1] > 0 and empty_pos[1] < (board_size - 1):
-        if (
-            (
-                brute_force == False
-                and board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
-                and board[empty_pos[0]][empty_pos[1] - 1] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
-            )
-        ) and (
-            (
-                brute_force == False
-                and board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
-                and board[empty_pos[0]][empty_pos[1] + 1] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
-            )
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # AVOID TRIPLE (MIDDLE) - column: 0.0 --> 010 or 1.1 --> 101
-    if empty_pos[0] > 0 and empty_pos[0] < (board_size - 1):
-        if (
-            (
-                brute_force == False
-                and board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
-                and board[empty_pos[0] - 1][empty_pos[1]] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
-            )
-        ) and (
-            (
-                brute_force == False
-                and board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
-                and board[empty_pos[0] + 1][empty_pos[1]] != "."
-            )
-            or (
-                brute_force == True
-                and board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
-            )
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # FILL EMPTY POSITIONS IN ROW/ COLUMN WITH "1" IF ALL ALL "0" ARE FOUND IN THAT ROW/ COLUMN
-    if (
-        board[empty_pos[0]].count("0") == board_size / 2
-        or column(board, empty_pos[1]).count("0") == board_size / 2
-        and proposed_val != "0"
-    ):
-        if check_max_instances(board, board_size, empty_pos, proposed_val):
-            if check_identical(board, board_size, empty_pos, proposed_val):
-                return True
-    # FILL EMPTY POSITIONS IN ROW/ COLUMN WITH "0" IF ALL ALL "1"" ARE FOUND IN THAT ROW/ COLUMN
-    if (
-        board[empty_pos[0]].count("0") == board_size / 2
-        or column(board, empty_pos[1]).count("0") == board_size / 2
-        and proposed_val != "1"
-    ):
-        if check_max_instances(board, board_size, empty_pos, proposed_val):
-            if check_identical(board, board_size, empty_pos, proposed_val):
-                return True
+def certain(board, board_size, empty_pos, proposed_val):
+    # PREPARATION -------------------------------------------------------------------------------------------
+    row_nr, col_nr = empty_pos
+    proposed_val = str(proposed_val)
+    # CONVERT ROW LIST TO STRING
+    row = ""
+    for i in board[row_nr]:
+        row += str(i)
+    # CONVERT COLUMN LIST TO STRING
+    col = ""
+    for i in column(board, col_nr):
+        col += str(i)
+    # AVOIDING TRIPLE VALUES IN ROW ----------------------------------------------------------------------------------------------
+    if "00." in row and proposed_val != "0":
+        index = row.index("00.") + 2
+        return (row_nr, index)
+    elif "11." in row and proposed_val != "1":
+        index = row.index("11.") + 2
+        return (row_nr, index)
+    elif ".00" in row and proposed_val != "0":
+        index = row.index(".00")
+        return (row_nr, index)
+    elif ".11" in row and proposed_val != "1":
+        index = row.index(".11")
+        return (row_nr, index)
+    elif "0.0" in row and proposed_val != "0":
+        index = row.index("0.0") + 1
+        return (row_nr, index)
+    elif "1.1" in row and proposed_val != "1":
+        index = row.index("1.1") + 1
+        return (row_nr, index)
+    # AVOIDING TRIPPLE VALUES IN COLUMN --------------------------------------------------------------------------------------------
+    elif "00." in col and proposed_val != "0":
+        index = col.index("00.") + 2
+        return (index, col_nr)
+    elif "11." in col and proposed_val != "1":
+        index = col.index("11.") + 2
+        return (index, col_nr)
+    elif ".00" in col and proposed_val != "0":
+        index = col.index(".00")
+        return (index, col_nr)
+    elif ".11" in col and proposed_val != "1":
+        index = col.index(".11")
+        return (index, col_nr)
+    elif "0.0" in col and proposed_val != "0":
+        index = col.index("0.0") + 1
+        return (index, col_nr)
+    elif "1.1" in col and proposed_val != "1":
+        index = col.index("1.1") + 1
+        return (index, col_nr)
+    # FILLING IN ROW IF ALL "0" OR "1" ARE FOUND ------------------------------------------------------------------------------------
+    elif row.count("0") == board_size / 2 and proposed_val != "0":
+        return empty_pos
+    elif row.count("1") == board_size / 2 and proposed_val != "1":
+        return empty_pos
+    elif col.count("0") == board_size / 2 and proposed_val != "0":
+        return empty_pos
+    elif col.count("1") == board_size / 2 and proposed_val != "1":
+        return empty_pos
     return False
 
 
 # VALIDATION OF POSSIBLE VALUES: MAX INSTANCES OF 1 AND 2 PER ROW CHECK--------------------------------------
-def check_max_instances(board, board_size, empty_pos, proposed_val):
-    # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN ROW
-    if board[empty_pos[0]].count(proposed_val) + 1 > (board_size / 2):
-        return False
-    # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN COLUMN
-    if column(board, empty_pos[1]).count(proposed_val) + 1 > (board_size / 2):
-        return False
-    return True
+def check_max_instances(board, board_size, empty_pos, proposed_val, brute_force):
+    if brute_force == False:
+        # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN ROW
+        if board[empty_pos[0]].count(proposed_val) + 1 > (board_size / 2):
+            return False
+        # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN COLUMN
+        if column(board, empty_pos[1]).count(proposed_val) + 1 > (board_size / 2):
+            return False
+        return True
+    else:
+        # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN ROW
+        if board[empty_pos[0]].count(proposed_val) > (board_size / 2):
+            return False
+        # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN COLUMN
+        if column(board, empty_pos[1]).count(proposed_val) > (board_size / 2):
+            return False
+        return True
 
 
 # VALIDATION OF POSSIBLE VALUES: CHEK IF PROPOSED VALUE CREATES IDENTICAL ROW/ COLUMNS -----------------------
-def check_identical(board, board_size, empty_pos, propposed_val):
-    # insert the proposed value into the (test)-board to test if this creates duplicate rows/ columns
-    board[empty_pos[0]][empty_pos[1]] == propposed_val
+def check_identical(board, board_size, empty_pos, proposed_val, brute_force):
+    if brute_force == False:
+        # insert the proposed value into the (test)-board to test if this creates duplicate rows/ columns
+        board[empty_pos[0]][empty_pos[1]] == str(proposed_val)
     # create list of columns
     columns = []
     for i in range(0, board_size):
@@ -340,74 +233,99 @@ def check_identical(board, board_size, empty_pos, propposed_val):
 
 
 # CHECK BOARD FOR ERRORS -------------------------------------------------------------------------------
-def final_board_check(board, board_size):
-    errors = []
-    columns = []
-    for i in range(0, board_size):
-        # [PREPARATION] convert row list to string for easy search
-        row = ""
-        for j in board[i]:
-            row += j
-        # [PREPARATION] convert col list to string for easy search
-        col = ""
-        for j in column(board, i):
-            col += j
-        # [ERROR CHECK]check row and column for triple values
-        if ("000" or "111") in (row or col):
-            errors.append(
-                "[ERROR] To many instances of the same character (0 or 1) next to eachoter."
-            )
-        # [ERROR CHECK] if to many 1
-        if (row.count("0") or row.count("1")) > board_size / 2:
-            errors.append(
-                "[ERROR] To many instances of the same character (0 or 1) found in the same row."
-            )
-        # [ERROR CHECK] if to many 0
-        if (col.count("0") or col.count("1")) > board_size / 2:
-            errors.append(
-                "[ERROR] To many instances of the same character (0 or 1) found in the same column."
-            )
-        # [ERROR CHECK] if 2 row are same
-        for row in board:
-            if row == board[i] and board.index(row) != i:
-                errors.append("[ERROR] Identical rows found")
-                break
-        # [ERROR CHECK] if 2 col are same
-        columns.append(column(board, i))
-        for col in columns:
-            if col == columns[i] and columns.index(col) != i:
-                errors.append("[ERROR] Identical columns found")
-                break
-    return errors
+def final_board_check(board, board_size, empty_pos, proposed_val):
+    # board[empty_pos[0]][empty_pos[1]] = str(proposed_val)
+    # PREPARATIONS ROW
+    row_list = board[empty_pos[0]]
+    row_list[empty_pos[1]] = str(proposed_val)
+    row = ""
+    for j in row_list:
+        row += str(j)
+
+    print("\nrow: " + row)
+    # PREPARATIONS COL
+    col = ""
+    column_list = column(board, empty_pos[1])
+    column_list[empty_pos[0]] = str(proposed_val)
+    for j in column_list:
+        col += str(j)
+    print("col: " + col)
+
+    # [ERROR CHECK] check row and column for triple values
+    print(board)
+    if not "000" in row and not "111" in row:
+        print("no tripple row")
+        if not "000" in col and not "111" in col:
+            print("no tripple col")
+            # CHECK IF THERE ARE TO MANY 0 OR 1 IN A ROW
+            if str(row).count(str(proposed_val)) <= (board_size / 2):
+                print("not to many row")
+                # CHECK IF THERE ARE TO MANY 0 OR 1 IN A COLUMN
+                if str(col).count(str(proposed_val)) <= (board_size / 2):
+                    print("not to many col")
+                    # CHECK FOR INDENTICAL ROWS AND COLUMNS
+                    if check_identical(
+                        board, board_size, empty_pos, str(proposed_val), True
+                    ):
+                        print("no identical")
+                        return True
+    return False
 
 
 # BRUTE FORCE (RECURSIVE) ------------------------------------------------------------------------------
-# def brute_force(board):
-#     # FIND EMPTY POSITIONS ON BOARD --------------------------------------------------------------------
-#     all_empty = find_empty(board)
-#     if not all_empty:
-#         # solution found
-#         return True
-#     else:
-#         empty_pos = all_empty[0]
+def brute_force(board, board_size):
+    # FIND EMPTY POSITIONS ON BOARD --------------------------------------------------------------------
+    empty = find_empty(board)
+    if not empty:
+        # solution found
+        return True
+    else:
+        row_nr, col_nr = empty[0]
 
-#     # CHECK POSSIBLE VALUES FOR EMPTY POSITION & UPDATE BOARD IF FOUND ---------------------------------
-#     for value in range(0, 2):
-#         # search row, column and box
-#         if (
-#             # triple prevention
-#             # detecting if added value doesnt exceed maximum ammount of instances of this value in teh row/ column
-#             # identical row/ column prevention (only if a row is complete)
-#         ):
-#             # update board if value is valid
-#             board[empty_pos[0]][empty_pos[1]] = value
-#             # try a value in the next empty position if a valid value was inserted, return true if value is possible
-#             if brute_force(board):
-#                 return True
-#             # reset value if next empty has no valid number
-#             board[empty_pos[0]][empty_pos[1]] = "."
-#     # required for recursive, says that next empty has no valid number
-#     return False
+    for proposed_val in range(0, 2):
+        proposed_val = str(proposed_val)
+        # convert row list to a string
+        row_list = board[row_nr]
+        row = ""
+        for val in row_list:
+            row += str(val)
+        # create duplicate list in which the poroposed value is inserted --> required for testing on tripple values
+        row_list_value = row_list
+        row_list_value[col_nr] = proposed_val
+        row_value = ""
+        for val in row_list_value:
+            row_value += str(val)
+        # print("row " + str(row_nr) + ": " + row_value)
+
+        # convert col list to a string
+        col_list = column(board, col_nr)
+        col = ""
+        for val in col_list:
+            col += str(val)
+        # create duplicate list in which the poroposed value is inserted --> required for testing on tripple values
+        col_list_value = col_list
+        col_list_value[row_nr] = proposed_val
+        col_value = ""
+        for val in col_list_value:
+            col_value += str(val)
+        # print("col " + str(col_nr) + ": " + col_value)
+
+        if (
+            not row.count(proposed_val) >= board_size
+            and not col.count(proposed_val) >= board_size
+            and not "000" in row_value
+            and not "111" in row_value
+            and not "000" in col_value
+            and not "111" in col_value
+            and check_identical(board, board_size, (row_nr, col_nr), proposed_val, True)
+        ):
+            board[row_nr][col_nr] = proposed_val
+
+            if brute_force(board, board_size):
+                return True
+            else:
+                board[row_nr][col_nr] = "."
+    return False
 
 
 # ======================================================================================================
@@ -426,17 +344,29 @@ while len(find_empty(board)) != 0:
     for empty_pos in find_empty(board):
         # print(empty_pos)
         for i in range(0, 2):
-            if valid(board, board_size, empty_pos, str(i), False) == True:
-                board[empty_pos[0]][empty_pos[1]] = str(i)
-                break
-        print_board(board)
-        print()
-    # # COMPLETE ROW/ COLUMN
-    # for solution in complete(board, board_size):
-    #     board[solution[0][0]][solution[0][1]] = solution[1]
+            if certain(board, board_size, empty_pos, str(i)):
+                position = certain(board, board_size, empty_pos, str(i))
+                board[position[0]][position[1]] = str(i)
+
+            # if valid(board, board_size, empty_pos, str(i)):
+            #     board[empty_pos[0]][empty_pos[1]] = str(i)
+            #     break
+        # print_board(board)
+        # print()
     # BREAK LOOP IF NO MORE VALID VALUES (NO BOARD UPDATES) --------------------------------------------
     if total_empty == len(find_empty(board)):
         break
+
+print("before brute forcing")
+print_board(board)
+
+# BRUTE FORCE A SOLUTION -------------------------------------------------------------------------------
+# if still empty values AND no more certain values
+if len(find_empty(board)) != 0:
+    # print("brute forcing")
+    if brute_force(board, board_size):
+        print("\nSolution:")
+        print_board(board)
 
 
 # CHECK FOR ERRORS IN FINAL BOARD
@@ -448,7 +378,3 @@ while len(find_empty(board)) != 0:
 #     print("unsolvable:")
 #     for error in errors:
 #         print(error)
-
-
-print("\nnew board")
-print_board(board)
