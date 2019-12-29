@@ -30,6 +30,20 @@ def InputCheck(row):
             errors.append("[ERROR] Row can only contain {} instances of '{}': found {} instances of '{}'".format(int(board_size / 2), j, count, j))
             break
     return errors
+# Print Board ----------------------------------------------------------------------------------------------
+
+# Transpose board to get columns ---------------------------------------------------------------------------
+def TransposeBoard(board):
+    columns = []
+    for column_nr in range(len(board)):
+        line = ''
+        for row in board:
+            line += row[column_nr]
+        columns.append(line)
+    return columns
+
+# Find empty -----------------------------------------------------------------------------------------------
+
 # ==========================================================================================================
 
 # INPUT ====================================================================================================
@@ -42,7 +56,8 @@ print(
     "\nExample: 1101...001\n"
 )
 
-# Board size -----------------------------------------------------------------------------------------------
+# Board size -----------------------------------------------------------
+# ------------------------------------
 board_size = input("Size of the board (needs to be an even number): ")
 while not board_size.isdigit() or int(board_size) % 2 != 0:
     if board_size.isdigit():
@@ -54,6 +69,7 @@ while not board_size.isdigit() or int(board_size) % 2 != 0:
 board_size = int(board_size)
 
 # Input rows ----------------------------------------------------------------------------------------------
+board = []
 for i in range(1, board_size + 1):
     row = input("Row {}: ".format(i))
     # Catching input errors -------------------------------------------------------------------------------
@@ -62,61 +78,17 @@ for i in range(1, board_size + 1):
             print(error)
         row = input("Row {}: ".format(i))
     # SAVE INPUT INTO BOARD -------------------------------------------------------------------------------
-    board = []
     board.append(row)
 # =========================================================================================================
-"""
-board_size = 12
-board = [
-    [".", ".", ".", "1", ".", "0", ".", ".", ".", ".", ".", "."],
-    [".", "1", ".", ".", ".", "1", ".", ".", ".", ".", "1", "."],
-    [".", ".", ".", ".", ".", "1", ".", "1", ".", ".", ".", "."],
-    ["0", ".", ".", ".", ".", ".", ".", ".", ".", ".", "1", "1"],
-    [".", ".", ".", ".", "1", ".", ".", ".", "0", ".", ".", "1"],
-    [".", ".", ".", "1", ".", ".", ".", ".", "0", ".", "0", "."],
-    [".", "1", ".", ".", ".", ".", "0", ".", ".", ".", "0", "."],
-    ["0", ".", ".", "0", "0", ".", ".", ".", ".", ".", ".", "."],
-    [".", "0", ".", "0", ".", ".", ".", ".", ".", ".", ".", "0"],
-    [".", ".", ".", ".", ".", ".", ".", ".", "0", "0", ".", "0"],
-    [".", ".", ".", ".", ".", "0", ".", "1", ".", ".", ".", "."],
-    ["1", ".", ".", "1", "1", ".", ".", ".", "0", ".", "0", "0"],
-]
 
+print(board)
+columns = TransposeBoard(board)
+print(columns)
+
+"""
 # FUNCTIONS ============================================================================================
 
-# Checking inputted rows for errors --------------------------------------------------------------------
-def InputCheck(row):
-    errors = []
-    # line lenght --------------------------------------------------------------------------------------
-    if len(line) != board_size:
-        if len(line) < board_size:
-            errors.append("[ERROR] Line is to short, a line must contain {} characters".format(board_size))
-        else:
-            errors.append("[ERROR] Line is to long, a line must contain {} characters".format(board_size))
-    # To many of the same number next to each other ----------------------------------------------------
-    if "000" in line or "111" in line:
-        errors.append("[ERROR] To many instances of the same character (0 or 1) next to eachoter, only 2 instances of 0 or 1 are allowed next to eachoter.")
-    # Unwanted characters ------------------------------------ -----------------------------------------
-    for j in line:
-        if j not in ["0", "1", "."]:
-            errors.append('[ERROR] Unallowed charaters found, only "0", "1" and "." are allowed')
-            break
-    # CHECK IF LINE CONTAINS TO MANY INSTANCES OF A CERTAIN NUMBER ---------------------------------
-    for j in range(0, 2):
-        count = str(line).count("{}".format(j))
-        if count > (board_size / 2):
-            errors.append("[ERROR] Line can only contain {} instances of '{}': found {} instances of '{}'".format(int(board_size / 2), j, count, j))
-            break
-    return errors
-
-
-# BOARD PRINTING ---------------------------------------------------------------------------------------
-def print_board(board):
-    for i in board:
-        print(i)
-
-
-# FIND EMPTY VALUES ------------------------------------------------------------------------------------
+# Find empty -----------------------------------------------------------------------------------------------
 def find_empty(board):
     empty_values = []
     for i in range(len(board)):  # row
@@ -124,7 +96,6 @@ def find_empty(board):
             if board[i][j] == ".":
                 empty_values.append((i, j))
     return empty_values
-
 
 # CREATE LIST OF ALL VALUES OF A COLUMN ----------------------------------------------------------------
 def column(board, col):
