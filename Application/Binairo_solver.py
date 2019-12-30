@@ -44,6 +44,44 @@ def TransposeBoard(board):
 
 # Find empty -----------------------------------------------------------------------------------------------
 
+def CountEmpty(board):
+    empty = 0
+    for line in range(len(board)):
+        for char in board[line]:
+            if char == ".":
+                empty += 1
+    return empty
+
+# Find certain values --------------------------------------------------------------------------------------
+def Certain(board):
+    for line in range(len(board)):
+        for i in range(0, 2):
+            if i == 0:
+                if ".00" in board[line]:   return (1, (line, board[line].index(".00")))
+                elif "0.0" in board[line]: return (1, (line, board[line].index("0.0") + 1))
+                elif "00." in board[line]: return (1, (line, board[line].index("00.") + 2))
+                if (board[line].count(str(i)) == len(board)/2) and "." in board[line]: return (1, (line, board[line].index(".")))
+            elif i == 1:
+                if ".11" in board[line]:   return (0, (line, board[line].index(".11")))
+                elif "1.1" in board[line]: return (0, (line, board[line].index("1.1") + 1))
+                elif "11." in board[line]: return (0, (line, board[line].index("11.") + 2))
+                elif board[line].count(str(i)) == len(board)/2 and "." in board[line]: return (0, (line, board[line].index(".")))
+
+# Update board ---------------------------------------------------------------------------------------------
+def UpdateBoard(board, update):
+    # Define variables
+    line = []
+    new_line = ""
+    # create a list of all characters in the line that needs updating
+    for char in board[update[1][0]]:
+        line.append(char)
+    # Update line with the found value at the correct position
+    line[update[1][1]] = update[0]
+    # convert line back to string
+    for char in line:
+        new_line += str(char)
+    return new_line
+
 # ==========================================================================================================
 
 # INPUT ====================================================================================================
@@ -56,8 +94,7 @@ print(
     "\nExample: 1101...001\n"
 )
 
-# Board size -----------------------------------------------------------
-# ------------------------------------
+# Board size -----------------------------------------------------------------------------------------------
 board_size = input("Size of the board (needs to be an even number): ")
 while not board_size.isdigit() or int(board_size) % 2 != 0:
     if board_size.isdigit():
@@ -84,6 +121,21 @@ for i in range(1, board_size + 1):
 print(board)
 columns = TransposeBoard(board)
 print(columns)
+
+while CountEmpty(board) != 0:
+    # Rows
+    row_value = Certain(board)
+    if row_value:
+        board[row_value[1][0]] = UpdateBoard(board, row_value)
+    # Columns
+    col_value = Certain(TransposeBoard(board))   
+    if col_value:
+        col_value = (col_value[0], (col_value[1][1], col_value[1][0]))
+        board[col_value[1][0]] = UpdateBoard(board, col_value)
+    # End loop
+    if not row_value and not col_value:
+        break
+print(board)
 
 """
 # FUNCTIONS ============================================================================================
