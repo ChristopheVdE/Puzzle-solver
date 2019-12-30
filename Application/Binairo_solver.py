@@ -59,7 +59,7 @@ def Certain(board):
                 if ".00" in board[line]:   return (1, (line, board[line].index(".00")))
                 elif "0.0" in board[line]: return (1, (line, board[line].index("0.0") + 1))
                 elif "00." in board[line]: return (1, (line, board[line].index("00.") + 2))
-                if (board[line].count(str(i)) == len(board)/2) and "." in board[line]: return (1, (line, board[line].index(".")))
+                elif (board[line].count(str(i)) == len(board)/2) and "." in board[line]: return (1, (line, board[line].index(".")))
             elif i == 1:
                 if ".11" in board[line]:   return (0, (line, board[line].index(".11")))
                 elif "1.1" in board[line]: return (0, (line, board[line].index("1.1") + 1))
