@@ -43,7 +43,6 @@ def TransposeBoard(board):
     return columns
 
 # Find empty -----------------------------------------------------------------------------------------------
-
 def CountEmpty(board):
     empty = 0
     for line in range(len(board)):
@@ -86,10 +85,48 @@ def UpdateBoard(board, update):
 def Identical(board):
     for i in range(len(board)):
         for row in board:
-            if board[i] == row and board.index(row) != i:
+            if board[i] == row and board.index(row) != i and not "." in row:
                 return False
             else:
                 return True
+
+# Brute force ----------------------------------------------------------------------------------------------
+def BruteForce(board):
+    # Look for empty spots ---------------------------------------------------------------------------------
+    if CountEmpty(board) == 0:
+        return board
+    else:
+        for row in range(len(board)):
+            if "." in board[row]:
+                empty = (row, board[row].index("."))
+                print(empty)
+                original_row = board[row]
+                break
+    # Try solution -----------------------------------------------------------------------------------------
+    for value in range(0, 2):
+        # Create new rows to test if the suggested value is valid
+        new_row = UpdateBoard(board, (value, empty))
+        print(new_row)
+        new_col = UpdateBoard(TransposeBoard(board), (value, (empty[1], empty[0])))
+        # print(new_col)
+        # Test if suggested value is valid
+        if not "000" in new_row and not "111" in new_row and not "000" in new_col and not "111" in new_col:
+            if not new_row.count(str(value)) > len(board) / 2 and not new_col.count(str(value)) > len(board) / 2:
+                # Create test board to test for identical rows/ columns
+                test_board = board
+                test_board[empty[0]] = new_row
+                # Test for identical rows/ columns
+                if Identical(test_board):
+                    board[empty[0]] = new_row
+                    print(board)
+                    print(TransposeBoard(board))
+                    # try a value in the next empty position if a valid value was inserted, return true if value is possible
+                    if BruteForce(board):
+                        return True
+                    # reset value if next empty has no valid number
+                    board[row] = original_row
+    # required for recursive, says that next empty has no valid number
+    return False
 
 # ==========================================================================================================
 
@@ -149,124 +186,14 @@ while CountEmpty(board) != 0:
 # Check for duplicate rows/ columns -----------------------------------------------------------------------
 if Identical(board) and Identical(TransposeBoard(board)):
     print(board)
+    print()
+    # Brute force -----------------------------------------------------------------------------------------
+    if CountEmpty(board) != 0:
+        if BruteForce(board):
+            print("Solution:")
+        else:
+            print("Impossible")
 else:
     print("[Error] Duplicate rows/ columns found")
-
-# 
+print(board)
 # ========================================================================================================
-"""
-
-# CHECK BOARD FOR ERRORS -------------------------------------------------------------------------------
-def final_board_check(board, board_size):
-    errors = []
-    columns = []
-    for i in range(0, board_size):
-        # [PREPARATION] convert row list to string for easy search
-        row = ""
-        for j in board[i]:
-            row += j
-        # [PREPARATION] convert col list to string for easy search
-        col = ""
-        for j in column(board, i):
-            col += j
-        # [ERROR CHECK]check row and column for triple values
-        if ("000" or "111") in (row or col):
-            errors.append(
-                "[ERROR] To many instances of the same character (0 or 1) next to eachoter."
-            )
-        # [ERROR CHECK] if to many 1
-        if (row.count("0") or row.count("1")) > board_size / 2:
-            errors.append(
-                "[ERROR] To many instances of the same character (0 or 1) found in the same row."
-            )
-        # [ERROR CHECK] if to many 0
-        if (col.count("0") or col.count("1")) > board_size / 2:
-            errors.append(
-                "[ERROR] To many instances of the same character (0 or 1) found in the same column."
-            )
-        # [ERROR CHECK] if 2 row are same
-        for row in board:
-            if row == board[i] and board.index(row) != i:
-                errors.append("[ERROR] Identical rows found")
-                break
-        # [ERROR CHECK] if 2 col are same
-        columns.append(column(board, i))
-        for col in columns:
-            if col == columns[i] and columns.index(col) != i:
-                errors.append("[ERROR] Identical columns found")
-                break
-    return errors
-
-
-# BRUTE FORCE (RECURSIVE) ------------------------------------------------------------------------------
-# def brute_force(board):
-#     # FIND EMPTY POSITIONS ON BOARD --------------------------------------------------------------------
-#     all_empty = find_empty(board)
-#     if not all_empty:
-#         # solution found
-#         return True
-#     else:
-#         empty_pos = all_empty[0]
-
-#     # CHECK POSSIBLE VALUES FOR EMPTY POSITION & UPDATE BOARD IF FOUND ---------------------------------
-#     for value in range(0, 2):
-#         # search row, column and box
-#         if (
-#             # triple prevention
-#             # detecting if added value doesnt exceed maximum ammount of instances of this value in teh row/ column
-#             # identical row/ column prevention (only if a row is complete)
-#         ):
-#             # update board if value is valid
-#             board[empty_pos[0]][empty_pos[1]] = value
-#             # try a value in the next empty position if a valid value was inserted, return true if value is possible
-#             if brute_force(board):
-#                 return True
-#             # reset value if next empty has no valid number
-#             board[empty_pos[0]][empty_pos[1]] = "."
-#     # required for recursive, says that next empty has no valid number
-#     return False
-
-
-# ======================================================================================================
-
-# SOLVE ================================================================================================
-# PRINT ORIGINAL BOARD ---------------------------------------------------------------------------------
-print("Original:")
-print_board(board)
-print()
-
-# CHECK FOR VALID VALUES & UPDATE BOARD IF FOUND -------------------------------------------------------
-while len(find_empty(board)) != 0:
-    total_empty = len(find_empty(board))
-    # SEARCH FOR CERTAIN VALUES AND UPDATE BOARD IF FOUND ----------------------------------------------
-    # TRIPLE VALUES
-    for empty_pos in find_empty(board):
-        # print(empty_pos)
-        for i in range(0, 2):
-            if valid(board, board_size, empty_pos, str(i)) == True:
-                board[empty_pos[0]][empty_pos[1]] = str(i)
-                break
-        print_board(board)
-        print()
-    # # COMPLETE ROW/ COLUMN
-    # for solution in complete(board, board_size):
-    #     board[solution[0][0]][solution[0][1]] = solution[1]
-    # BREAK LOOP IF NO MORE VALID VALUES (NO BOARD UPDATES) --------------------------------------------
-    if total_empty == len(find_empty(board)):
-        break
-
-
-# CHECK FOR ERRORS IN FINAL BOARD
-# errors = check(board, board_size)
-# if len(errors) == 0:
-#     print("new board")
-#     print_board(board)
-# else:
-#     print("unsolvable:")
-#     for error in errors:
-#         print(error)
-
-
-print("\nnew board")
-print_board(board)
-"""
