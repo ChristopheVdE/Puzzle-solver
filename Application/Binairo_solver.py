@@ -85,10 +85,9 @@ def UpdateBoard(board, update):
 def Identical(board):
     for i in range(len(board)):
         for row in board:
-            if board[i] == row and board.index(row) != i and not "." in row:
+            if board[i] == row and board.index(row) != i and not '.' in row:
                 return False
-            else:
-                return True
+    return True
 
 # Brute force ----------------------------------------------------------------------------------------------
 def BruteForce(board):
@@ -99,14 +98,12 @@ def BruteForce(board):
         for row in range(len(board)):
             if "." in board[row]:
                 empty = (row, board[row].index("."))
-                print(empty)
                 original_row = board[row]
                 break
     # Try solution -----------------------------------------------------------------------------------------
     for value in range(0, 2):
         # Create new rows to test if the suggested value is valid
         new_row = UpdateBoard(board, (value, empty))
-        print(new_row)
         new_col = UpdateBoard(TransposeBoard(board), (value, (empty[1], empty[0])))
         # print(new_col)
         # Test if suggested value is valid
@@ -118,8 +115,6 @@ def BruteForce(board):
                 # Test for identical rows/ columns
                 if Identical(test_board):
                     board[empty[0]] = new_row
-                    print(board)
-                    print(TransposeBoard(board))
                     # try a value in the next empty position if a valid value was inserted, return true if value is possible
                     if BruteForce(board):
                         return True
@@ -154,12 +149,12 @@ board_size = int(board_size)
 # Input rows ----------------------------------------------------------------------------------------------
 board = []
 for i in range(1, board_size + 1):
-    row = input("Row {}: ".format(i))
+    row = input("Row {}:\t".format(i))
     # Catching input errors -------------------------------------------------------------------------------
     while InputCheck(row):
         for error in InputCheck(row):
             print(error)
-        row = input("Row {}: ".format(i))
+        row = input("Row {}:\t".format(i))
     # SAVE INPUT INTO BOARD -------------------------------------------------------------------------------
     board.append(row)
 # =========================================================================================================
@@ -185,15 +180,17 @@ while CountEmpty(board) != 0:
 
 # Check for duplicate rows/ columns -----------------------------------------------------------------------
 if Identical(board) and Identical(TransposeBoard(board)):
+    print("Certain values:")
     print(board)
-    print()
     # Brute force -----------------------------------------------------------------------------------------
     if CountEmpty(board) != 0:
+        print("\nBrute forcing")
         if BruteForce(board):
-            print("Solution:")
+            print("\nSolution:")
+            print(board)
         else:
-            print("Impossible")
+            print("\nImpossible")
 else:
     print("[Error] Duplicate rows/ columns found")
-print(board)
+
 # ========================================================================================================
