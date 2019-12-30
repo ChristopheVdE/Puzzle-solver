@@ -82,6 +82,15 @@ def UpdateBoard(board, update):
         new_line += str(char)
     return new_line
 
+# Check for duplicate rows/ columns ------------------------------------------------------------------------
+def Identical(board):
+    for i in range(len(board)):
+        for row in board:
+            if board[i] == row and board.index(row) != i:
+                return False
+            else:
+                return True
+
 # ==========================================================================================================
 
 # INPUT ====================================================================================================
@@ -118,10 +127,11 @@ for i in range(1, board_size + 1):
     board.append(row)
 # =========================================================================================================
 
+# SOLVER ==================================================================================================
+# Print original board ------------------------------------------------------------------------------------
 print(board)
-columns = TransposeBoard(board)
-print(columns)
 
+# Find certain values & update board with them ------------------------------------------------------------
 while CountEmpty(board) != 0:
     # Rows
     row_value = Certain(board)
@@ -135,163 +145,16 @@ while CountEmpty(board) != 0:
     # End loop
     if not row_value and not col_value:
         break
-print(board)
 
+# Check for duplicate rows/ columns -----------------------------------------------------------------------
+if Identical(board) and Identical(TransposeBoard(board)):
+    print(board)
+else:
+    print("[Error] Duplicate rows/ columns found")
+
+# 
+# ========================================================================================================
 """
-# FUNCTIONS ============================================================================================
-
-# Find empty -----------------------------------------------------------------------------------------------
-def find_empty(board):
-    empty_values = []
-    for i in range(len(board)):  # row
-        for j in range(len(board[i])):  # column
-            if board[i][j] == ".":
-                empty_values.append((i, j))
-    return empty_values
-
-# CREATE LIST OF ALL VALUES OF A COLUMN ----------------------------------------------------------------
-def column(board, col):
-    column_values = []
-    for row in board:
-        column_values.append(row[col])
-    return column_values
-
-
-# VALIDATION OF POSSIBLE VALUES------------------------------------------------------------------------------
-def valid(board, board_size, empty_pos, proposed_val):
-    # AVOID TRIPLE (FRONT) - row: .00 --> 100 or .11 --> 011
-    if empty_pos[1] >= 0 and empty_pos[1] < (board_size - 2):
-        if (
-            board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
-            and board[empty_pos[0]][empty_pos[1] + 1] != "."
-        ) and (
-            board[empty_pos[0]][empty_pos[1] + 2] != proposed_val
-            and board[empty_pos[0]][empty_pos[1] + 2] != "."
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # AVOID TRIPLE (FRONT) - column: .00 --> 100 or .11 --> 011
-    if empty_pos[0] >= 0 and empty_pos[0] < (board_size - 2):
-        if (
-            board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
-            and board[empty_pos[0] + 1][empty_pos[1]] != "."
-        ) and (
-            board[empty_pos[0] + 2][empty_pos[1]] != proposed_val
-            and board[empty_pos[0] + 2][empty_pos[1]] != "."
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-                return True
-    # AVOID TRIPLE (BACK) - row: 00. --> 001 or 11. --> 110
-    if empty_pos[1] > 1 and empty_pos[1] <= (board_size - 1):
-        if (
-            board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
-            and board[empty_pos[0]][empty_pos[1] - 1] != "."
-        ) and (
-            board[empty_pos[0]][empty_pos[1] - 2] != proposed_val
-            and board[empty_pos[0]][empty_pos[1] - 2] != "."
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # AVOID TRIPLE (BACK) - col: 00. --> 001 or 11. --> 110
-    if empty_pos[0] > 1 and empty_pos[0] <= (board_size - 1):
-        if (
-            board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
-            and board[empty_pos[0] - 1][empty_pos[1]] != "."
-        ) and (
-            board[empty_pos[0] - 2][empty_pos[1]] != proposed_val
-            and board[empty_pos[0] - 2][empty_pos[1]] != "."
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # AVOID TRIPLE (MIDDLE) - row: 0.0 --> 010 or 1.1 --> 101
-    if empty_pos[1] > 0 and empty_pos[1] < (board_size - 1):
-        if (
-            board[empty_pos[0]][empty_pos[1] - 1] != proposed_val
-            and board[empty_pos[0]][empty_pos[1] - 1] != "."
-        ) and (
-            board[empty_pos[0]][empty_pos[1] + 1] != proposed_val
-            and board[empty_pos[0]][empty_pos[1] + 1] != "."
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # AVOID TRIPLE (MIDDLE) - column: 0.0 --> 010 or 1.1 --> 101
-    if empty_pos[0] > 0 and empty_pos[0] < (board_size - 1):
-        if (
-            board[empty_pos[0] - 1][empty_pos[1]] != proposed_val
-            and board[empty_pos[0] - 1][empty_pos[1]] != "."
-        ) and (
-            board[empty_pos[0] + 1][empty_pos[1]] != proposed_val
-            and board[empty_pos[0] + 1][empty_pos[1]] != "."
-        ):
-            if check_max_instances(board, board_size, empty_pos, proposed_val):
-                if check_identical(board, board_size, empty_pos, proposed_val):
-                    return True
-    # FILL EMPTY POSITIONS IN ROW/ COLUMN WITH "1" IF ALL ALL "0" ARE FOUND IN THAT ROW/ COLUMN
-    if (
-        board[empty_pos[0]].count("0") == board_size / 2
-        or column(board, empty_pos[1]).count("0") == board_size / 2
-        and proposed_val != "0"
-    ):
-        if check_max_instances(board, board_size, empty_pos, proposed_val):
-            if check_identical(board, board_size, empty_pos, proposed_val):
-                return True
-    # FILL EMPTY POSITIONS IN ROW/ COLUMN WITH "0" IF ALL ALL "1"" ARE FOUND IN THAT ROW/ COLUMN
-    if (
-        board[empty_pos[0]].count("0") == board_size / 2
-        or column(board, empty_pos[1]).count("0") == board_size / 2
-        and proposed_val != "1"
-    ):
-        if check_max_instances(board, board_size, empty_pos, proposed_val):
-            if check_identical(board, board_size, empty_pos, proposed_val):
-                return True
-    return False
-
-
-# VALIDATION OF POSSIBLE VALUES: MAX INSTANCES OF 1 AND 2 PER ROW CHECK--------------------------------------
-def check_max_instances(board, board_size, empty_pos, proposed_val):
-    # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN ROW
-    if board[empty_pos[0]].count(proposed_val) + 1 > (board_size / 2):
-        return False
-    # AVOID MORE INSTANCES OF SAME VALUE THAN ALLOW IN COLUMN
-    if column(board, empty_pos[1]).count(proposed_val) + 1 > (board_size / 2):
-        return False
-    return True
-
-
-# VALIDATION OF POSSIBLE VALUES: CHEK IF PROPOSED VALUE CREATES IDENTICAL ROW/ COLUMNS -----------------------
-def check_identical(board, board_size, empty_pos, propposed_val):
-    # insert the proposed value into the (test)-board to test if this creates duplicate rows/ columns
-    board[empty_pos[0]][empty_pos[1]] == propposed_val
-    # create list of columns
-    columns = []
-    for i in range(0, board_size):
-        columns.append(column(board, i))
-    # check for identical rows and columns
-    for i in range(0, board_size):
-        # check if proposed value creates a identical row
-        if (
-            board[empty_pos[0]] == board[i]
-            and empty_pos[0] != i
-            # no empty values allowed
-            and (not "." in board[empty_pos[0]] and not "." in board[i])
-        ):
-            return False
-        # check if poposed value creates an identical column
-        if (
-            columns[empty_pos[1]] == columns[i]
-            and empty_pos[1] != i
-            # no empty values allowed
-            and (not "." in columns[empty_pos[1]] and not "." in columns[i])
-        ):
-            return False
-    return True
-
 
 # CHECK BOARD FOR ERRORS -------------------------------------------------------------------------------
 def final_board_check(board, board_size):
