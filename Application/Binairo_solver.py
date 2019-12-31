@@ -31,6 +31,28 @@ def InputCheck(row):
             break
     return errors
 # Print Board ----------------------------------------------------------------------------------------------
+def PrintBoard(board):
+    row_count = 0
+    for row in range(len(board)):
+        line = []
+        char_count = 0
+        # Print board middle separator (horizontal)
+        if row_count == len(board) / 2:
+            print("{0}|{0}".format("-" * int(len(board) + 1)))
+        # loop through row & print values
+        for char in board[row]:
+            #Add extra space in front of each line
+            if char_count == 0:
+                print(' ', end="")
+            # Print board middle separator (vertical)
+            if char_count == len(board) / 2:
+                print("| ", end="")
+            # Print values
+            print("{} ".format(char), end="")
+            char_count += 1
+        # Print end of line
+        print()
+        row_count += 1
 
 # Transpose board to get columns ---------------------------------------------------------------------------
 def TransposeBoard(board):
@@ -148,6 +170,7 @@ board_size = int(board_size)
 
 # Input rows ----------------------------------------------------------------------------------------------
 board = []
+Original = []
 for i in range(1, board_size + 1):
     row = input("Row {}:\t".format(i))
     # Catching input errors -------------------------------------------------------------------------------
@@ -156,12 +179,14 @@ for i in range(1, board_size + 1):
             print(error)
         row = input("Row {}:\t".format(i))
     # SAVE INPUT INTO BOARD -------------------------------------------------------------------------------
+    Original.append(row)
     board.append(row)
 # =========================================================================================================
 
 # SOLVER ==================================================================================================
 # Print original board ------------------------------------------------------------------------------------
-print(board)
+print("\nOriginal board:")
+PrintBoard(board)
 
 # Find certain values & update board with them ------------------------------------------------------------
 while CountEmpty(board) != 0:
@@ -174,23 +199,28 @@ while CountEmpty(board) != 0:
     if col_value:
         col_value = (col_value[0], (col_value[1][1], col_value[1][0]))
         board[col_value[1][0]] = UpdateBoard(board, col_value)
-    # End loop
+    # End loop if no cetain values where found
     if not row_value and not col_value:
         break
 
 # Check for duplicate rows/ columns -----------------------------------------------------------------------
 if Identical(board) and Identical(TransposeBoard(board)):
-    print("Certain values:")
-    print(board)
     # Brute force -----------------------------------------------------------------------------------------
     if CountEmpty(board) != 0:
-        print("\nBrute forcing")
+        # Display extra output if certain values where found
+        if Original != board:
+            print("\nPartial solution with all values that could instantly be found:")
+            PrintBoard(board)
+            print()
+        else:
+            print("\nNo certain values found")
+        # Brute force a solution
+        print("Using brute-forcing algorithm to find full solution")
         if BruteForce(board):
             print("\nSolution:")
-            print(board)
+            PrintBoard(board)
         else:
             print("\nImpossible")
 else:
     print("[Error] Duplicate rows/ columns found")
-
 # ========================================================================================================
