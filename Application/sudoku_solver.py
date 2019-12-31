@@ -1,4 +1,9 @@
-# SUDOKU SOLVER
+############################################################################################################
+# NAME: SUDOKU SOLVER
+# AUTHOR: Christophe Van den Eynde
+# FUNCTION: solves Sudoku-type puzzles
+# USAGE python sudoku_solver.py
+############################################################################################################
 
 # INPUT THE BOARD ======================================================================================
 print(
@@ -35,31 +40,6 @@ for i in range(1, 10):
     board.append(row)
 # ======================================================================================================
 
-# board = [
-#     [7, 8, 8, 4, 0, 0, 1, 2, 0],
-#     [6, 0, 0, 0, 7, 5, 0, 0, 9],
-#     [0, 0, 0, 6, 0, 1, 0, 7, 8],
-#     [0, 0, 7, 0, 4, 0, 2, 6, 0],
-#     [0, 0, 1, 0, 5, 0, 9, 3, 0],
-#     [9, 0, 4, 0, 6, 0, 0, 0, 5],
-#     [0, 7, 0, 3, 0, 0, 0, 1, 2],
-#     [1, 2, 0, 0, 0, 7, 4, 0, 0],
-#     [0, 4, 9, 2, 0, 6, 0, 0, 7],
-# ]
-
-# Hardest sudoku ever
-# board = [
-#     [8, 0, 0, 0, 0, 0, 0, 0, 0],
-#     [0, 0, 3, 6, 0, 0, 0, 0, 0],
-#     [0, 7, 0, 0, 9, 0, 2, 0, 0],
-#     [0, 5, 0, 0, 0, 7, 0, 0, 0],
-#     [0, 0, 0, 0, 4, 5, 7, 0, 0],
-#     [0, 0, 0, 1, 0, 0, 0, 3, 0],
-#     [0, 0, 1, 0, 0, 0, 0, 6, 8],
-#     [0, 0, 8, 5, 0, 0, 0, 1, 0],
-#     [0, 9, 0, 0, 0, 0, 4, 0, 0],
-# ]
-
 # FUNCTIONS ============================================================================================
 # PRINT SUDOKU BOARD -----------------------------------------------------------------------------------
 def print_sudoku(board):
@@ -75,7 +55,6 @@ def print_sudoku(board):
             if j == (len(board) - 1):
                 print()
 
-
 # FIND EMPTY VALUES ------------------------------------------------------------------------------------
 def find_empty(board):
     empty_values = []
@@ -85,14 +64,12 @@ def find_empty(board):
                 empty_values.append((i, j))
     return empty_values
 
-
 # FIND VALUES FROM COlUMN ------------------------------------------------------------------------------
 def column(board, col):
     column_values = []
     for row in board:
         column_values.append(row[col])
     return column_values
-
 
 # FIND VALUES FROM BOX ---------------------------------------------------------------------------------
 def box(board, empty_pos):
@@ -105,7 +82,6 @@ def box(board, empty_pos):
         for k in range(box_y * 3, box_y * 3 + 3):
             box_values.append(board[j][k])
     return box_values
-
 
 # TEST FOR VALID VALUES ------------------------------------------------------------------------------
 def valid(board, empty_pos):
@@ -120,7 +96,6 @@ def valid(board, empty_pos):
         ):
             test.append((value, True))
     return test
-
 
 # BRUTE FORCE (RECURSIVE) ------------------------------------------------------------------------------
 def brute_force(board):
@@ -149,8 +124,6 @@ def brute_force(board):
             board[empty_pos[0]][empty_pos[1]] = 0
     # required for recursive, says that next empty has no valid number
     return False
-
-
 # ======================================================================================================
 
 
