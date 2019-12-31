@@ -4,6 +4,6 @@ Requires:
   - python
 
 Contains:
-  - script to solver sudoku's
+  - script to solve sudoku's
   - scritp to solve binairo's
  
