@@ -134,6 +134,11 @@ def BruteForce(board):
     # required for recursive, says that next empty has no valid number
     return False
 
+# Calculate the current percentage of empty values in the board --------------------------------------------
+def Percentage(board):
+    Percentage = int(CountEmpty(board) / (len(board) * len(board)) * 100)
+    return Percentage
+
 # ==========================================================================================================
 
 # INPUT ====================================================================================================
@@ -149,7 +154,7 @@ while not board_size.isdigit() or int(board_size) % 2 != 0:
 board_size = int(board_size)
 # ===========================================================================================================
 
-# CREATE RANDOM BOARD =======================================================================================
+# CREATE RANDOM SOLVED BOARD ================================================================================
 # Create empty placeholder board ----------------------------------------------------------------------------
 board = []
 for row in range(board_size):
@@ -158,6 +163,27 @@ for row in range(board_size):
 # Create random solved board --------------------------------------------------------------------------------
 BruteForce(board)
 PrintBoard(board)
+# ===========================================================================================================
 
-# Remove values from board ----------------------------------------------------------------------------------
+# REMOVE VALUES FROM BOARD ==================================================================================
+# choose random percentage of empty positions ---------------------------------------------------------------
+ToRemove = random.randrange(45, 65)
+
+# re-add empty values into the board ------------------------------------------------------------------------
+while not Percentage(board) >= ToRemove:
+    # choose random row & col
+    row_nr = random.randrange(len(board))
+    col_nr = random.randrange(len(board))
+    # position to change into "."
+    value = (".", (row_nr, col_nr))
+    # Update board
+    if not board[row_nr][col_nr] == ".":
+        board[row_nr] = UpdateBoard(board, value)
+
+# Print the partially re-emptied board ----------------------------------------------------------------------
+PrintBoard(board)
+
+# Solve it again and see if new solution == old solution ----------------------------------------------------
+BruteForce(board)
+PrintBoard(board)
 # ===========================================================================================================
