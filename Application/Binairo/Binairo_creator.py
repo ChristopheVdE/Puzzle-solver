@@ -11,21 +11,21 @@ import random
 
 # FUNCTIONS ================================================================================================
 # Print Board ----------------------------------------------------------------------------------------------
-def PrintBoard(board):
+def PrintBoard(BoardState):
     row_count = 0
-    for row in range(len(board)):
+    for row in range(len(BoardState)):
         line = []
         char_count = 0
         # Print board middle separator (horizontal)
-        if row_count == len(board) / 2:
-            print("{0}|{0}".format("-" * int(len(board) + 1)))
+        if row_count == len(BoardState) / 2:
+            print("{0}|{0}".format("-" * int(len(BoardState) + 1)))
         # loop through row & print values
-        for char in board[row]:
+        for char in BoardState[row]:
             #Add extra space in front of each line
             if char_count == 0:
                 print(' ', end="")
             # Print board middle separator (vertical)
-            if char_count == len(board) / 2:
+            if char_count == len(BoardState) / 2:
                 print("| ", end="")
             # Print values
             print("{} ".format(char), end="")
@@ -37,54 +37,54 @@ def PrintBoard(board):
     print()
 
 # Transpose board to get columns ---------------------------------------------------------------------------
-def TransposeBoard(board):
+def TransposeBoard(BoardState):
     columns = []
-    for column_nr in range(len(board)):
+    for column_nr in range(len(BoardState)):
         line = ''
-        for row in board:
+        for row in BoardState:
             line += row[column_nr]
         columns.append(line)
     return columns
 
 # Find empty -----------------------------------------------------------------------------------------------
-def CountEmpty(board):
+def CountEmpty(BoardState):
     empty = 0
-    for line in range(len(board)):
-        for char in board[line]:
+    for line in range(len(BoardState)):
+        for char in BoardState[line]:
             if char == ".":
                 empty += 1
     return empty
 
 # Find certain values --------------------------------------------------------------------------------------
-def Certain(board):
-    for line in range(len(board)):
+def Certain(BoardState):
+    for line in range(len(BoardState)):
         for i in range(0, 2):
             if i == 0:
-                if ".00" in board[line]:
-                    return (1, (line, board[line].index(".00")))
-                elif "0.0" in board[line]:
-                    return (1, (line, board[line].index("0.0") + 1))
-                elif "00." in board[line]:
-                    return (1, (line, board[line].index("00.") + 2))
-                elif (board[line].count(str(i)) == len(board) / 2) and "." in board[line]:
-                    return (1, (line, board[line].index(".")))
+                if ".00" in BoardState[line]:
+                    return (1, (line, BoardState[line].index(".00")))
+                elif "0.0" in BoardState[line]:
+                    return (1, (line, BoardState[line].index("0.0") + 1))
+                elif "00." in BoardState[line]:
+                    return (1, (line, BoardState[line].index("00.") + 2))
+                elif (BoardState[line].count(str(i)) == len(BoardState) / 2) and "." in BoardState[line]:
+                    return (1, (line, BoardState[line].index(".")))
             elif i == 1:
-                if ".11" in board[line]:
-                    return (0, (line, board[line].index(".11")))
-                elif "1.1" in board[line]:
-                    return (0, (line, board[line].index("1.1") + 1))
-                elif "11." in board[line]:
-                    return (0, (line, board[line].index("11.") + 2))
-                elif board[line].count(str(i)) == len(board) / 2 and "." in board[line]:
-                    return (0, (line, board[line].index(".")))
+                if ".11" in BoardState[line]:
+                    return (0, (line, BoardState[line].index(".11")))
+                elif "1.1" in BoardState[line]:
+                    return (0, (line, BoardState[line].index("1.1") + 1))
+                elif "11." in BoardState[line]:
+                    return (0, (line, BoardState[line].index("11.") + 2))
+                elif BoardState[line].count(str(i)) == len(BoardState) / 2 and "." in BoardState[line]:
+                    return (0, (line, BoardState[line].index(".")))
 
 # Update board ---------------------------------------------------------------------------------------------
-def UpdateBoard(board, update):
+def UpdateBoard(BoardState, update):
     # Define variables
     line = []
     new_line = ""
     # create a list of all characters in the line that needs updating
-    for char in board[update[1][0]]:
+    for char in BoardState[update[1][0]]:
         line.append(char)
     # Update line with the found value at the correct position
     line[update[1][1]] = update[0]
@@ -94,52 +94,53 @@ def UpdateBoard(board, update):
     return new_line
 
 # Check for duplicate rows/ columns ------------------------------------------------------------------------
-def Identical(board):
-    for i in range(len(board)):
-        for row in board:
-            if board[i] == row and board.index(row) != i and not '.' in row:
+def Identical(BoardState):
+    for i in range(len(BoardState)):
+        for row in BoardState:
+            if BoardState[i] == row and BoardState.index(row) != i and not '.' in row:
                 return False
     return True
 
 # Brute force ----------------------------------------------------------------------------------------------
-def BruteForce(board):
+def BruteForce(BoardState):
     # Look for empty spots ---------------------------------------------------------------------------------
-    if CountEmpty(board) == 0:
-        return board
+    if CountEmpty(BoardState) == 0:
+        return BoardState
     else:
-        for row in range(len(board)):
-            if "." in board[row]:
-                empty = (row, board[row].index("."))
-                original_row = board[row]
+        for row in range(len(BoardState)):
+            if "." in BoardState[row]:
+                empty = (row, BoardState[row].index("."))
+                original_row = BoardState[row]
                 break
     # Try solution -----------------------------------------------------------------------------------------
     for value in random.choice([[0, 1], [1, 0]]):
         # Create new rows to test if the suggested value is valid
-        new_row = UpdateBoard(board, (value, empty))
-        new_col = UpdateBoard(TransposeBoard(board), (value, (empty[1], empty[0])))
+        new_row = UpdateBoard(BoardState, (value, empty))
+        new_col = UpdateBoard(TransposeBoard(BoardState), (value, (empty[1], empty[0])))
         # Test if suggested value is valid
         if not "000" in new_row and not "111" in new_row and not "000" in new_col and not "111" in new_col:
-            if not new_row.count(str(value)) > len(board) / 2 and not new_col.count(str(value)) > len(board) / 2:
+            if not new_row.count(str(value)) > len(BoardState) / 2 and not new_col.count(str(value)) > len(BoardState) / 2:
                 # Create test board to test for identical rows/ columns
-                test_board = board
+                test_board = BoardState
                 test_board[empty[0]] = new_row
                 # Test for identical rows/ columns
                 if Identical(test_board):
-                    board[empty[0]] = new_row
+                    BoardState[empty[0]] = new_row
                     # try a value in the next empty position if a valid value was inserted, return true if value is possible
-                    if BruteForce(board):
+                    if BruteForce(BoardState):
                         return True
                     # reset value if next empty has no valid number
-                    board[row] = original_row
+                    BoardState[row] = original_row
     # required for recursive, says that next empty has no valid number
     return False
 
 # Calculate the current percentage of empty values in the board --------------------------------------------
-def Percentage(board):
-    Percentage = int(CountEmpty(board) / (len(board) * len(board)) * 100)
+def Percentage(BoardState):
+    Percentage = int(CountEmpty(BoardState) / (len(BoardState) * len(BoardState)) * 100)
     return Percentage
 
 # ==========================================================================================================
+
 
 # INPUT ====================================================================================================
 # Board size -----------------------------------------------------------------------------------------------
@@ -156,34 +157,54 @@ board_size = int(board_size)
 
 # CREATE RANDOM SOLVED BOARD ================================================================================
 # Create empty placeholder board ----------------------------------------------------------------------------
-board = []
+RandomBoard = []
 for row in range(board_size):
-    board.append("{}".format('.'*board_size))
+    RandomBoard.append("{}".format('.'*board_size))
 
 # Create random solved board --------------------------------------------------------------------------------
-BruteForce(board)
-PrintBoard(board)
+BruteForce(RandomBoard)
+print("original")
+PrintBoard(RandomBoard)
 # ===========================================================================================================
 
 # REMOVE VALUES FROM BOARD ==================================================================================
-# choose random percentage of empty positions ---------------------------------------------------------------
-ToRemove = random.randrange(45, 65)
+# Create list of coordinates in board -----------------------------------------------------------------------
+coords = []
+for row in range(len(RandomBoard)):
+    for char in range(len(RandomBoard[row])):
+        coords.append((row, char))
 
-# re-add empty values into the board ------------------------------------------------------------------------
-while not Percentage(board) >= ToRemove:
-    # choose random row & col
-    row_nr = random.randrange(len(board))
-    col_nr = random.randrange(len(board))
-    # position to change into "."
-    value = (".", (row_nr, col_nr))
-    # Update board
-    if not board[row_nr][col_nr] == ".":
-        board[row_nr] = UpdateBoard(board, value)
+# Create duplicate boards for testing -----------------------------------------------------------------------
+EmptiedBoard = []
+for i in RandomBoard:
+    EmptiedBoard.append(i)
 
-# Print the partially re-emptied board ----------------------------------------------------------------------
-PrintBoard(board)
+# Loop through coordinates and see if removal of value at coord still gives same solution of board ----------
+while len(coords) != 0:
+    # Choose a random position out of coordinates & index of said position in the list of coordinates
+    position = random.choice(coords)
+    index = coords.index(position)
 
-# Solve it again and see if new solution == old solution ----------------------------------------------------
-BruteForce(board)
-PrintBoard(board)
+    # Create backup copy of the row in which a empty value will be added
+    old_row = EmptiedBoard[position[0]]
+
+    # Remove value at selected position
+    EmptiedBoard[position[0]] = UpdateBoard(EmptiedBoard, (".", position))
+
+    # Create duplicate of the emptied board (used for solving and comparing solution to original solution)
+    TestBoard = []
+    for i in EmptiedBoard:
+        TestBoard.append(i)
+    
+    # Test if solution of board is still the same (stop board from having multiple solutions)
+    BruteForce(TestBoard)
+    if TestBoard != RandomBoard:
+        EmptiedBoard[position[0]] = old_row
+        
+    # Remove tested position out of coordinates list
+    del coords[index]
+
+# Return final board ----------------------------------------------------------------------------------------
+PrintBoard(EmptiedBoard)
 # ===========================================================================================================
+
