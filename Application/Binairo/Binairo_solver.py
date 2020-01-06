@@ -238,6 +238,10 @@ if Identical(board) and Identical(TransposeBoard(board)):
             PrintBoard(board)
         else:
             print("\nImpossible")
+    # All values could instanly be found using the "Certain"-function (no Brute force required)
+    else:
+        print("{} out of {} empty values could instantly be found:".format(count_certain, CountEmpty(Original)))
+        PrintBoard(board)
 else:
     print("[Error] Duplicate rows/ columns found")
 # ========================================================================================================
