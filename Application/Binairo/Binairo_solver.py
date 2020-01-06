@@ -5,6 +5,8 @@
 # USAGE python binairo_solver.py
 ############################################################################################################
 
+import random
+
 # FUNCTIONS ================================================================================================
 # Checking inputted rows for errors ------------------------------------------------------------------------
 def InputCheck(row):
@@ -134,7 +136,7 @@ def BruteForce(board):
                 original_row = board[row]
                 break
     # Try solution -----------------------------------------------------------------------------------------
-    for value in range(0, 2):
+    for value in random.choice([[0, 1], [1, 0]]):
         # Create new rows to test if the suggested value is valid
         new_row = UpdateBoard(board, (value, empty))
         new_col = UpdateBoard(TransposeBoard(board), (value, (empty[1], empty[0])))

@@ -93,6 +93,29 @@ def UpdateBoard(BoardState, update):
         new_line += str(char)
     return new_line
 
+# Update board with certain values
+def UpdateCertain(BoardState):
+        # Counter for ammount of certain values -------------------------------------------------------------------
+    count_certain = 0
+
+    # Find certain values & update board with them ------------------------------------------------------------
+    while CountEmpty(BoardState) != 0:
+        # Rows
+        row_value = Certain(BoardState)
+        if row_value:
+            count_certain +=1
+            BoardState[row_value[1][0]] = UpdateBoard(BoardState, row_value)
+        # Columns
+        col_value = Certain(TransposeBoard(BoardState))   
+        if col_value:
+            count_certain +=1
+            col_value = (col_value[0], (col_value[1][1], col_value[1][0]))
+            BoardState[col_value[1][0]] = UpdateBoard(BoardState, col_value) 
+        # End loop if no cetain values where found
+        if not row_value and not col_value:
+            return BoardState, count_certain
+    return BoardState, count_certain
+
 # Check for duplicate rows/ columns ------------------------------------------------------------------------
 def Identical(BoardState):
     for i in range(len(BoardState)):
@@ -179,6 +202,9 @@ EmptiedBoard = []
 for i in RandomBoard:
     EmptiedBoard.append(i)
 
+# Message ---------------------------------------------------------------------------------------------------
+print("Creating a random board. Please wait, this might take a while depending on the size of the board.\n")
+
 # Loop through coordinates and see if removal of value at coord still gives same solution of board ----------
 while len(coords) != 0:
     # Choose a random position out of coordinates & index of said position in the list of coordinates
@@ -187,24 +213,31 @@ while len(coords) != 0:
 
     # Create backup copy of the row in which a empty value will be added
     old_row = EmptiedBoard[position[0]]
-
+    """
     # Remove value at selected position
     EmptiedBoard[position[0]] = UpdateBoard(EmptiedBoard, (".", position))
-
+    """
     # Create duplicate of the emptied board (used for solving and comparing solution to original solution)
     TestBoard = []
     for i in EmptiedBoard:
         TestBoard.append(i)
-    
+
+    # Update testboard with empty value
+    TestBoard[position[0]] = UpdateBoard(TestBoard, (".", position))
+
     # Test if solution of board is still the same (stop board from having multiple solutions)
-    BruteForce(TestBoard)
-    if TestBoard != RandomBoard:
+    TestBoard, count = UpdateCertain(TestBoard)
+    
+    if TestBoard == RandomBoard:
+        EmptiedBoard[position[0]] = UpdateBoard(EmptiedBoard, (".", position))
+        # print("yes: (" + str(coords[index][0]) + ", " + str(coords[index][1]) + ")")
+    else:
+        # print("no: (" + str(coords[index][0]) + ", " + str(coords[index][1]) + ")")
         EmptiedBoard[position[0]] = old_row
-        
+
     # Remove tested position out of coordinates list
     del coords[index]
-
+    
 # Return final board ----------------------------------------------------------------------------------------
 PrintBoard(EmptiedBoard)
 # ===========================================================================================================
-
