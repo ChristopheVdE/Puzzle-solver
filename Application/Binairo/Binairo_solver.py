@@ -148,7 +148,7 @@ def BruteForce(board):
                 test_board = board
                 test_board[empty[0]] = new_row
                 # Test for identical rows/ columns
-                if Identical(test_board):
+                if Identical(test_board) and Identical(TransposeBoard(test_board)):
                     board[empty[0]] = new_row
                     # try a value in the next empty position if a valid value was inserted, return true if value is possible
                     if BruteForce(board):
