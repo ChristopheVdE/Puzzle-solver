@@ -147,7 +147,7 @@ def BruteForce(BoardState):
                 test_board = BoardState
                 test_board[empty[0]] = new_row
                 # Test for identical rows/ columns
-                if Identical(test_board):
+                if Identical(test_board) and Identical(TransposeBoard(test_board)):
                     BoardState[empty[0]] = new_row
                     # try a value in the next empty position if a valid value was inserted, return true if value is possible
                     if BruteForce(BoardState):
@@ -184,10 +184,11 @@ RandomBoard = []
 for row in range(board_size):
     RandomBoard.append("{}".format('.'*board_size))
 
+# Message ---------------------------------------------------------------------------------------------------
+print("\nCreating a random board. Please wait, this might take a while depending on the size of the board.\n")
+
 # Create random solved board --------------------------------------------------------------------------------
 BruteForce(RandomBoard)
-print("original")
-PrintBoard(RandomBoard)
 # ===========================================================================================================
 
 # REMOVE VALUES FROM BOARD ==================================================================================
@@ -202,21 +203,12 @@ EmptiedBoard = []
 for i in RandomBoard:
     EmptiedBoard.append(i)
 
-# Message ---------------------------------------------------------------------------------------------------
-print("Creating a random board. Please wait, this might take a while depending on the size of the board.\n")
-
 # Loop through coordinates and see if removal of value at coord still gives same solution of board ----------
 while len(coords) != 0:
     # Choose a random position out of coordinates & index of said position in the list of coordinates
     position = random.choice(coords)
     index = coords.index(position)
 
-    # Create backup copy of the row in which a empty value will be added
-    old_row = EmptiedBoard[position[0]]
-    """
-    # Remove value at selected position
-    EmptiedBoard[position[0]] = UpdateBoard(EmptiedBoard, (".", position))
-    """
     # Create duplicate of the emptied board (used for solving and comparing solution to original solution)
     TestBoard = []
     for i in EmptiedBoard:
@@ -230,14 +222,16 @@ while len(coords) != 0:
     
     if TestBoard == RandomBoard:
         EmptiedBoard[position[0]] = UpdateBoard(EmptiedBoard, (".", position))
-        # print("yes: (" + str(coords[index][0]) + ", " + str(coords[index][1]) + ")")
-    else:
-        # print("no: (" + str(coords[index][0]) + ", " + str(coords[index][1]) + ")")
-        EmptiedBoard[position[0]] = old_row
 
     # Remove tested position out of coordinates list
     del coords[index]
     
 # Return final board ----------------------------------------------------------------------------------------
 PrintBoard(EmptiedBoard)
+# ===========================================================================================================
+
+# SHOW SOLUTION =============================================================================================
+if input("Show solution? (y/n): ").lower() == "y":
+    print()
+    PrintBoard(RandomBoard)
 # ===========================================================================================================
