@@ -5,6 +5,8 @@
 # USAGE python binairo_solver.py
 ############################################################################################################
 
+import random
+
 # FUNCTIONS ================================================================================================
 # Checking inputted rows for errors ------------------------------------------------------------------------
 def InputCheck(row):
@@ -30,6 +32,7 @@ def InputCheck(row):
             errors.append("[ERROR] Row can only contain {} instances of '{}': found {} instances of '{}'".format(int(board_size / 2), j, count, j))
             break
     return errors
+    
 # Print Board ----------------------------------------------------------------------------------------------
 def PrintBoard(board):
     row_count = 0
@@ -53,6 +56,8 @@ def PrintBoard(board):
         # Print end of line
         print()
         row_count += 1
+    # Add empty line after each printed board
+    print()
 
 # Transpose board to get columns ---------------------------------------------------------------------------
 def TransposeBoard(board):
@@ -78,15 +83,23 @@ def Certain(board):
     for line in range(len(board)):
         for i in range(0, 2):
             if i == 0:
-                if ".00" in board[line]:   return (1, (line, board[line].index(".00")))
-                elif "0.0" in board[line]: return (1, (line, board[line].index("0.0") + 1))
-                elif "00." in board[line]: return (1, (line, board[line].index("00.") + 2))
-                elif (board[line].count(str(i)) == len(board)/2) and "." in board[line]: return (1, (line, board[line].index(".")))
+                if ".00" in board[line]:
+                    return (1, (line, board[line].index(".00")))
+                elif "0.0" in board[line]:
+                    return (1, (line, board[line].index("0.0") + 1))
+                elif "00." in board[line]:
+                    return (1, (line, board[line].index("00.") + 2))
+                elif (board[line].count(str(i)) == len(board) / 2) and "." in board[line]:
+                    return (1, (line, board[line].index(".")))
             elif i == 1:
-                if ".11" in board[line]:   return (0, (line, board[line].index(".11")))
-                elif "1.1" in board[line]: return (0, (line, board[line].index("1.1") + 1))
-                elif "11." in board[line]: return (0, (line, board[line].index("11.") + 2))
-                elif board[line].count(str(i)) == len(board)/2 and "." in board[line]: return (0, (line, board[line].index(".")))
+                if ".11" in board[line]:
+                    return (0, (line, board[line].index(".11")))
+                elif "1.1" in board[line]:
+                    return (0, (line, board[line].index("1.1") + 1))
+                elif "11." in board[line]:
+                    return (0, (line, board[line].index("11.") + 2))
+                elif board[line].count(str(i)) == len(board) / 2 and "." in board[line]:
+                    return (0, (line, board[line].index(".")))
 
 # Update board ---------------------------------------------------------------------------------------------
 def UpdateBoard(board, update):
@@ -123,7 +136,7 @@ def BruteForce(board):
                 original_row = board[row]
                 break
     # Try solution -----------------------------------------------------------------------------------------
-    for value in range(0, 2):
+    for value in random.choice([[0, 1], [1, 0]]):
         # Create new rows to test if the suggested value is valid
         new_row = UpdateBoard(board, (value, empty))
         new_col = UpdateBoard(TransposeBoard(board), (value, (empty[1], empty[0])))
@@ -135,7 +148,7 @@ def BruteForce(board):
                 test_board = board
                 test_board[empty[0]] = new_row
                 # Test for identical rows/ columns
-                if Identical(test_board):
+                if Identical(test_board) and Identical(TransposeBoard(test_board)):
                     board[empty[0]] = new_row
                     # try a value in the next empty position if a valid value was inserted, return true if value is possible
                     if BruteForce(board):
@@ -188,17 +201,22 @@ for i in range(1, board_size + 1):
 print("\nOriginal board:")
 PrintBoard(board)
 
+# Counter for ammount of certain values -------------------------------------------------------------------
+count_certain = 0
+
 # Find certain values & update board with them ------------------------------------------------------------
 while CountEmpty(board) != 0:
     # Rows
     row_value = Certain(board)
     if row_value:
+        count_certain +=1
         board[row_value[1][0]] = UpdateBoard(board, row_value)
     # Columns
     col_value = Certain(TransposeBoard(board))   
     if col_value:
+        count_certain +=1
         col_value = (col_value[0], (col_value[1][1], col_value[1][0]))
-        board[col_value[1][0]] = UpdateBoard(board, col_value)
+        board[col_value[1][0]] = UpdateBoard(board, col_value) 
     # End loop if no cetain values where found
     if not row_value and not col_value:
         break
@@ -209,18 +227,21 @@ if Identical(board) and Identical(TransposeBoard(board)):
     if CountEmpty(board) != 0:
         # Display extra output if certain values where found
         if Original != board:
-            print("\nPartial solution with all values that could instantly be found:")
+            print("{} out of {} empty values could instantly be found:".format(count_certain, CountEmpty(Original)))
             PrintBoard(board)
-            print()
         else:
-            print("\nNo certain values found")
+            print("{} values could instantly be found.".format(count_certain))
         # Brute force a solution
-        print("Using brute-forcing algorithm to find full solution")
+        print("Using brute-forcing algorithm to find full solution.")
         if BruteForce(board):
             print("\nSolution:")
             PrintBoard(board)
         else:
             print("\nImpossible")
+    # All values could instanly be found using the "Certain"-function (no Brute force required)
+    else:
+        print("{} out of {} empty values could instantly be found:".format(count_certain, CountEmpty(Original)))
+        PrintBoard(board)
 else:
     print("[Error] Duplicate rows/ columns found")
 # ========================================================================================================
