@@ -11,8 +11,13 @@ import pygame
 # ==========================================================================================================
 
 # GENERAL INFO =============================================================================================
-# Image folder
+# Image folder ---------------------------------------------------------------------------------------------
 Images = os.path.dirname(os.path.realpath(__file__)) + '\Images'
+
+# colors ---------------------------------------------------------------------------------------------------
+black = (0,0,0)
+ButtonColor = (192, 192, 192)
+HighlightColor = (135, 135, 135)
 
 # Initialize game ------------------------------------------------------------------------------------------
 pygame.init()
@@ -35,9 +40,11 @@ ButtonFont = pygame.font.Font('freesansbold.ttf', 15)
 
 # FUNCTIONS ================================================================================================
 # Text area (for renderign) --------------------------------------------------------------------------------
-def TextObject(Text, Font, Color):
+def TextObject(Text, Font, Color, X, Y):
     Text = Font.render(Text, True, Color)
-    return Text, Text.get_rect()
+    TextArea = Text.get_rect()
+    TextArea.center  = (int(X), int(Y))
+    Screen.blit(Text, TextArea)
 
 # Create INteractive buttons -------------------------------------------------------------------------------
 def Button(Text, TopLeft, ButtonWidth, ButtonHeight, NormalColor, HighlightColor, Action = None):
@@ -54,13 +61,12 @@ def Button(Text, TopLeft, ButtonWidth, ButtonHeight, NormalColor, HighlightColor
         pygame.draw.rect(Screen, NormalColor, (int(TopLeft[0]), int(TopLeft[1]), ButtonWidth, ButtonHeight))
 
     # Add Text to Button
-    ButtonText, ButtonTextArea = TextObject(Text, ButtonFont, (0, 0, 0))
-    ButtonTextArea.center = (int(TopLeft[0] + (ButtonWidth / 2)), int(TopLeft[1] + (ButtonHeight / 2)))
-    Screen.blit(ButtonText, ButtonTextArea)
+    TextObject(Text, ButtonFont, black, TopLeft[0] + (ButtonWidth / 2), TopLeft[1] + (ButtonHeight / 2))
+    
 # ===========================================================================================================
 
 
-# MAIN MENU ================================================================================================
+# MAIN MENU =================================================================================================
 def MainMenu():
     menu = True
 
@@ -68,20 +74,42 @@ def MainMenu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 menu = False
-        
         # Set background color
         Screen.fill(backgroundcolor)
-
         # Display title
-        Title, TitleArea = TextObject("Puzzle Solver", TitleFont, (0, 0, 0))
-        TitleArea.center  = (int(ScreenWidth / 2), int(ScreenHeight / 3))
-        Screen.blit(Title, TitleArea)
+        TextObject("Puzzle Solver", TitleFont, black, ScreenWidth / 2, ScreenHeight / 3)
         
-        # Buttons
-        Button("Sudoku", (ScreenWidth / 2 - 75, 300), 150, 40, (192, 192, 192), (135, 135, 135), Sudoku_GameLoop)
-        Button("Binairo", (ScreenWidth / 2 - 75, 350), 150, 40, (192, 192, 192), (135, 135, 135), Binairo_GameLoop)
-        
-        # Update Display
+    # [SUBMENU] 1) Play a random board ------------------------------------------------------------------------
+        Submenu_X = 140
+        Submenu_Y = int(ScreenHeight / 3 + 75)
+        Button_X = int((Submenu_X + 170) / 2)
+
+        # Submenu - outline
+        pygame.draw.rect(Screen, black, (Submenu_X - 2, Submenu_Y - 2, 250 + 4, 250 + 4))
+        # Submenu - color
+        pygame.draw.rect(Screen, backgroundcolor, (Submenu_X, Submenu_Y, 250, 250))
+        # Submenu - title
+        Button("PLAY", (Button_X + 73, Submenu_Y - 15), 75, 30, backgroundcolor, backgroundcolor)
+        # Submenu - buttons
+        Button("Sudoku", (Button_X, 300), 218, 40, ButtonColor, HighlightColor, Sudoku_GameLoop)
+        Button("Binairo", (Button_X, 350), 218, 40, ButtonColor, HighlightColor, Binairo_GameLoop)
+
+    # [SUBMENU] 2) Solve an existing board --------------------------------------------------------------------
+        Submenu_X = 150 + 260
+        Submenu_Y = int(ScreenHeight / 3 + 75)
+        Button_X = int((Submenu_X + 443) / 2)
+
+        # Print submenu-rectangles - Outline
+        pygame.draw.rect(Screen, black, (Submenu_X - 2, Submenu_Y - 2, 250 + 4, 250 + 4))
+        # Print submenu-rectangles - Inner color
+        pygame.draw.rect(Screen, backgroundcolor, (Submenu_X, Submenu_Y, 250, 250))
+        # Print submenu-rectangles - Titles
+        Button("SOLVE", (Button_X + 73, Submenu_Y - 15), 75, 30, backgroundcolor, backgroundcolor)
+        # Buttons - Solve Existing board
+        Button("Sudoku", (Button_X, 300), 218, 40, ButtonColor, HighlightColor, Sudoku_GameLoop)
+        Button("Binairo", (Button_X, 350), 218, 40, ButtonColor, HighlightColor, Binairo_GameLoop)
+
+    # Update Display ---------------------------------------------------------------------------------------
         pygame.display.update()
 # ==========================================================================================================
 
@@ -99,9 +127,7 @@ def Sudoku_GameLoop():
         Screen.fill((backgroundcolor))
 
         # Display title
-        Title, TitleArea = TextObject("Sudoku", TitleFont, (0, 0, 0))
-        TitleArea.center  = (int(ScreenWidth / 2), 50)
-        Screen.blit(Title, TitleArea)
+        TextObject("Sudoku", TitleFont, black, int(ScreenWidth / 2), 50)
 
         # Update Display
         pygame.display.update()
@@ -124,9 +150,7 @@ def Binairo_GameLoop():
         Screen.fill(backgroundcolor)
 
         # Display title
-        Title, TitleArea = TextObject("Binairo", TitleFont, (0, 0, 0))
-        TitleArea.center  = (int(ScreenWidth / 2), 50)
-        Screen.blit(Title, TitleArea)
+        TextObject("Binairo", TitleFont, black, int(ScreenWidth / 2), 50)
 
         # Update Display
         pygame.display.update()
