@@ -5,5 +5,5 @@ Requires:
 
 Contains:
   - script to solve sudoku's
-  - scritp to solve binairo's
- 
+  - script to solve binairo's
+  - script to create binairo's
