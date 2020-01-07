@@ -10,34 +10,6 @@ import os
 import pygame
 # ==========================================================================================================
 
-# GENERAL INFO =============================================================================================
-# Image folder ---------------------------------------------------------------------------------------------
-Images = os.path.dirname(os.path.realpath(__file__)) + '\Images'
-
-# colors ---------------------------------------------------------------------------------------------------
-black = (0,0,0)
-ButtonColor = (192, 192, 192)
-HighlightColor = (135, 135, 135)
-
-# Initialize game ------------------------------------------------------------------------------------------
-pygame.init()
-
-# Display size & background --------------------------------------------------------------------------------
-ScreenWidth = 800
-ScreenHeight = 600
-Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight))
-backgroundcolor = (220,220,220) #gray (grainsboro)
-
-# Caption & logo -------------------------------------------------------------------------------------------
-pygame.display.set_caption('Puzzle solver')
-icon = pygame.image.load(Images + '\main.png')
-pygame.display.set_icon(icon)
-
-# Fonts ----------------------------------------------------------------------------------------------------
-TitleFont = pygame.font.Font('freesansbold.ttf', 60)
-ButtonFont = pygame.font.Font('freesansbold.ttf', 15)
-# ==========================================================================================================
-
 # FUNCTIONS ================================================================================================
 # Text area (for renderign) --------------------------------------------------------------------------------
 def TextObject(Text, Font, Color, X, Y):
@@ -69,6 +41,33 @@ def quitgame():
     quit()
 # ===========================================================================================================
 
+# GENERAL INFO ==============================================================================================
+# Image folder ----------------------------------------------------------------------------------------------
+Images = os.path.dirname(os.path.realpath(__file__)) + '\Images'
+
+# Colors ----------------------------------------------------------------------------------------------------
+black           = (0, 0, 0)
+BackgroundColor = (220,220,220)     #grey (grainsboro)
+ButtonColor     = (192, 192, 192)   #grey (silver)
+HighlightColor  = (135, 135, 135)   #grey (slightly lighter grey)
+
+# Initialize game -------------------------------------------------------------------------------------------
+pygame.init()
+
+# Display size ----------------------------------------------------------------------------------------------
+ScreenWidth = 800
+ScreenHeight = 600
+Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight))
+
+# Caption & logo --------------------------------------------------------------------------------------------
+pygame.display.set_caption('Puzzle solver')
+icon = pygame.image.load(Images + '\logo.png')
+pygame.display.set_icon(icon)
+
+# Fonts -----------------------------------------------------------------------------------------------------
+TitleFont = pygame.font.Font('freesansbold.ttf', 60)
+ButtonFont = pygame.font.Font('freesansbold.ttf', 15)
+# ===========================================================================================================
 
 # MAIN MENU =================================================================================================
 def MainMenu():
@@ -79,11 +78,12 @@ def MainMenu():
             if event.type == pygame.QUIT:
                 menu = False
         # Set background color
-        Screen.fill(backgroundcolor)
+        Screen.fill(BackgroundColor)
+
         # Display title
         TextObject("Puzzle Solver", TitleFont, black, ScreenWidth / 2, ScreenHeight / 4)
         
-    # [SUBMENU] 1) Play a random board ------------------------------------------------------------------------
+    # [SUBMENU] 1) Play a random board ----------------------------------------------------------------------
         Submenu_X = 140
         Submenu_Y = int(ScreenHeight / 4 + 75)
         Button_X = int((Submenu_X + 170) / 2)
@@ -92,14 +92,14 @@ def MainMenu():
         # Submenu - outline
         pygame.draw.rect(Screen, black, (Submenu_X - 2, Submenu_Y - 2, 250 + 4, 250 + 4))
         # Submenu - color
-        pygame.draw.rect(Screen, backgroundcolor, (Submenu_X, Submenu_Y, 250, 250))
+        pygame.draw.rect(Screen, BackgroundColor, (Submenu_X, Submenu_Y, 250, 250))
         # Submenu - title
-        Button("PLAY", (Button_X + 73, Submenu_Y - 15), 75, 30, backgroundcolor, backgroundcolor)
+        Button("PLAY", (Button_X + 73, Submenu_Y - 15), 75, 30, BackgroundColor, BackgroundColor)
         # Submenu - buttons
         Button("Sudoku", (Button_X, Button_Y), 218, 40, ButtonColor, HighlightColor, Sudoku_GameLoop)
         Button("Binairo", (Button_X, Button_Y + 50), 218, 40, ButtonColor, HighlightColor, Binairo_GameLoop)
 
-    # [SUBMENU] 2) Solve an existing board --------------------------------------------------------------------
+    # [SUBMENU] 2) Solve an existing board ------------------------------------------------------------------
         Submenu_X = 150 + 260
         Submenu_Y = int(ScreenHeight / 4 + 75)
         Button_X = int((Submenu_X + 443) / 2)
@@ -108,9 +108,9 @@ def MainMenu():
         # Submenu - outline
         pygame.draw.rect(Screen, black, (Submenu_X - 2, Submenu_Y - 2, 250 + 4, 250 + 4))
         # Submenu - color
-        pygame.draw.rect(Screen, backgroundcolor, (Submenu_X, Submenu_Y, 250, 250))
+        pygame.draw.rect(Screen, BackgroundColor, (Submenu_X, Submenu_Y, 250, 250))
         # Submenu - title
-        Button("SOLVE", (Button_X + 73, Submenu_Y - 15), 75, 30, backgroundcolor, backgroundcolor)
+        Button("SOLVE", (Button_X + 73, Submenu_Y - 15), 75, 30, BackgroundColor, BackgroundColor)
         # Submenu - buttons
         Button("Sudoku", (Button_X, Button_Y), 218, 40, ButtonColor, HighlightColor, Sudoku_GameLoop)
         Button("Binairo", (Button_X, Button_Y + 50), 218, 40, ButtonColor, HighlightColor, Binairo_GameLoop)
@@ -122,7 +122,6 @@ def MainMenu():
         pygame.display.update()
 # ==========================================================================================================
 
-
 # GAME LOOP: Sudoku ========================================================================================
 def Sudoku_GameLoop():
     running = True
@@ -133,7 +132,7 @@ def Sudoku_GameLoop():
                 running = False
     
         # Set background color
-        Screen.fill((backgroundcolor))
+        Screen.fill((BackgroundColor))
 
         # Display title
         TextObject("Sudoku", TitleFont, black, int(ScreenWidth / 2), 50)
@@ -178,7 +177,7 @@ def Binairo_GameLoop():
                 running = False
 
         # Set background color
-        Screen.fill(backgroundcolor)
+        Screen.fill(BackgroundColor)
 
         # Display title
         TextObject("Binairo", TitleFont, black, int(ScreenWidth / 2), 50)
