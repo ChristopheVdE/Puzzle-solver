@@ -2,6 +2,7 @@
 
 Requires:
   - python
+  - pygame
 
 Contains:
   - script to solve sudoku's
