@@ -59,12 +59,14 @@ def quitgame():
 Images = os.path.dirname(os.path.realpath(__file__)) + '\Images'
 
 # Colors ----------------------------------------------------------------------------------------------------
-black           = (0, 0, 0)
-BackgroundColor = (220,220,220)     #grey (grainsboro)
-ButtonColor     = (192, 192, 192)   #grey (silver)
-HighlightColor  = (135,206,235)     #skyblue
-Playbutton      = (0,255,127)       #springgreen 
-PlayHighlight   = (50,205,50)       #limegreen
+black               = (0, 0, 0)
+BackgroundColor     = (220,220,220)     #grey (grainsboro)
+ButtonColor         = (192, 192, 192)   #grey (silver)
+HighlightColor      = (135,206,235)     #skyblue
+Playbutton          = (0,255,127)       #springgreen 
+PlayHighlight       = (50, 205, 50)     #limegreen
+NavigationColor     = (255,69,0)
+NavigationHighlight = (139,0,0)
 
 # Initialize game -------------------------------------------------------------------------------------------
 pygame.init()
@@ -188,94 +190,69 @@ def MainMenu():
         pygame.display.update()
 # ==========================================================================================================
 
-
 # GAME LOOP: Sudoku ========================================================================================
 def Sudoku_GameLoop():
     running = True
 
+# MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
     
-        # Set background color
+    # Set background color
         Screen.fill((BackgroundColor))
-
-        # Display title
+    # Display title
         TextObject("Sudoku", TitleFont, black, int(ScreenWidth / 2), 50)
-
-
-    # BACK TO MAIN MENU Button (Action cant be passed through Button function so full code is used here) -
-        TopLeft = (ScreenWidth / 2 - 110, ScreenHeight - 75)
-
-        # Get mouse position & track mouse-clicks
+    # Get mouse position & track mouse-clicks
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
-        # Draw Button & Highlight button if slected & Perform action if pressed
-        if TopLeft[0] + 100 > mouse[0] > TopLeft[0] and TopLeft[1] + 40 > mouse[1] > TopLeft[1]:
-            pygame.draw.rect(Screen, (139,0,0), (int(TopLeft[0]), int(TopLeft[1]), 100, 40))
-            if click[0] == 1:
-                Menu = True
-                running = False
-        else:
-            pygame.draw.rect(Screen, (255,69,0), (int(TopLeft[0]), int(TopLeft[1]), 100, 40))
-        # Add Text to Button
-        TextObject("MENU", ButtonFont, black, TopLeft[0] + (100 / 2), TopLeft[1] + (40 / 2))
+# NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
+    # Menu button
+        Button("MENU", (ScreenWidth / 2 - 110, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
+        if (ScreenWidth / 2 - 110) + 100 > mouse[0] > (ScreenWidth / 2 - 110) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
+            Menu = True
+            running = False
+    # EXIT Button 
+        Button("EXIT", (ScreenWidth / 2 + 10, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
+        if (ScreenWidth / 2 + 10) + 100 > mouse[0] > (ScreenWidth / 2 + 10) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
+            quitgame()
 
-    # EXIT Button ------------------------------------------------------------------------------------------
-        # Button("EXIT", (ScreenWidth /2 + 10, ScreenHeight - 75), 100, 40, (255,69,0), (139,0,0), quitgame)
-
-        # Update Display
+# UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
-
-    # Completely close the game (if this code isn't here, it closes the loop but not the app. The app would go back to the main menu.
-    if not Menu:
-        quitgame()
 # ==========================================================================================================
 
 # GAME LOOP: Binairo =======================================================================================
 def Binairo_GameLoop():
     running = True
 
+# MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        # Set background color
+    # Set background color
         Screen.fill(BackgroundColor)
-
-        # Display title
+    # Display title
         TextObject("Binairo", TitleFont, black, int(ScreenWidth / 2), 50)
-
-    # BACK TO MAIN MENU Button (Action cant be passed through Button function so full code is used here) -
-        TopLeft = (ScreenWidth / 2 - 110, ScreenHeight - 75)
-
-        # Get mouse position & track mouse-clicks
+    # Get mouse position & track mouse-clicks
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
-        # Draw Button & Highlight button if slected & Perform action if pressed
-        if TopLeft[0] + 100 > mouse[0] > TopLeft[0] and TopLeft[1] + 40 > mouse[1] > TopLeft[1]:
-            pygame.draw.rect(Screen, (139,0,0), (int(TopLeft[0]), int(TopLeft[1]), 100, 40))
-            if click[0] == 1:
-                Menu = True
-                running = False
-        else:
-            pygame.draw.rect(Screen, (255,69,0), (int(TopLeft[0]), int(TopLeft[1]), 100, 40))
-        # Add Text to Button
-        TextObject("MENU", ButtonFont, black, TopLeft[0] + (100 / 2), TopLeft[1] + (40 / 2))
+# NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
+    # Menu button
+        Button("MENU", (ScreenWidth / 2 - 110, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
+        if (ScreenWidth / 2 - 110) + 100 > mouse[0] > (ScreenWidth / 2 - 110) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
+            Menu = True
+            running = False
+    # EXIT Button 
+        Button("EXIT", (ScreenWidth / 2 + 10, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
+        if (ScreenWidth / 2 + 10) + 100 > mouse[0] > (ScreenWidth / 2 + 10) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
+            quitgame()
 
-    # EXIT Button ------------------------------------------------------------------------------------------
-        # Button("EXIT", (ScreenWidth /2 + 10, ScreenHeight - 75), 100, 40, (255,69,0), (139,0,0), quitgame)
-
-        # Update Display
+# UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
-
-    # Completely close the game (if this code isn't here, it closes the loop but not the app. The app would go back to the main menu.
-    if not Menu:
-        quitgame()
 # ==========================================================================================================
 
 # Start game
