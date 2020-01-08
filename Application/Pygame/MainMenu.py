@@ -11,17 +11,36 @@ import pygame
 # ==========================================================================================================
 
 # FUNCTIONS ================================================================================================
-# Text area (for renderign) --------------------------------------------------------------------------------
+# Text area (for renderign) (centered) ---------------------------------------------------------------------
 def TextObject(Text, Font, Color, X, Y):
-    Text = Font.render(Text, True, Color)
-    TextArea = Text.get_rect()
+    TextSurface = Font.render(Text, True, Color)
+    TextArea = TextSurface.get_rect()
     TextArea.center  = (int(X), int(Y))
-    Screen.blit(Text, TextArea)
+    Screen.blit(TextSurface, TextArea)
+
+# Multi line text area (for renderign) (not centered) ------------------------------------------------------
+def MultilineText(Text, Font, Color, pos, MaxWidth, MaxHeight):
+    
+    space = Font.size(' ')[0]  # The width of a space.
+    X, Y = pos
+
+    for Sentence in Text.splitlines():
+        for Word in Sentence.split(' '):
+            WordSurface = Font.render(Word, True, Color)
+            WordWidth, WordHeight = WordSurface.get_size()
+
+            if X + WordWidth >= MaxWidth:
+                X = pos[0]          # reset X
+                Y += WordHeight     # jump to next line
+            Screen.blit(WordSurface, (X, Y))
+            X += WordWidth + space
+        X = pos[0]
+        Y += WordHeight
 
 # Create INteractive buttons -------------------------------------------------------------------------------
-def Button(Text, TopLeft, ButtonWidth, ButtonHeight, NormalColor, HighlightColor, mouse):
+def Button(Text, TopLeft, ButtonWidth, ButtonHeight, NormalColor, HighlightColor, mouse, Selected = False):
     # Draw Button & Highlight button if slected & Perform action if pressed
-    if TopLeft[0] + ButtonWidth > mouse[0] > TopLeft[0] and TopLeft[1] + ButtonHeight > mouse[1] > TopLeft[1]:
+    if (TopLeft[0] + ButtonWidth > mouse[0] > TopLeft[0] and TopLeft[1] + ButtonHeight > mouse[1] > TopLeft[1]) or Selected:
         pygame.draw.rect(Screen, HighlightColor, (int(TopLeft[0]), int(TopLeft[1]), ButtonWidth, ButtonHeight))
     else:
         pygame.draw.rect(Screen, NormalColor, (int(TopLeft[0]), int(TopLeft[1]), ButtonWidth, ButtonHeight))
@@ -43,7 +62,7 @@ Images = os.path.dirname(os.path.realpath(__file__)) + '\Images'
 black           = (0, 0, 0)
 BackgroundColor = (220,220,220)     #grey (grainsboro)
 ButtonColor     = (192, 192, 192)   #grey (silver)
-HighlightColor  = (135, 135, 135)   #grey (slightly lighter grey)
+HighlightColor  = (135,206,235)     #skyblue
 Playbutton      = (0,255,127)       #springgreen 
 PlayHighlight   = (50,205,50)       #limegreen
 
@@ -71,7 +90,7 @@ def MainMenu():
     Sudoku = False
     Binairo = False
 
-# MAIN LOOP -------------------------------------------------------------------------------------------------
+# MAIN LOOP ------------------------------------------------------------------------------------------------
     while menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -84,7 +103,7 @@ def MainMenu():
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         
-# [SUBMENU] CHOOSE PUZZLE ------------------------------------------------------------------------------------
+# [SUBMENU] CHOOSE PUZZLE ----------------------------------------------------------------------------------
     # Submenu settings
         Submenu_X = 140
         Submenu_Y = int(ScreenHeight / 7 + 70)
@@ -103,10 +122,10 @@ def MainMenu():
     # Submenu - title
         Button("CHOOSE PUZZLE", (Button_X + 35, Submenu_Y - 16), 150, 30, BackgroundColor, BackgroundColor, mouse)
     # Submenu - buttons
-        Button("Sudoku", (Button_X, Button_Y), ButtonWidth, ButtonHeight, ButtonColor, HighlightColor, mouse)
-        Button("Binairo", (Button_X, Button_Y + 50), ButtonWidth, ButtonHeight, ButtonColor, HighlightColor, mouse)
+        Button("Sudoku", (Button_X, Button_Y), ButtonWidth, ButtonHeight, ButtonColor, HighlightColor, mouse, Sudoku)
+        Button("Binairo", (Button_X, Button_Y + 50), ButtonWidth, ButtonHeight, ButtonColor, HighlightColor, mouse, Binairo)
 
-# [SUBMENU] 2) Puzzle info -----------------------------------------------------------------------------
+# [SUBMENU] 2) Puzzle info ---------------------------------------------------------------------------------
     # Submenu settings
         Submenu_X = Submenu_X + 260 + 10  # start column 1 + width column 1 + space between columns
 
@@ -124,15 +143,11 @@ def MainMenu():
             if click[0] == 1: Sudoku = True
             Binairo = False
 
-            # Title
-            TextObject("Sudoku", ButtonFont, black, 535, Submenu_Y + 25)
             # Puzzle image
             image = pygame.image.load(Images + '\Sudoku.jpg')
-            Screen.blit(image, (Submenu_X + 65, Submenu_Y + 45))
+            Screen.blit(image, (Submenu_X + 65, Submenu_Y + 25))
             # Puzzle info
-            TextObject("Fill a 9×9 grid.", ButtonFont, black, 535, Submenu_Y + 200)
-            TextObject("Each column, row and 3×3 grid", ButtonFont, black, 535, Submenu_Y + 220)
-            TextObject("should contain all digits from 1 to 9.", ButtonFont, black, 535, Submenu_Y + 235)
+            MultilineText("Fill a 9×9 grid.\nEach column, row and 3×3 grid should contain all digits from 1 to 9.", ButtonFont, black, (420, Submenu_Y + 180), 650, 250)
             # Play button
             Button("PLAY", (Submenu_X + 15, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
             if Submenu_X + 15 + 100 > mouse[0] > Submenu_X + 15 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
@@ -149,15 +164,11 @@ def MainMenu():
             if click[0] == 1: Binairo = True
             Sudoku = False
 
-            # Title
-            TextObject("Binairo", ButtonFont, black, 535, Submenu_Y + 25)
             # Puzzle image
             image = pygame.image.load(Images + '\Binairo.png')
-            Screen.blit(image, (Submenu_X + 65, Submenu_Y + 45))
+            Screen.blit(image, (Submenu_X + 65, Submenu_Y + 25))
             # Puzzle info
-            TextObject("Each column and row need to have te same ammount of 1 and 0.", ButtonFont, black, 535, Submenu_Y + 200)
-            TextObject("Max 2 times the same number next to eachother.", ButtonFont, black, 535, Submenu_Y + 220)
-            TextObject("No identical rows/ columns alowed", ButtonFont, black, 535, Submenu_Y + 240)
+            MultilineText("Each column/ row needs to have te same ammount of 1 and 0.\nMax 2 times the same number next to eachother.\nNo identical rows/ columns alowed.", ButtonFont, black, (420, Submenu_Y + 150), 650, 250)
             # Play button
             Button("PLAY", (Submenu_X + 15, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
             if Submenu_X + 15 + 100 > mouse[0] > Submenu_X + 15 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
