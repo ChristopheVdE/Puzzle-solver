@@ -19,16 +19,10 @@ def TextObject(Text, Font, Color, X, Y):
     Screen.blit(Text, TextArea)
 
 # Create INteractive buttons -------------------------------------------------------------------------------
-def Button(Text, TopLeft, ButtonWidth, ButtonHeight, NormalColor, HighlightColor, Action = None):
-    # Get mouse position & track mouse-clicks
-    mouse = pygame.mouse.get_pos()
-    click = pygame.mouse.get_pressed()
-
+def Button(Text, TopLeft, ButtonWidth, ButtonHeight, NormalColor, HighlightColor, mouse):
     # Draw Button & Highlight button if slected & Perform action if pressed
     if TopLeft[0] + ButtonWidth > mouse[0] > TopLeft[0] and TopLeft[1] + ButtonHeight > mouse[1] > TopLeft[1]:
         pygame.draw.rect(Screen, HighlightColor, (int(TopLeft[0]), int(TopLeft[1]), ButtonWidth, ButtonHeight))
-        if click[0] == 1 and Action != None:
-            Action()
     else:
         pygame.draw.rect(Screen, NormalColor, (int(TopLeft[0]), int(TopLeft[1]), ButtonWidth, ButtonHeight))
 
@@ -73,35 +67,51 @@ ButtonFont = pygame.font.Font('freesansbold.ttf', 15)
 def MainMenu():
     menu = True
 
+# MAIN LOOP -------------------------------------------------------------------------------------------------
     while menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 menu = False
-        # Set background color
+    # Set background color
         Screen.fill(BackgroundColor)
-
-        # Display title
-        TextObject("Puzzle Solver", TitleFont, black, ScreenWidth / 2, ScreenHeight / 4)
+    # Display title
+        TextObject("Puzzle Solver", TitleFont, black, ScreenWidth / 2, ScreenHeight / 7)
+    # Get mouse position & track mouse-clicks
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
         
-    # [SUBMENU] 1) Play a random board ----------------------------------------------------------------------
+# [SUBMENU] CHOOSE PUZZLE ------------------------------------------------------------------------------------
+    # Submenu settings
         Submenu_X = 140
-        Submenu_Y = int(ScreenHeight / 4 + 75)
+        Submenu_Y = int(ScreenHeight / 7 + 70)
+        Submenu_Width = 250
+        Submenu_height = 325
+    # Button settings
         Button_X = int((Submenu_X + 170) / 2)
-        Button_Y = int(Submenu_Y + 35)
+        Button_Y = int(Submenu_Y + 25)
+        ButtonWidth = 218
+        ButtonHeight = 40
 
-        # Submenu - outline
-        pygame.draw.rect(Screen, black, (Submenu_X - 2, Submenu_Y - 2, 250 + 4, 250 + 4))
-        # Submenu - color
-        pygame.draw.rect(Screen, BackgroundColor, (Submenu_X, Submenu_Y, 250, 250))
-        # Submenu - title
-        Button("PLAY", (Button_X + 73, Submenu_Y - 15), 75, 30, BackgroundColor, BackgroundColor)
-        # Submenu - buttons
-        Button("Sudoku", (Button_X, Button_Y), 218, 40, ButtonColor, HighlightColor, Sudoku_GameLoop)
-        Button("Binairo", (Button_X, Button_Y + 50), 218, 40, ButtonColor, HighlightColor, Binairo_GameLoop)
+    # Submenu - outline
+        pygame.draw.rect(Screen, black, (Submenu_X - 2, Submenu_Y - 2, Submenu_Width + 4, Submenu_height + 4))
+    # Submenu - color
+        pygame.draw.rect(Screen, BackgroundColor, (Submenu_X, Submenu_Y, Submenu_Width, Submenu_height))
+    # Submenu - title
+        Button("CHOOSE PUZZLE", (Button_X + 35, Submenu_Y - 16), 150, 30, BackgroundColor, BackgroundColor, mouse)
+    # Submenu - buttons
+        Button("Sudoku", (Button_X, Button_Y), ButtonWidth, ButtonHeight, ButtonColor, HighlightColor, mouse)
+        Button("Binairo", (Button_X, Button_Y + 50), ButtonWidth, ButtonHeight, ButtonColor, HighlightColor, mouse)
 
-    # [SUBMENU] 2) Solve an existing board ------------------------------------------------------------------
-        Submenu_X = 150 + 260
-        Submenu_Y = int(ScreenHeight / 4 + 75)
+    # Submenu - button actions
+        # Sudoku button
+        if Button_X + ButtonWidth > mouse[0] > Button_X and Button_Y + ButtonHeight > mouse[1] > Button_Y and click[0] == 1:
+                Sudoku_GameLoop()
+        # Binairo button
+        if Button_X + ButtonWidth > mouse[0] > Button_X and Button_Y + 50 + ButtonHeight > mouse[1] > Button_Y and click[0] == 1:
+                Binairo_GameLoop()
+
+# [SUBMENU] 2) Solve an existing board -----------------------------------------------------------------------------
+        Submenu_X = Submenu_X + 260 + 10        # start column 1 + width column 1 + space between columns
         Button_X = int((Submenu_X + 443) / 2)
         Button_Y = int(Submenu_Y + 35)
 
@@ -110,17 +120,19 @@ def MainMenu():
         # Submenu - color
         pygame.draw.rect(Screen, BackgroundColor, (Submenu_X, Submenu_Y, 250, 250))
         # Submenu - title
-        Button("SOLVE", (Button_X + 73, Submenu_Y - 15), 75, 30, BackgroundColor, BackgroundColor)
+        Button("PUZZLE INFO", (Button_X + 73, Submenu_Y - 15), 75, 30, BackgroundColor, BackgroundColor, mouse)
+
         # Submenu - buttons
-        Button("Sudoku", (Button_X, Button_Y), 218, 40, ButtonColor, HighlightColor, Sudoku_GameLoop)
-        Button("Binairo", (Button_X, Button_Y + 50), 218, 40, ButtonColor, HighlightColor, Binairo_GameLoop)
+            # Button("Sudoku", (Button_X, Button_Y), 218, 40, ButtonColor, HighlightColor, Sudoku_GameLoop)
+            # Button("Binairo", (Button_X, Button_Y + 50), 218, 40, ButtonColor, HighlightColor, Binairo_GameLoop)
 
     # EXIT Button ------------------------------------------------------------------------------------------
-        Button("EXIT", (ScreenWidth /2 - 50, ScreenHeight - 75), 100, 40, (255,69,0), (139,0,0), quitgame)
+        Button("EXIT", (ScreenWidth /2 - 50, ScreenHeight - 75), 100, 40, (255,69,0), (139,0,0), mouse)
 
     # Update Display ---------------------------------------------------------------------------------------
         pygame.display.update()
 # ==========================================================================================================
+
 
 # GAME LOOP: Sudoku ========================================================================================
 def Sudoku_GameLoop():
@@ -157,7 +169,7 @@ def Sudoku_GameLoop():
         TextObject("MENU", ButtonFont, black, TopLeft[0] + (100 / 2), TopLeft[1] + (40 / 2))
 
     # EXIT Button ------------------------------------------------------------------------------------------
-        Button("EXIT", (ScreenWidth /2 + 10, ScreenHeight - 75), 100, 40, (255,69,0), (139,0,0), quitgame)
+        # Button("EXIT", (ScreenWidth /2 + 10, ScreenHeight - 75), 100, 40, (255,69,0), (139,0,0), quitgame)
 
         # Update Display
         pygame.display.update()
@@ -201,7 +213,7 @@ def Binairo_GameLoop():
         TextObject("MENU", ButtonFont, black, TopLeft[0] + (100 / 2), TopLeft[1] + (40 / 2))
 
     # EXIT Button ------------------------------------------------------------------------------------------
-        Button("EXIT", (ScreenWidth /2 + 10, ScreenHeight - 75), 100, 40, (255,69,0), (139,0,0), quitgame)
+        # Button("EXIT", (ScreenWidth /2 + 10, ScreenHeight - 75), 100, 40, (255,69,0), (139,0,0), quitgame)
 
         # Update Display
         pygame.display.update()
