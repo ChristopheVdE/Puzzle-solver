@@ -155,9 +155,18 @@ def MainMenu():
             image = pygame.image.load(Images + '\Binairo.png')
             Screen.blit(image, (Submenu_X + 65, Submenu_Y + 45))
             # Puzzle info
+            TextObject("Each column and row need to have te same ammount of 1 and 0.", ButtonFont, black, 535, Submenu_Y + 200)
+            TextObject("Max 2 times the same number next to eachother.", ButtonFont, black, 535, Submenu_Y + 220)
+            TextObject("No identical rows/ columns alowed", ButtonFont, black, 535, Submenu_Y + 240)
             # Play button
-            # solve button
+            Button("PLAY", (Submenu_X + 15, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
+            if Submenu_X + 15 + 100 > mouse[0] > Submenu_X + 15 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
+                Binairo_GameLoop()
 
+            # solve button
+            Button("SOLVE", (Submenu_X + 135, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
+            if Submenu_X + 135 + 100 > mouse[0] > Submenu_X + 135 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
+                Binairo_GameLoop()
     # EXIT Button ------------------------------------------------------------------------------------------
         Button("EXIT", (ScreenWidth / 2 - 50, ScreenHeight - 75), 100, 40, (255, 69, 0), (139, 0, 0), mouse)
         if ((ScreenWidth / 2 - 50) + 100 > mouse[0] > (ScreenWidth / 2 - 50) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75)):
