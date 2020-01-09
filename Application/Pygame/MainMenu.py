@@ -211,13 +211,14 @@ def Sudoku_GameLoop():
 # BOARD ----------------------------------------------------------------------------------------------------
         grid = board(Screen, 9, (140,100))
         board.DarwBoardBackground(grid, black)
-        board.DrawCubes(grid, (255,255,255))
+        board.DrawCubes(grid, (255, 255, 255))
+        board.HiglightLines(grid, NavigationColor, mouse)
         
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button
         Button("MENU", (ScreenWidth / 2 - 110, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
         if (ScreenWidth / 2 - 110) + 100 > mouse[0] > (ScreenWidth / 2 - 110) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
-            Menu = True
+            menu = True
             running = False
     # EXIT Button 
         Button("EXIT", (ScreenWidth / 2 + 10, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
@@ -225,7 +226,7 @@ def Sudoku_GameLoop():
             quitgame()
 
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
-        pygame.display.update()
+        pygame.display.update()        
 # ==========================================================================================================
 
 # GAME LOOP: Binairo =======================================================================================
@@ -278,22 +279,46 @@ class board():
         pygame.draw.rect(self.Screen, BackgroundColor, (self.X, self.Y, self.BoardSize, self.BoardSize))
     
     def DrawCubes(self, CubeColor):
-        CubeX = self.X + 3                               #border arround board = 2
-        CubeY = self.Y + 3                               #border arround board = 2
-        for row in range(self.NumberOfCubes):  #rows
+        # Parameters ---------------------------------------------------------------------------------------
+        self.Rows = []
+        self.Cols = []
+        CubeX = self.X + 3  #border arround board = 2
+        CubeY = self.Y + 3  #border arround board = 2
+        # Create cubes -------------------------------------------------------------------------------------
+        for row in range(self.NumberOfCubes):
+            # 3x3 grid separation lines: rows (Sudoku)
             if row in [3, 6]:
-                #pygame.draw.line(self.Screen, (255, 0, 0), (self.X, CubeY -1), (self.X + self.BoardSize, CubeY -1), 2)
                 CubeY += 1
-            for col in range(self.NumberOfCubes):  #cols
+            for col in range(self.NumberOfCubes):
+                # 3x3 grid separation lines: columns (Sudoku)
                 if col in [3, 6]:
-                    #pygame.draw.line(self.Screen, (255, 0, 0), (CubeX -1, self.Y), (CubeX -1, self.Y + self.BoardSize), 2)
                     CubeX += 1
+                # Draw cube
                 pygame.draw.rect(self.Screen, CubeColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
+            # Save coords of colum --------------------------------------------------------------------------
+                self.Cols.append((CubeX, self.Y +3))
                 CubeX += self.CubeSize + self.spaceBetweenCubes
+            # Save coords of Row ----------------------------------------------------------------------------
+            self.Rows.append((self.X +3, CubeY))
+            # Reset positions for new row -------------------------------------------------------------------
             CubeX = self.X + 3
             CubeY += self.CubeSize + self.spaceBetweenCubes
 
-
+    def HiglightLines(self, HighlightColor, mouse):
+        HighlightColor = (HighlightColor[0], HighlightColor[1], HighlightColor[2], 0.01)
+        for row in self.Rows:
+            for col in self.Cols:
+                # Check if mouse is in column-area & higlight column if true
+                if col[0] + self.CubeSize > mouse[0] > col[0] and col[1] + self.BoardSize -2 > mouse[1] > col[1]:
+                    pygame.draw.rect(self.Screen, HighlightColor, (col[0], col[1], self.CubeSize, self.BoardSize -6))
+                # Check if mouse is in row-area & higlight row if true
+                if row[0] + self.BoardSize -5 > mouse[0] > row[0] and row[1] + self.CubeSize> mouse[1] > row[1]:
+                    pygame.draw.rect(self.Screen, HighlightColor, (row[0], row[1], self.BoardSize -6, self.CubeSize))
+    """
+    def UpdateCube(self):
+        # highlight selected cube
+        #allow typing
+    """
 
 
 # Start game
