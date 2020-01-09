@@ -208,6 +208,11 @@ def Sudoku_GameLoop():
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
+# BOARD ----------------------------------------------------------------------------------------------------
+        grid = board(Screen, 9, (140,100))
+        board.DarwBoardBackground(grid, black)
+        board.DrawCubes(grid, (255,255,255))
+        
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button
         Button("MENU", (ScreenWidth / 2 - 110, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
@@ -254,6 +259,42 @@ def Binairo_GameLoop():
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
 # ==========================================================================================================
+
+
+
+
+# Board ====================================================================================================
+class board():
+    def __init__(self, Screen, NumberOfCubes, StartPos):
+        self.Screen = Screen
+        self.NumberOfCubes = int(NumberOfCubes)
+        self.X = int(StartPos[0])
+        self.Y = int(StartPos[1])
+        self.CubeSize = 40
+
+    def DarwBoardBackground(self, BackgroundColor):
+        self.spaceBetweenCubes = 1
+        self.BoardSize = int((self.NumberOfCubes * self.CubeSize) + (self.NumberOfCubes * self.spaceBetweenCubes) + 2 + 5)
+        pygame.draw.rect(self.Screen, BackgroundColor, (self.X, self.Y, self.BoardSize, self.BoardSize))
+    
+    def DrawCubes(self, CubeColor):
+        CubeX = self.X + 3                               #border arround board = 2
+        CubeY = self.Y + 3                               #border arround board = 2
+        for row in range(self.NumberOfCubes):  #rows
+            if row in [3, 6]:
+                #pygame.draw.line(self.Screen, (255, 0, 0), (self.X, CubeY -1), (self.X + self.BoardSize, CubeY -1), 2)
+                CubeY += 1
+            for col in range(self.NumberOfCubes):  #cols
+                if col in [3, 6]:
+                    #pygame.draw.line(self.Screen, (255, 0, 0), (CubeX -1, self.Y), (CubeX -1, self.Y + self.BoardSize), 2)
+                    CubeX += 1
+                pygame.draw.rect(self.Screen, CubeColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
+                CubeX += self.CubeSize + self.spaceBetweenCubes
+            CubeX = self.X + 3
+            CubeY += self.CubeSize + self.spaceBetweenCubes
+
+
+
 
 # Start game
 MainMenu()
