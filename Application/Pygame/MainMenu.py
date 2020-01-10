@@ -74,7 +74,7 @@ pygame.init()
 # Display size ----------------------------------------------------------------------------------------------
 ScreenWidth = 800
 ScreenHeight = 600
-Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight))
+Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF, 32)
 
 # Caption & logo --------------------------------------------------------------------------------------------
 pygame.display.set_caption('Puzzle solver')
@@ -305,15 +305,24 @@ class board():
             CubeY += self.CubeSize + self.spaceBetweenCubes
 
     def HiglightLines(self, HighlightColor, mouse):
-        HighlightColor = (HighlightColor[0], HighlightColor[1], HighlightColor[2], 0.01)
+        # Create new surfaces for the higlights
+        RowSurface = pygame.Surface((self.BoardSize -6, self.CubeSize))
+        ColSurface = pygame.Surface((self.CubeSize, self.BoardSize -6))
+        # Set color of highlights
+        RowSurface.fill(HighlightColor)
+        ColSurface.fill(HighlightColor)
+        # Set alpha value of highlights (transparancy)
+        RowSurface.set_alpha(1)
+        ColSurface.set_alpha(1)
+        # Check if mouse position & higlight correct row/ column
         for row in self.Rows:
             for col in self.Cols:
                 # Check if mouse is in column-area & higlight column if true
-                if col[0] + self.CubeSize > mouse[0] > col[0] and col[1] + self.BoardSize -2 > mouse[1] > col[1]:
-                    pygame.draw.rect(self.Screen, HighlightColor, (col[0], col[1], self.CubeSize, self.BoardSize -6))
+                if col[0] + self.CubeSize > mouse[0] > col[0] and col[1] + self.BoardSize - 2 > mouse[1] > col[1]:
+                    self.Screen.blit(ColSurface, (col[0], col[1]))
                 # Check if mouse is in row-area & higlight row if true
                 if row[0] + self.BoardSize -5 > mouse[0] > row[0] and row[1] + self.CubeSize> mouse[1] > row[1]:
-                    pygame.draw.rect(self.Screen, HighlightColor, (row[0], row[1], self.BoardSize -6, self.CubeSize))
+                    self.Screen.blit(RowSurface, (row[0], row[1]))
     """
     def UpdateCube(self):
         # highlight selected cube
