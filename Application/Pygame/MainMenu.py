@@ -153,12 +153,12 @@ def MainMenu():
             # Play button
             Button("PLAY", (Submenu_X + 15, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
             if Submenu_X + 15 + 100 > mouse[0] > Submenu_X + 15 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
-                Sudoku_GameLoop()
+                Sudoku_GameLoop(menu)
 
             # solve button
             Button("SOLVE", (Submenu_X + 135, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
             if Submenu_X + 135 + 100 > mouse[0] > Submenu_X + 135 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
-                Sudoku_GameLoop()
+                Sudoku_GameLoop(menu)
 
     # Submenu - Binairo info
         if (Button_X + ButtonWidth > mouse[0] > Button_X and Button_Y + 50 + ButtonHeight > mouse[1] > Button_Y + 50) or Binairo:
@@ -191,7 +191,7 @@ def MainMenu():
 # ==========================================================================================================
 
 # GAME LOOP: Sudoku ========================================================================================
-def Sudoku_GameLoop():
+def Sudoku_GameLoop(menu):
     running = True
 
 # MAIN LOOP ------------------------------------------------------------------------------------------------
@@ -200,6 +200,8 @@ def Sudoku_GameLoop():
             if event.type == pygame.QUIT:
                 running = False
     
+    # Wheter or not to return to menu when leaving the sudoku window
+        BackToMenu = False
     # Set background color
         Screen.fill((BackgroundColor))
     # Display title
@@ -210,15 +212,15 @@ def Sudoku_GameLoop():
 
 # BOARD ----------------------------------------------------------------------------------------------------
         grid = board(Screen, 9, (140,100))
-        board.DarwBoardBackground(grid, black)
-        board.DrawCubes(grid, (255, 255, 255))
-        board.HiglightLines(grid, NavigationColor, mouse)
+        grid.DarwBoardBackground(black)
+        grid.DrawCubes((255, 255, 255))
+        grid.HiglightLines(NavigationColor, mouse)
         
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button
         Button("MENU", (ScreenWidth / 2 - 110, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
         if (ScreenWidth / 2 - 110) + 100 > mouse[0] > (ScreenWidth / 2 - 110) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
-            menu = True
+            BackToMenu = True
             running = False
     # EXIT Button 
         Button("EXIT", (ScreenWidth / 2 + 10, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
@@ -226,7 +228,11 @@ def Sudoku_GameLoop():
             quitgame()
 
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
-        pygame.display.update()        
+        pygame.display.update()
+
+# COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
+    if not BackToMenu:
+        quitgame()    
 # ==========================================================================================================
 
 # GAME LOOP: Binairo =======================================================================================
@@ -238,6 +244,9 @@ def Binairo_GameLoop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+    # Wheter or not to return to menu when leaving the sudoku window
+        BackToMenu = False
     # Set background color
         Screen.fill(BackgroundColor)
     # Display title
@@ -250,7 +259,7 @@ def Binairo_GameLoop():
     # Menu button
         Button("MENU", (ScreenWidth / 2 - 110, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
         if (ScreenWidth / 2 - 110) + 100 > mouse[0] > (ScreenWidth / 2 - 110) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
-            Menu = True
+            BackToMenu = True
             running = False
     # EXIT Button 
         Button("EXIT", (ScreenWidth / 2 + 10, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
@@ -259,6 +268,10 @@ def Binairo_GameLoop():
 
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
+
+# COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
+    if not BackToMenu:
+        quitgame()    
 # ==========================================================================================================
 
 
@@ -280,8 +293,8 @@ class board():
     
     def DrawCubes(self, CubeColor):
         # Parameters ---------------------------------------------------------------------------------------
-        self.Rows = []
-        self.Cols = []
+        self.Rows = []      #contains start-coords and size of each row
+        self.Cols = []      #contains start-coords and size of each column
         CubeX = self.X + 3  #border arround board = 2
         CubeY = self.Y + 3  #border arround board = 2
         # Create cubes -------------------------------------------------------------------------------------
@@ -323,10 +336,13 @@ class board():
                 # Check if mouse is in row-area & higlight row if true
                 if row[0] + self.BoardSize -5 > mouse[0] > row[0] and row[1] + self.CubeSize> mouse[1] > row[1]:
                     self.Screen.blit(RowSurface, (row[0], row[1]))
+    
     """
     def UpdateCube(self):
-        # highlight selected cube
-        #allow typing
+        # print values on board
+        # allow selecting of cube if it's not a permanent value
+        # allow typing
+        # allow pencil
     """
 
 
