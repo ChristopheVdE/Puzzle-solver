@@ -62,7 +62,7 @@ ButtonFont = pygame.font.Font('freesansbold.ttf', 15)
 # MAIN MENU =================================================================================================
 def MainMenu():
     menu = True
-    # if button is selected
+    # if button was Pressed
     SudokuSelected = False
     BinairoSelected = False
 
@@ -105,54 +105,50 @@ def MainMenu():
             if click[0] == 1:
                 SudokuSelected = True
             BinairoSelected = False
-        # Puzzle Image
-            PuzzleInfo.Image(Images + '\Sudoku.jpg', 115, 115)
-            """
-        # Puzzle info
-            MultilineText("Fill a 9×9 grid.\nEach column, row and 3×3 grid should contain all digits from 1 to 9.", ButtonFont, black, (420, Submenu_Y + 180), 650, 250)
+        # Puzzle image & text
+            PuzzleInfo.Image(Images + '\Sudoku.jpg')
+            PuzzleInfo.MultiLineText("Fill a 9×9 grid.\nEach column, row and 3×3 grid should contain all digits from 1 to 9.", ButtonFont, black)
         # Play button
-            Button("PLAY", (Submenu_X + 15, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
-            if Submenu_X + 15 + 100 > mouse[0] > Submenu_X + 15 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
-                return ActivateGameLoop("SudokuPlay")
-
-        # solve button
-            Button("SOLVE", (Submenu_X + 135, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
-            if Submenu_X + 135 + 100 > mouse[0] > Submenu_X + 135 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
-                return ActivateGameLoop("SudokuSolve")
-            """
-# [SUBMENU] PUZZLE INFO: BINAIRO ---------------------------------------------------------------------------
-    # Submenu - Binairo info
-        """
-        if (Button_X + ButtonWidth > mouse[0] > Button_X and Button_Y + 50 + ButtonHeight > mouse[1] > Button_Y + 50) or Binairo:
-            # Activate & decativate the correct info screen
-            if click[0] == 1: Binairo = True
-            Sudoku = False
-
-            # Puzzle image
-            image = pygame.image.load(Images + '\Binairo.png')
-            Screen.blit(image, (Submenu_X + 65, Submenu_Y + 25))
-            # Puzzle info
-            MultilineText("Each column/ row needs to have te same ammount of 1 and 0.\nMax 2 times the same number next to eachother.\nNo identical rows/ columns alowed.", ButtonFont, black, (420, Submenu_Y + 150), 650, 250)
-            # Play button
-            Button("PLAY", (Submenu_X + 15, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
-            if Submenu_X + 15 + 100 > mouse[0] > Submenu_X + 15 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
-                SelectedGame = ActivateGameLoop("BinairoPlay")
-                return SelectedGame
-            # solve button
-            Button("SOLVE", (Submenu_X + 135, Submenu_Y + 270), 100, 40, Playbutton, PlayHighlight, mouse)
-            if Submenu_X + 135 + 100 > mouse[0] > Submenu_X + 135 and Submenu_Y + 270 + 40 > mouse[1] > Submenu_Y + 270 and click[0] == 1:
-                SelectedGame = ActivateGameLoop("BinairoSolve")
-                return SelectedGame
-        """
-    # EXIT Button ------------------------------------------------------------------------------------------
-        """
-        Button("EXIT", (ScreenWidth / 2 - 50, ScreenHeight - 75), 100, 40, (255, 69, 0), (139, 0, 0), mouse)
-        if ((ScreenWidth / 2 - 50) + 100 > mouse[0] > (ScreenWidth / 2 - 50) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75)):
+            Play = Button(Screen, PuzzleInfo.X + 15, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Playbutton, PlayHighlight)
+            Play.render(mouse)
+            Play.text(ButtonFont, black, "PLAY")
+            SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("SudokuPlay"))
+        # Solve button
+            Play = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Playbutton, PlayHighlight)
+            Play.render(mouse)
+            Play.text(ButtonFont, black, "SOLVE")
+            SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("SudokuSolve"))
+        # Return SelectedGame
+            if SelectedGame: return SelectedGame
+    # PUZZLE INFO: BINAIRO ---------------------------------------------------------------------------------
+        # Sudoku button activation
+        if (Binairo.X + Binairo.Width > mouse[0] > Binairo.X and Binairo.Y + Binairo.Height > mouse[1] > Binairo.Y) or BinairoSelected:
             if click[0] == 1:
-                #quitgame()
-                return ActivateGameLoop("Quit")
-        """
-    # Update Display ---------------------------------------------------------------------------------------
+                BinairoSelected = True
+            SudokuSelected = False
+        # Puzzle image & text
+            PuzzleInfo.Image(Images + '\Binairo.png')
+            PuzzleInfo.MultiLineText("Each column/ row needs to have te same ammount of 1 and 0.\nMax 2 times the same number next to eachother.\nNo identical rows/ columns alowed.", ButtonFont, black)
+        # Play button
+            Play = Button(Screen, PuzzleInfo.X + 15, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Playbutton, PlayHighlight)
+            Play.render(mouse)
+            Play.text(ButtonFont, black, "PLAY")
+            SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("BinairoPlay"))
+        # Solve button
+            Play = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Playbutton, PlayHighlight)
+            Play.render(mouse)
+            Play.text(ButtonFont, black, "SOLVE")
+            SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("BinairoSolve"))
+        # Return SelectedGame
+            if SelectedGame: return SelectedGame
+
+# EXIT BUTTON ----------------------------------------------------------------------------------------------
+        Exit = Button(Screen, ScreenWidth/2 - 50, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
+        Exit.render(mouse)
+        Exit.text(ButtonFont, black, "EXIT")
+        SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
+        if SelectedGame: return SelectedGame
+# UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
     
     return ActivateGameLoop("Quit")
@@ -254,7 +250,6 @@ while True:
     for game in SelectedGame:
         if game[0] == "Menu" and game[1] == True:
             SelectedGame = MainMenu()
-            print(SelectedGame)
         elif game[0] == "SudokuPlay" and game[1] == True:
             SelectedGame = Sudoku_GameLoop()
         elif game[0] == "SudokuSolve" and game[1] == True:

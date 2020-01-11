@@ -33,7 +33,7 @@ class Button():
 # Adding functionality to Button ---------------------------------------------------------------------------
     def functionality(self, mouse, click, function):
         if self.X + self.Width > mouse[0] > self.X and self.Y + self.Height > mouse[1] > self.Height and click[0] == 1:
-            function # OR return function
+            return function # OR return function
 # ==========================================================================================================
 
 # [CLASS] CENTERED TEXT ====================================================================================
@@ -69,7 +69,7 @@ class MultiLineText():
 
         for Sentence in self.Text.splitlines():
             for Word in Sentence.split(' '):
-                WordSurface = self.Font.render(Word, True, Color)
+                WordSurface = self.Font.render(Word, True, self.Color)
                 WordWidth, WordHeight = WordSurface.get_size()
                 if X + WordWidth >= self.MaxWidth:
                     X = self.Position[0]            # reset X
@@ -111,14 +111,16 @@ class Submenu():
         Title = CenteredText(Text, Font, Color, Text_X, self.Y)
         Title.render(self.Screen)
 # Submenu image --------------------------------------------------------------------------------------------
-    def Image(self, Image, Width, Height):
+    def Image(self, Image):
         Image = pygame.image.load(Image)
-        Image = pygame.transform.scale(Image, (Width, Height))
+        Image = pygame.transform.scale(Image, (115, 115))
         ImageArea = Image.get_rect()
-        ImageArea.center = (self.X + self.Width/2, self.Y)
+        ImageArea.center = (self.X + self.Width/2, self.Y +80)
         self.Screen.blit(Image, ImageArea)
 # Submenu text ---------------------------------------------------------------------------------------------
-
+    def MultiLineText(self, Text, Font, Color):
+        self.Text = MultiLineText(Text, Font, Color, (self.X + 10, int(self.Y + 80 + 150/ 2)), self.X + self.Width - 20)
+        self.Text.render(self.Screen)
     
 # ===========================================================================================================
 
