@@ -62,7 +62,7 @@ ButtonFont = pygame.font.Font('freesansbold.ttf', 15)
 
 # MAIN MENU =================================================================================================
 def MainMenu():
-    #time.sleep(0.1)
+    time.sleep(0.1)
     menu = True
     # if button was Pressed
     SudokuSelected = False
