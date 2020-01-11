@@ -9,6 +9,7 @@
 import os
 import pygame
 from Menu import Button, CenteredText, MultiLineText, Submenu
+import time
 # ==========================================================================================================
 
 # FUNCTIONS ================================================================================================
@@ -61,11 +62,11 @@ ButtonFont = pygame.font.Font('freesansbold.ttf', 15)
 
 # MAIN MENU =================================================================================================
 def MainMenu():
+    #time.sleep(0.1)
     menu = True
     # if button was Pressed
     SudokuSelected = False
     BinairoSelected = False
-
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     while menu:
         for event in pygame.event.get():
@@ -79,7 +80,6 @@ def MainMenu():
     # Title
         MenuTitle = CenteredText("Puzzle Solver", TitleFont, black, ScreenWidth/2, ScreenHeight/7)
         MenuTitle.render(Screen)
-
 # [SUBMENU] CHOOSE PUZZLE ----------------------------------------------------------------------------------
     # Title
         PuzzleType = Submenu(Screen, 140, ScreenHeight/7 + 70, 250, 325, black, BackgroundColor)
@@ -93,7 +93,6 @@ def MainMenu():
         Binairo = Button(Screen, 155, ScreenHeight / 7 + 145, 218, 40, ButtonColor, HighlightColor, BinairoSelected)
         Binairo.render(mouse)
         Binairo.text(ButtonFont, black, "Binairo")        
-
 # [SUBMENU] PUZZLE INFO ------------------------------------------------------------------------------------
     # GENERAL ----------------------------------------------------------------------------------------------
         PuzzleInfo = Submenu(Screen, 140 + 270, ScreenHeight/7 + 70, 250, 325, black, BackgroundColor)
@@ -113,12 +112,12 @@ def MainMenu():
             Play.render(mouse)
             Play.text(ButtonFont, black, "PLAY")
             SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("SudokuPlay"))
+            if SelectedGame: return SelectedGame
         # Solve button
-            Play = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Playbutton, PlayHighlight)
-            Play.render(mouse)
-            Play.text(ButtonFont, black, "SOLVE")
-            SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("SudokuSolve"))
-        # Return SelectedGame
+            Solve = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Playbutton, PlayHighlight)
+            Solve.render(mouse)
+            Solve.text(ButtonFont, black, "SOLVE")
+            SelectedGame = Solve.functionality(mouse, click, ActivateGameLoop("SudokuSolve"))
             if SelectedGame: return SelectedGame
     # PUZZLE INFO: BINAIRO ---------------------------------------------------------------------------------
         # Sudoku button activation
@@ -134,14 +133,13 @@ def MainMenu():
             Play.render(mouse)
             Play.text(ButtonFont, black, "PLAY")
             SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("BinairoPlay"))
-        # Solve button
-            Play = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Playbutton, PlayHighlight)
-            Play.render(mouse)
-            Play.text(ButtonFont, black, "SOLVE")
-            SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("BinairoSolve"))
-        # Return SelectedGame
             if SelectedGame: return SelectedGame
-
+        # Solve button
+            Solve = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Playbutton, PlayHighlight)
+            Solve.render(mouse)
+            Solve.text(ButtonFont, black, "SOLVE")
+            SelectedGame = Solve.functionality(mouse, click, ActivateGameLoop("BinairoSolve"))
+            if SelectedGame: return SelectedGame
 # EXIT BUTTON ----------------------------------------------------------------------------------------------
         Exit = Button(Screen, ScreenWidth/2 - 50, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
         Exit.render(mouse)
@@ -156,59 +154,52 @@ def MainMenu():
 
 # GAME LOOP: Sudoku ========================================================================================
 def Sudoku_GameLoop():
-    running = True
-
 # IMPORT SUDOKU SCRIPTS ------------------------------------------------------------------------------------
     from Sudoku import board
-
 # MAIN LOOP ------------------------------------------------------------------------------------------------
+    running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
     
-    # Wheter or not to return to menu when leaving the sudoku window
-        BackToMenu = False
     # Set background color
         Screen.fill((BackgroundColor))
     # Display title
-        TextObject("Sudoku", TitleFont, black, int(ScreenWidth / 2), 50)
+        Title = CenteredText("Sudoku", TitleFont, black, int(ScreenWidth / 2), 50)
+        Title.render(Screen)
     # Get mouse position & track mouse-clicks
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-
 # BOARD ----------------------------------------------------------------------------------------------------
         grid = board(Screen, 9, (140,100))
         grid.DarwBoardBackground(black)
         grid.DrawCubes((255, 255, 255))
-        grid.HiglightLines(NavigationColor, mouse)
-        
+        grid.HiglightLines(NavigationColor, mouse)     
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button
-        Button("MENU", (ScreenWidth / 2 - 110, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
-        if (ScreenWidth / 2 - 110) + 100 > mouse[0] > (ScreenWidth / 2 - 110) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
-            return ActivateGameLoop("Menu")
-            # BackToMenu = True
-            # running = False
-    # EXIT Button 
-        Button("EXIT", (ScreenWidth / 2 + 10, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
-        if (ScreenWidth / 2 + 10) + 100 > mouse[0] > (ScreenWidth / 2 + 10) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
-            return ActivateGameLoop("Quit")
-
+        Menu = Button(Screen, ScreenWidth / 2 - 110, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
+        Menu.render(mouse)
+        Menu.text(ButtonFont, black, "MENU")
+        SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Menu"))
+        if SelectedGame: return SelectedGame
+    # EXIT Button
+        Exit = Button(Screen, ScreenWidth / 2 +10, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
+        Exit.render(mouse)
+        Exit.text(ButtonFont, black, "QUIT")
+        SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Quit"))
+        if SelectedGame: return SelectedGame
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
-
 # COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
     return ActivateGameLoop("Quit")
-    # if not BackToMenu:
-    #     quitgame()    
 # ==========================================================================================================
 
 # GAME LOOP: Binairo =======================================================================================
 def Binairo_GameLoop():
-    running = True
-
+# IMPORT SUDOKU SCRIPTS ------------------------------------------------------------------------------------
 # MAIN LOOP ------------------------------------------------------------------------------------------------
+    running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -219,33 +210,35 @@ def Binairo_GameLoop():
     # Set background color
         Screen.fill(BackgroundColor)
     # Display title
-        TextObject("Binairo", TitleFont, black, int(ScreenWidth / 2), 50)
+        Title = CenteredText("Binairo", TitleFont, black, int(ScreenWidth / 2), 50)
+        Title.render(Screen)
     # Get mouse position & track mouse-clicks
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-
+# BOARD ----------------------------------------------------------------------------------------------------
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button
-        Button("MENU", (ScreenWidth / 2 - 110, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
-        if (ScreenWidth / 2 - 110) + 100 > mouse[0] > (ScreenWidth / 2 - 110) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
-            BackToMenu = True
-            running = False
-    # EXIT Button 
-        Button("EXIT", (ScreenWidth / 2 + 10, ScreenHeight - 75), 100, 40, NavigationColor, NavigationHighlight, mouse)
-        if (ScreenWidth / 2 + 10) + 100 > mouse[0] > (ScreenWidth / 2 + 10) and (ScreenHeight - 75) + 40 > mouse[1] > (ScreenHeight - 75) and click[0] == 1:
-            quitgame()
-
+        Menu = Button(Screen, ScreenWidth / 2 - 110, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
+        Menu.render(mouse)
+        Menu.text(ButtonFont, black, "MENU")
+        SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Menu"))
+        if SelectedGame: return SelectedGame
+    # EXIT Button
+        Exit = Button(Screen, ScreenWidth / 2 +10, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
+        Exit.render(mouse)
+        Exit.text(ButtonFont, black, "QUIT")
+        SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Quit"))
+        if SelectedGame: return SelectedGame
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
-
 # COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
-    if not BackToMenu:
-        quitgame()    
+    return ActivateGameLoop("Quit")
 # ==========================================================================================================
 
-# Start game
+# MAIN GAME LOOP ===========================================================================================
+# Set Start-screen to Menu ---------------------------------------------------------------------------------
 SelectedGame = ActivateGameLoop("Menu")
-
+# MAIN LOOP ------------------------------------------------------------------------------------------------
 while True:
     for game in SelectedGame:
         if game[0] == "Menu" and game[1] == True:
@@ -255,11 +248,10 @@ while True:
         elif game[0] == "SudokuSolve" and game[1] == True:
             SelectedGame = Sudoku_GameLoop()
         elif game[0] == "BinairoPlay" and game[1] == True:
-            Binairo_GameLoop()
+            SelectedGame = Binairo_GameLoop()
         elif game[0] == "BinairoSolve" and game[1] == True:
-            Binairo_GameLoop()
+            SelectedGame = Binairo_GameLoop()
         elif game[0] == "Quit" and game[1] == True:
             quitgame()
-
-#quitgame()
+# ==========================================================================================================
 
