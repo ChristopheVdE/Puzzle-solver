@@ -188,7 +188,7 @@ def Sudoku_GameLoop():
         Exit = Button(Screen, ScreenWidth / 2 +10, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
         Exit.render(mouse)
         Exit.text(ButtonFont, black, "QUIT")
-        SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Quit"))
+        SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
         if SelectedGame: return SelectedGame
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
@@ -234,7 +234,7 @@ def Binairo_GameLoop():
         Exit = Button(Screen, ScreenWidth / 2 +10, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
         Exit.render(mouse)
         Exit.text(ButtonFont, black, "QUIT")
-        SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Quit"))
+        SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
         if SelectedGame: return SelectedGame
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
