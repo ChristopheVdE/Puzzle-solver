@@ -9,7 +9,6 @@
 import os
 import pygame
 from Menu import Button, CenteredText, MultiLineText, Submenu
-import time
 # ==========================================================================================================
 
 # FUNCTIONS ================================================================================================
@@ -45,6 +44,9 @@ NavigationHighlight = (139,0,0)
 # Initialize game ------------------------------------------------------------------------------------------
 pygame.init()
 
+# Clock ----------------------------------------------------------------------------------------------------
+clock = pygame.time.Clock()
+
 # Display size ---------------------------------------------------------------------------------------------
 ScreenWidth = 800
 ScreenHeight = 600
@@ -62,7 +64,6 @@ ButtonFont = pygame.font.Font('freesansbold.ttf', 15)
 
 # MAIN MENU =================================================================================================
 def MainMenu():
-    time.sleep(0.1)
     menu = True
     # if button was Pressed
     SudokuSelected = False
@@ -148,7 +149,7 @@ def MainMenu():
         if SelectedGame: return SelectedGame
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
-    
+        clock.tick(60)
     return ActivateGameLoop("Quit")
 # ==========================================================================================================
 
@@ -191,6 +192,7 @@ def Sudoku_GameLoop():
         if SelectedGame: return SelectedGame
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
+        clock.tick(60)
 # COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
     return ActivateGameLoop("Quit")
 # ==========================================================================================================
@@ -198,6 +200,7 @@ def Sudoku_GameLoop():
 # GAME LOOP: Binairo =======================================================================================
 def Binairo_GameLoop():
 # IMPORT SUDOKU SCRIPTS ------------------------------------------------------------------------------------
+    from Binairo import board
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     running = True
     while running:
@@ -216,6 +219,10 @@ def Binairo_GameLoop():
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 # BOARD ----------------------------------------------------------------------------------------------------
+        grid = board(Screen, 10, (140,100))
+        grid.DarwBoardBackground(black)
+        grid.DrawCubes((255, 255, 255))
+        grid.HiglightLines(NavigationColor, mouse)     
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button
         Menu = Button(Screen, ScreenWidth / 2 - 110, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
@@ -231,6 +238,7 @@ def Binairo_GameLoop():
         if SelectedGame: return SelectedGame
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
+        clock.tick(60)
 # COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
     return ActivateGameLoop("Quit")
 # ==========================================================================================================
@@ -242,6 +250,7 @@ SelectedGame = ActivateGameLoop("Menu")
 while True:
     for game in SelectedGame:
         if game[0] == "Menu" and game[1] == True:
+            pygame.time.delay(100)
             SelectedGame = MainMenu()
         elif game[0] == "SudokuPlay" and game[1] == True:
             SelectedGame = Sudoku_GameLoop()

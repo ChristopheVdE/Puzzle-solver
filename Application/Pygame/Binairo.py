@@ -1,43 +1,78 @@
-# GAME LOOP: Binairo =======================================================================================
-def Binairo_GameLoop():
-    running = True
+############################################################################################################
+# NAME: Binairo
+# AUTHOR: Christophe Van den Eynde
+# FUNCTION: All scripts concerning Binairo's for the pygame apllication
+############################################################################################################
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        # Set background color
-        Screen.fill(backgroundcolor)
-
-        # Display title
-        TextObject("Binairo", TitleFont, black, int(ScreenWidth / 2), 50)
-
-    # BACK TO MAIN MENU Button (Action cant be passed through Button function so full code is used here) -
-        TopLeft = (ScreenWidth / 2 - 110, ScreenHeight - 75)
-
-        # Get mouse position & track mouse-clicks
-        mouse = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
-
-        # Draw Button & Highlight button if slected & Perform action if pressed
-        if TopLeft[0] + 100 > mouse[0] > TopLeft[0] and TopLeft[1] + 40 > mouse[1] > TopLeft[1]:
-            pygame.draw.rect(Screen, (139,0,0), (int(TopLeft[0]), int(TopLeft[1]), 100, 40))
-            if click[0] == 1:
-                Menu = True
-                running = False
-        else:
-            pygame.draw.rect(Screen, (255,69,0), (int(TopLeft[0]), int(TopLeft[1]), 100, 40))
-        # Add Text to Button
-        TextObject("MENU", ButtonFont, black, TopLeft[0] + (100 / 2), TopLeft[1] + (40 / 2))
-
-    # EXIT Button ------------------------------------------------------------------------------------------
-        Button("EXIT", (ScreenWidth /2 + 10, ScreenHeight - 75), 100, 40, (255,69,0), (139,0,0), quitgame)
-
-        # Update Display
-        pygame.display.update()
-
-    # Completely close the game (if this code isn't here, it closes the loop but not the app. The app would go back to the main menu.
-    if not Menu:
-        quitgame()
+# IMPORT PACKAGES ==========================================================================================
+import pygame
 # ==========================================================================================================
+
+# Board ====================================================================================================
+class board():
+    def __init__(self, Screen, NumberOfCubes, StartPos):
+        self.Screen = Screen
+        self.NumberOfCubes = int(NumberOfCubes)
+        self.X = int(StartPos[0])
+        self.Y = int(StartPos[1])
+        self.CubeSize = 40
+
+    def DarwBoardBackground(self, BackgroundColor):
+        self.spaceBetweenCubes = 1
+        self.BoardSize = int((self.NumberOfCubes * self.CubeSize) + (self.NumberOfCubes * self.spaceBetweenCubes) + 2 + 5)
+        pygame.draw.rect(self.Screen, BackgroundColor, (self.X, self.Y, self.BoardSize, self.BoardSize))
+    
+    def DrawCubes(self, CubeColor):
+        # Parameters ---------------------------------------------------------------------------------------
+        self.Rows = []      #contains start-coords and size of each row
+        self.Cols = []      #contains start-coords and size of each column
+        CubeX = self.X + 3  #border arround board = 2
+        CubeY = self.Y + 3  #border arround board = 2
+        # Create cubes -------------------------------------------------------------------------------------
+        for row in range(self.NumberOfCubes):
+            # 3x3 grid separation lines: rows (Sudoku)
+            if row == self.NumberOfCubes /2:
+                CubeY += 1
+            for col in range(self.NumberOfCubes):
+                # 3x3 grid separation lines: columns (Sudoku)
+                if col == self.NumberOfCubes /2:
+                    CubeX += 1
+                # Draw cube
+                pygame.draw.rect(self.Screen, CubeColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
+            # Save coords of colum --------------------------------------------------------------------------
+                self.Cols.append((CubeX, self.Y +3))
+                CubeX += self.CubeSize + self.spaceBetweenCubes
+            # Save coords of Row ----------------------------------------------------------------------------
+            self.Rows.append((self.X +3, CubeY))
+            # Reset positions for new row -------------------------------------------------------------------
+            CubeX = self.X + 3
+            CubeY += self.CubeSize + self.spaceBetweenCubes
+
+    def HiglightLines(self, HighlightColor, mouse):
+        # Create new surfaces for the higlights
+        RowSurface = pygame.Surface((self.BoardSize -6, self.CubeSize))
+        ColSurface = pygame.Surface((self.CubeSize, self.BoardSize -6))
+        # Set color of highlights
+        RowSurface.fill(HighlightColor)
+        ColSurface.fill(HighlightColor)
+        # Set alpha value of highlights (transparancy)
+        RowSurface.set_alpha(1)
+        ColSurface.set_alpha(1)
+        # Check if mouse position & higlight correct row/ column
+        for row in self.Rows:
+            for col in self.Cols:
+                # Check if mouse is in column-area & higlight column if true
+                if col[0] + self.CubeSize > mouse[0] > col[0] and col[1] + self.BoardSize - 2 > mouse[1] > col[1]:
+                    self.Screen.blit(ColSurface, (col[0], col[1]))
+                # Check if mouse is in row-area & higlight row if true
+                if row[0] + self.BoardSize -5 > mouse[0] > row[0] and row[1] + self.CubeSize> mouse[1] > row[1]:
+                    self.Screen.blit(RowSurface, (row[0], row[1]))
+    
+    """
+    def UpdateCube(self):
+        # print values on board
+        # allow selecting of cube if it's not a permanent value
+        # allow typing
+        # allow pencil
+    """
+
