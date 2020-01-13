@@ -89,6 +89,7 @@ class board():
             for col in range(len(self.solvable)):
                 if self.solvable[row][col] == '0' or self.solvable[row][col] == '1':
                     self.immutable.append((row, col))
+        print(self.immutable)
 # Return selected cube -------------------------------------------------------------------------------------
     def SelectCube(self, mouse, click, Cube):
         for row in range(len(self.Rows)):
@@ -111,13 +112,16 @@ class board():
         if board:
             self.CurrentBoard = board
         else:
-            self.CurrentBoard = self.solvable
+            self.CurrentBoard = []
+            for row in self.solvable:
+                self.CurrentBoard.append(row)
 
         # Update value of selected cube if key is pressed
         if Cube and key:
             if not Cube[0] in self.immutable:
                 self.CurrentBoard[Cube[0][0]] = UpdateBoard(self.CurrentBoard, (key, Cube[0]))
                 return self.CurrentBoard
+        return self.CurrentBoard
 # PRINT BOARD ----------------------------------------------------------------------------------------------
     def PrintBoard(self):
         Font = pygame.font.Font('freesansbold.ttf', 15)
@@ -129,6 +133,7 @@ class board():
                 if not self.CurrentBoard[row][col] == ".":
                     value = CenteredText(self.CurrentBoard[row][col], Font, Color, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
                     value.render(self.Screen)
+    
 # ==========================================================================================================
 
 
