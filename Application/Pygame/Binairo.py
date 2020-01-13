@@ -89,7 +89,6 @@ class board():
             for col in range(len(self.solvable)):
                 if self.solvable[row][col] == '0' or self.solvable[row][col] == '1':
                     self.immutable.append((row, col))
-        print(self.immutable)
 # Return selected cube -------------------------------------------------------------------------------------
     def SelectCube(self, mouse, click, Cube):
         for row in range(len(self.Rows)):
@@ -124,16 +123,22 @@ class board():
         return self.CurrentBoard
 # PRINT BOARD ----------------------------------------------------------------------------------------------
     def PrintBoard(self):
-        Font = pygame.font.Font('freesansbold.ttf', 15)
-        Color = (0,0,0)
+        # Original values
+        OriginalFont = pygame.font.Font('freesansbold.ttf', 20)
+        OriginalColor = (0,0,0)
+        # New values:
+        NewFont = pygame.font.Font('freesansbold.ttf', 18)
+        NewColor = (50,50,50)
 
         for row in range(len(self.Rows)):
             for col in range(len(self.Cols)):
                 CubeCoords = (self.Cols[col][0], self.Rows[row][1])
-                if not self.CurrentBoard[row][col] == ".":
-                    value = CenteredText(self.CurrentBoard[row][col], Font, Color, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
+                if not self.CurrentBoard[row][col] == "." and (row, col) in self.immutable:
+                    value = CenteredText(self.CurrentBoard[row][col], OriginalFont, OriginalColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
                     value.render(self.Screen)
-    
+                elif not self.CurrentBoard[row][col] == "." and (row, col) not in self.immutable:
+                    value = CenteredText(self.CurrentBoard[row][col], NewFont, NewColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
+                    value.render(self.Screen)
 # ==========================================================================================================
 
 
