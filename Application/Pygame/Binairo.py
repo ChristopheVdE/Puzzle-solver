@@ -82,8 +82,13 @@ class board():
             BruteForce(self.solution)
     # Create solvable state out of solution
             self.solvable = SolvableState(self.solution)
-            print(self.solvable)
-
+# Set Original board values as immutable -------------------------------------------------------------------
+    def Immutable(self):
+        self.immutable = []
+        for row in range(len(self.solvable)):
+            for col in range(len(self.solvable)):
+                if self.solvable[row][col] == '0' or self.solvable[row][col] == '1':
+                    self.immutable.append((row, col))
 # Return selected cube -------------------------------------------------------------------------------------
     def SelectCube(self, mouse, click, Cube):
         for row in range(len(self.Rows)):
@@ -106,15 +111,12 @@ class board():
         if board:
             self.CurrentBoard = board
         else:
-            self.CurrentBoard = []
-            for row in self.solvable:
-                self.CurrentBoard.append(row)
+            self.CurrentBoard = self.solvable
 
         # Update value of selected cube if key is pressed
-        if key:
-            if Cube:
-                print((key, Cube[0]))
-                self.CurrentBoard = UpdateBoard(self.CurrentBoard, (key, Cube[0]))
+        if Cube and key:
+            if not Cube[0] in self.immutable:
+                self.CurrentBoard[Cube[0][0]] = UpdateBoard(self.CurrentBoard, (key, Cube[0]))
                 return self.CurrentBoard
 # PRINT BOARD ----------------------------------------------------------------------------------------------
     def PrintBoard(self):
@@ -124,15 +126,9 @@ class board():
         for row in range(len(self.Rows)):
             for col in range(len(self.Cols)):
                 CubeCoords = (self.Cols[col][0], self.Rows[row][1])
-                if not self.solvable[row][col] == ".":
-                    value = CenteredText(self.solvable[row][col], Font, Color, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
+                if not self.CurrentBoard[row][col] == ".":
+                    value = CenteredText(self.CurrentBoard[row][col], Font, Color, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
                     value.render(self.Screen)
-    def Printself(self):
-        for key, value in self.__dict__.items():
-            print(key, value)
-            # value = CenteredText(key, Font, Color, (SelectedCube[0] + self.CubeSize), (SelectedCube[1] + self.CubeSize))
-            # value = CenteredText("TEST", Font, Color, (SelectedCube[0] + self.CubeSize/2), (SelectedCube[1] + self.CubeSize/2))
-            # value.render(self.Screen)
 # ==========================================================================================================
 
 

@@ -214,10 +214,10 @@ def Binairo_GameLoop():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_0: # cheks for keypress --> combing keypress check with selected cube to update value in cube
-                    key = 0
-                if event.key == pygame.K_1:
-                    key = 1
+                if event.key == pygame.K_0 or event.key == pygame.K_KP0: # cheks for keypress --> combing keypress check with selected cube to update value in cube
+                    key = '0'
+                if event.key == pygame.K_1 or event.key == pygame.K_KP1:
+                    key = '1'
             #if event.key == pygame.K_DELETE:
 
     # Wheter or not to return to menu when leaving the sudoku window
@@ -250,9 +250,9 @@ def Binairo_GameLoop():
         grid.DrawCubes((255, 255, 255))
         grid.HiglightLines(NavigationColor, mouse)
         grid.CreateBoard(FirstIteration)
-        #Cube = grid.SelectCube(mouse, click, Cube)
-        #print(Cube)
-        #UpdateBoard = grid.Updatecube(key, UpdateBoard, Cube)
+        grid.Immutable()
+        Cube = grid.SelectCube(mouse, click, Cube)
+        UpdateBoard = grid.Updatecube(key, UpdateBoard, Cube)
         grid.PrintBoard()
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button
@@ -272,6 +272,7 @@ def Binairo_GameLoop():
         clock.tick(60)
 # ITERATION COUNT ------------------------------------------------------------------------------------------
         FirstIteration = False
+        key = None
 # COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
     return ActivateGameLoop("Quit")
 # ==========================================================================================================
