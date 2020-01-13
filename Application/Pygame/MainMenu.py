@@ -203,10 +203,22 @@ def Binairo_GameLoop():
     from Binairo import board
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     running = True
+    key = None
+    Cube = None
+    CreatedBoard = None
+    FirstIteration = True
+    UpdateBoard = None
+    grid = None
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_0: # cheks for keypress --> combing keypress check with selected cube to update value in cube
+                    key = 0
+                if event.key == pygame.K_1:
+                    key = 1
+            #if event.key == pygame.K_DELETE:
 
     # Wheter or not to return to menu when leaving the sudoku window
         BackToMenu = False
@@ -218,11 +230,30 @@ def Binairo_GameLoop():
     # Get mouse position & track mouse-clicks
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
+# SETTINGS WINDOW ------------------------------------------------------------------------------------------
+    # number of cubes
+        # show current number of cubes per row/col
+        # increase by 2
+        # decrease by 2
+    # Turn of higlighting?
+    # Reset board
+    # Get Hint
+    # Check current (partial) board
+    # Create new board
+    # Navigation Buttons --> move nav buttons to this submenu
 # BOARD ----------------------------------------------------------------------------------------------------
-        grid = board(Screen, 10, (140,100))
+    # inititialize board class    
+        if not grid:
+            grid = board(Screen, 10, (140, 100))
+    # Print board, values ...
         grid.DarwBoardBackground(black)
         grid.DrawCubes((255, 255, 255))
-        grid.HiglightLines(NavigationColor, mouse)     
+        grid.HiglightLines(NavigationColor, mouse)
+        grid.CreateBoard(FirstIteration)
+        #Cube = grid.SelectCube(mouse, click, Cube)
+        #print(Cube)
+        #UpdateBoard = grid.Updatecube(key, UpdateBoard, Cube)
+        grid.PrintBoard()
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button
         Menu = Button(Screen, ScreenWidth / 2 - 110, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
@@ -239,6 +270,8 @@ def Binairo_GameLoop():
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
+# ITERATION COUNT ------------------------------------------------------------------------------------------
+        FirstIteration = False
 # COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
     return ActivateGameLoop("Quit")
 # ==========================================================================================================
