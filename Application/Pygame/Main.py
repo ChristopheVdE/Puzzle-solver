@@ -58,6 +58,6 @@ while True:
             SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
         elif game[0] == "Quit" and game[1] == True:
             pygame.quit()
-            break
+            quit()
 # ==========================================================================================================
 

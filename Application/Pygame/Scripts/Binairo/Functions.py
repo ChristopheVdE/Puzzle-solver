@@ -72,16 +72,15 @@ class board():
                 if row[0] + self.BoardSize -6 > mouse[0] > row[0] -1 and row[1] + self.CubeSize> mouse[1] > row[1] -1:
                     self.Screen.blit(RowSurface, (row[0], row[1]))
 # Create the actual board (the values) ---------------------------------------------------------------------
-    def CreateBoard(self, FirstIteration = None):
+    def CreateBoard(self):
     # Create empty board
-        if FirstIteration:
-            self.solution = []
-            for row in range(self.NumberOfCubes):
-                self.solution.append("{}".format('.' * self.NumberOfCubes))
+        self.solution = []
+        for row in range(self.NumberOfCubes):
+            self.solution.append("{}".format('.' * self.NumberOfCubes))
     # Generate a solution
-            BruteForce(self.solution)
+        BruteForce(self.solution)
     # Create solvable state out of solution
-            self.solvable = SolvableState(self.solution)
+        self.solvable = SolvableState(self.solution)
 # Set Original board values as immutable -------------------------------------------------------------------
     def Immutable(self):
         self.immutable = []
