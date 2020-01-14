@@ -41,17 +41,21 @@ SelectedGame = [("Menu", True)]
 while True:
     for game in SelectedGame:
         if game[0] == "Menu" and game[1] == True:
-            from Scripts.MainMenu.Menu import MainMenu as Gameloop
+            from Scripts.MainMenu.Menu import MainMenu as GameLoop
             pygame.time.delay(100)
-            SelectedGame = Gameloop(Screen, ScreenWidth, ScreenHeight, clock, Images)
+            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock, Images)
         elif game[0] == "SudokuPlay" and game[1] == True:
-            SelectedGame = GameLoop()
+            from Scripts.Sudoku.Create import Sudoku_GameLoop as GameLoop
+            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
         elif game[0] == "SudokuSolve" and game[1] == True:
-            SelectedGame = GameLoop()
+            from Scripts.Sudoku.Solve import Sudoku_GameLoop as GameLoop
+            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
         elif game[0] == "BinairoPlay" and game[1] == True:
-            SelectedGame = GameLoop()
+            from Scripts.Binairo.Create import Binairo_GameLoop as GameLoop
+            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
         elif game[0] == "BinairoSolve" and game[1] == True:
-            SelectedGame = GameLoop()
+            from Scripts.Binairo.Solve import Binairo_GameLoop as GameLoop
+            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
         elif game[0] == "Quit" and game[1] == True:
             pygame.quit()
             quit()

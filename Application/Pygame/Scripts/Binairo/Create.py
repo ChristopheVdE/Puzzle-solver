@@ -4,11 +4,18 @@
 # FUNCTION: Create playable boards
 ############################################################################################################
 
+# IMPORT PACKAGES ==========================================================================================
+import pygame
+from Scripts.General.Classes import Button, CenteredText
+from Scripts.General.Functions import ActivateGameLoop, quitgame
+from Scripts.Binairo.Functions import board
+from Settings.Colors import Colors
+from Settings.Fonts import Fonts
+# ==========================================================================================================
+
 # GAME LOOP: Binairo =======================================================================================
-def Binairo_GameLoop():
-# IMPORT SUDOKU SCRIPTS ------------------------------------------------------------------------------------
-    from Binairo import board
-# MAIN LOOP ------------------------------------------------------------------------------------------------
+def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock):
+# VARIABLES ------------------------------------------------------------------------------------------------
     running = True
     key = None
     Cube = None
@@ -16,6 +23,7 @@ def Binairo_GameLoop():
     FirstIteration = True
     UpdateBoard = None
     grid = None
+# MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -30,9 +38,9 @@ def Binairo_GameLoop():
     # Wheter or not to return to menu when leaving the sudoku window
         BackToMenu = False
     # Set background color
-        Screen.fill(BackgroundColor)
+        Screen.fill(Colors["BackgroundColor"])
     # Display title
-        Title = CenteredText("Binairo", TitleFont, black, int(ScreenWidth / 2), 50)
+        Title = CenteredText("Binairo", Fonts["TitleFont"], Colors["black"], int(ScreenWidth / 2), 50)
         Title.render(Screen)
     # Get mouse position & track mouse-clicks
         mouse = pygame.mouse.get_pos()
@@ -53,9 +61,9 @@ def Binairo_GameLoop():
         if not grid:
             grid = board(Screen, 10, (140, 100))
     # Print board, values ...
-        grid.DarwBoardBackground(black)
+        grid.DarwBoardBackground(Colors["black"])
         grid.DrawCubes((255, 255, 255))
-        grid.HiglightLines(NavigationColor, mouse)
+        grid.HiglightLines(Colors["NavigationColor"], mouse)
         grid.CreateBoard(FirstIteration)
         grid.Immutable()
         Cube = grid.SelectCube(mouse, click, Cube)
@@ -63,15 +71,15 @@ def Binairo_GameLoop():
         grid.PrintBoard()
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button
-        Menu = Button(Screen, ScreenWidth / 2 - 110, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
+        Menu = Button(Screen, ScreenWidth / 2 - 110, ScreenHeight - 75, 100, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
         Menu.render(mouse)
-        Menu.text(ButtonFont, black, "MENU")
+        Menu.text(Fonts["ButtonFont"], Colors["black"], "MENU")
         SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Menu"))
         if SelectedGame: return SelectedGame
     # EXIT Button
-        Exit = Button(Screen, ScreenWidth / 2 +10, ScreenHeight - 75, 100, 40, NavigationColor, NavigationHighlight)
+        Exit = Button(Screen, ScreenWidth / 2 +10, ScreenHeight - 75, 100, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
         Exit.render(mouse)
-        Exit.text(ButtonFont, black, "QUIT")
+        Exit.text(Fonts["ButtonFont"], Colors["black"], "QUIT")
         SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
         if SelectedGame: return SelectedGame
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
