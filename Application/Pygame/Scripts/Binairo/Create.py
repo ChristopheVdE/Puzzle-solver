@@ -5,10 +5,11 @@
 ############################################################################################################
 
 # IMPORT PACKAGES ==========================================================================================
+import random
 import pygame
 from Scripts.General.Classes import Button, CenteredText
 from Scripts.General.Functions import ActivateGameLoop, quitgame
-from Scripts.Binairo.Functions import board, UpdateBoard
+from Scripts.Binairo.Functions import board, UpdateBoard, CountEmpty
 from Settings.Colors import Colors
 from Settings.Fonts import Fonts
 # ==========================================================================================================
@@ -90,21 +91,32 @@ def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock):
             UpdatedBoard = []
             for line in grid.solvable:
                 UpdatedBoard.append(line)
+    # Give hint --------------------------------------------------------------------------------------------
+        if Hint.functionality(mouse, click, True):
+            Coords = []
+            for row in range(grid.NumberOfCubes):
+                for char in range(grid.NumberOfCubes):
+                    if grid.CurrentBoard[row][char] == '.':
+                        Coords.append((row, char))
+            if len(Coords) != 0:
+                tip = random.choice(Coords)
+                grid.CurrentBoard[tip[0]] = UpdateBoard(grid.CurrentBoard, (grid.solution[tip[0]][tip[1]], tip))
+            pygame.time.delay(200)
     # Allow board updates ----------------------------------------------------------------------------------
         Cube = grid.SelectCube(mouse, click, Cube)
         UpdatedBoard = grid.Updatecube(key, UpdatedBoard, Cube)
     # Print values -----------------------------------------------------------------------------------------
         grid.PrintBoard()
     # Check board ------------------------------------------------------------------------------------------
-        if Check.functionality(mouse, click, True):
+        if Check.functionality(mouse, click, True) or CountEmpty(grid.CurrentBoard) == 0:
             if not grid.solution == grid.CurrentBoard:
                 for row in range(grid.NumberOfCubes):
                     if not grid.solution[row] == grid.CurrentBoard[row]:
                         for char in range(grid.NumberOfCubes):
                             if grid.CurrentBoard[row][char] != '.' and grid.CurrentBoard[row][char] != grid.solution[row][char]:
                                 grid.CurrentBoard[row] = UpdateBoard(grid.CurrentBoard, ('.', (row, char)))
-        else:
-            Solved = True
+            else:
+                Solved = True
         if Solved:
             Message = CenteredText("Solved", Fonts["TitleFont"], (255, 0, 0,), ScreenWidth / 2, ScreenHeight / 2)
             Message.render(Screen)
