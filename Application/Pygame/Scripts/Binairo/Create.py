@@ -28,16 +28,13 @@ def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock):
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_0 or event.key == pygame.K_KP0: # cheks for keypress --> combing keypress check with selected cube to update value in cube
+                if event.key == pygame.K_0 or event.key == pygame.K_KP0:
                     key = '0'
                 if event.key == pygame.K_1 or event.key == pygame.K_KP1:
                     key = '1'
                 if event.key == pygame.K_DELETE or event.key == pygame.K_KP_PERIOD:
                     key = '.'
-            #if event.key == pygame.K_DELETE:
-
-    # Wheter or not to return to menu when leaving the sudoku window
-        BackToMenu = False
+# SCREEN & CAPTION -----------------------------------------------------------------------------------------
     # Set background color
         Screen.fill(Colors["BackgroundColor"])
     # Display title
@@ -46,29 +43,40 @@ def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock):
     # Get mouse position & track mouse-clicks
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-# SETTINGS WINDOW ------------------------------------------------------------------------------------------
-    # number of cubes
-        # show current number of cubes per row/col
-        # increase by 2
-        # decrease by 2
-    # Turn of higlighting?
-    # Reset board
+# SETTINGS BUTTONS -----------------------------------------------------------------------------------------
+    # Number of cubes/ Board size --------------------------------------------------------------------------
+    # Reset board ------------------------------------------------------------------------------------------
         Reset = Button(Screen, ScreenWidth - 150, 250, 100, 40, (255, 0, 0), (255, 255, 0))
         Reset.render(mouse)
         Reset.text(Fonts["ButtonFont"], Colors["black"], "Reset")
-    # Get Hint
+    # Get Hint ---------------------------------------------------------------------------------------------
         Hint = Button(Screen, ScreenWidth - 150, 300, 100, 40, (255, 0, 0), (255, 255, 0))
         Hint.render(mouse)
         Hint.text(Fonts["ButtonFont"], Colors["black"], "Hint")
-    # Check current (partial) board
+    # Check current (partial) board ------------------------------------------------------------------------
         Check = Button(Screen, ScreenWidth - 150, 350, 100, 40, (255, 0, 0), (255, 255, 0))
         Check.render(mouse)
         Check.text(Fonts["ButtonFont"], Colors["black"], "Check")
-    # Create new board
+    # Create new board -------------------------------------------------------------------------------------
         New = Button(Screen, ScreenWidth - 150, 400, 100, 40, (255, 0, 0), (255, 255, 0))
         New.render(mouse)
         New.text(Fonts["ButtonFont"], Colors["black"], "New Board")
-    # Navigation Buttons --> move nav buttons to this submenu
+# NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
+    # Menu button ------------------------------------------------------------------------------------------
+        Menu = Button(Screen, ScreenWidth / 2 - 110, ScreenHeight - 75, 100, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
+        Menu.render(mouse)
+        Menu.text(Fonts["ButtonFont"], Colors["black"], "MENU")
+        SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Menu"))
+        if SelectedGame: return SelectedGame
+    # Exit Button ------------------------------------------------------------------------------------------
+        Exit = Button(Screen, ScreenWidth / 2 +10, ScreenHeight - 75, 100, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
+        Exit.render(mouse)
+        Exit.text(Fonts["ButtonFont"], Colors["black"], "QUIT")
+        SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
+        if SelectedGame: return SelectedGame
+# UPDATE DISPLAY: SCREEN & SETTINGS (NOT BOARD) ------------------------------------------------------------
+        if not grid:
+            pygame.display.update()
 # BOARD ----------------------------------------------------------------------------------------------------
     # inititialize board class -----------------------------------------------------------------------------
         if not grid or New.functionality(mouse, click, True):
@@ -120,23 +128,10 @@ def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock):
         if Solved:
             Message = CenteredText("Solved", Fonts["TitleFont"], (255, 0, 0,), ScreenWidth / 2, ScreenHeight / 2)
             Message.render(Screen)
-# NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
-    # Menu button
-        Menu = Button(Screen, ScreenWidth / 2 - 110, ScreenHeight - 75, 100, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
-        Menu.render(mouse)
-        Menu.text(Fonts["ButtonFont"], Colors["black"], "MENU")
-        SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Menu"))
-        if SelectedGame: return SelectedGame
-    # EXIT Button
-        Exit = Button(Screen, ScreenWidth / 2 +10, ScreenHeight - 75, 100, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
-        Exit.render(mouse)
-        Exit.text(Fonts["ButtonFont"], Colors["black"], "QUIT")
-        SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
-        if SelectedGame: return SelectedGame
-# UPDATE DISPLAY -------------------------------------------------------------------------------------------
+# UPDATE DISPLAY: BOARD ------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
-# ITERATION COUNT ------------------------------------------------------------------------------------------
+# RESET VARIABLES ------------------------------------------------------------------------------------------
         FirstIteration = False
         key = None
 # COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
