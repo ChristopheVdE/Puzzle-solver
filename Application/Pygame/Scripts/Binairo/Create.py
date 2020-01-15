@@ -7,7 +7,7 @@
 # IMPORT PACKAGES ==========================================================================================
 import random
 import pygame
-from Scripts.General.Classes import Button, CenteredText
+from Scripts.General.Classes import Button, CenteredText, Submenu
 from Scripts.General.Functions import ActivateGameLoop, quitgame
 from Scripts.Binairo.Functions import board, UpdateBoard, CountEmpty
 from Settings.Colors import Colors
@@ -35,15 +35,21 @@ def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock, Images):
                     key = '1'
                 if event.key == pygame.K_DELETE or event.key == pygame.K_KP_PERIOD:
                     key = '.'
-# SCREEN & CAPTION -----------------------------------------------------------------------------------------
+# SCREEN ---------------------------------------------------------------------------------------------------
     # Set background color
         Screen.fill(Colors["BackgroundColor"])
+        """
     # Display title
         Title = CenteredText("Binairo", Fonts["TitleFont"], Colors["black"], int(ScreenWidth / 2), 50)
         Title.render(Screen)
-    # Get mouse position & track mouse-clicks
+        """
+# MOUSE POSITION & CLICKS ----------------------------------------------------------------------------------
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
+# OPTIONS SUBMENU ------------------------------------------------------------------------------------------
+        Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
+        Title.Outline()
+        Title.Title("Binairo", Fonts["ButtonFont"], Colors["black"])
 # SETTINGS BUTTONS -----------------------------------------------------------------------------------------
     # Number of cubes per row/ Board size ------------------------------------------------------------------
         # Dispay number
@@ -55,7 +61,7 @@ def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock, Images):
         Increase.render(mouse)
         Increase.image(Images + '\ArrowUp.png')
         NrCubes = Increase.functionality(mouse, click, int(NumberOfCubes + 2))
-        if NrCubes and NrCubes in range(2, 14, 2):
+        if NrCubes and NrCubes in range(2, 16, 2):
             pygame.time.delay(150)
             NumberOfCubes = NrCubes
         # Decrease number
@@ -63,7 +69,7 @@ def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock, Images):
         Decrease.render(mouse)
         Decrease.image(Images + '\ArrowDown.png')
         NrCubes = Decrease.functionality(mouse, click, int(NumberOfCubes - 2))
-        if NrCubes and NrCubes in range(2, 14, 2):
+        if NrCubes and NrCubes in range(2, 16, 2):
             pygame.time.delay(150)
             NumberOfCubes = NrCubes
     # Create new board -------------------------------------------------------------------------------------
@@ -106,7 +112,8 @@ def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock, Images):
             UpdatedBoard = None
             Solved = False        
             # Initialize board
-            grid = board(Screen, NumberOfCubes, (140, 100))
+            grid = board(Screen, NumberOfCubes, (ScreenWidth, ScreenHeight))
+            grid.CenterRectangle(ScreenWidth, ScreenHeight, 175, 0)
             pygame.time.delay(100)
     # Print board (cubes & lines --> No values) ------------------------------------------------------------
         grid.DarwBoardBackground(Colors["black"])

@@ -13,16 +13,27 @@ from Scripts.General.Classes import CenteredText
 # [CLASS] Board ============================================================================================
 class board():
 # Inititalize class ----------------------------------------------------------------------------------------
-    def __init__(self, Screen, NumberOfCubes, StartPos):
+    def __init__(self, Screen, NumberOfCubes, StartPos = None):
         self.Screen = Screen
         self.NumberOfCubes = int(NumberOfCubes)
-        self.X = int(StartPos[0])
-        self.Y = int(StartPos[1])
+        if StartPos:
+            self.X = int(StartPos[0])
+            self.Y = int(StartPos[1])
         self.CubeSize = 40
-# Draw the background (= lines between cubes) --------------------------------------------------------------
-    def DarwBoardBackground(self, BackgroundColor):
         self.spaceBetweenCubes = 1
         self.BoardSize = int((self.NumberOfCubes * self.CubeSize) + (self.NumberOfCubes * self.spaceBetweenCubes) + 2 + 4)
+# Calculate center -----------------------------------------------------------------------------------------
+    def CenterRectangle(self, ScreenWidth, ScreenHeight, Unoccupy_X, Unoccupy_Y):
+        # Calcualte centered X
+        self.X = self.X / 2 - self.BoardSize / 2
+        while self.X + self.BoardSize > ScreenWidth - Unoccupy_X:
+            self.X = self.X - (self.CubeSize + 1)
+        # Calcualte centered Y
+        self.Y = self.Y / 2 - self.BoardSize / 2
+        while self.Y + self.BoardSize > ScreenHeight - Unoccupy_Y:
+            self.Y = self.Y - (self.CubeSize + 1)
+# Draw the background (= lines between cubes) --------------------------------------------------------------
+    def DarwBoardBackground(self, BackgroundColor):
         pygame.draw.rect(self.Screen, BackgroundColor, (self.X, self.Y, self.BoardSize, self.BoardSize))
 # Draw the cubes -------------------------------------------------------------------------------------------
     def DrawCubes(self, CubeColor):
