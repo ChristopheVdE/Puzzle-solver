@@ -52,7 +52,7 @@ while True:
             SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
         elif game[0] == "BinairoPlay" and game[1] == True:
             from Scripts.Binairo.Create import Binairo_GameLoop as GameLoop
-            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
+            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock, Images)
         elif game[0] == "BinairoSolve" and game[1] == True:
             from Scripts.Binairo.Solve import Binairo_GameLoop as GameLoop
             SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
