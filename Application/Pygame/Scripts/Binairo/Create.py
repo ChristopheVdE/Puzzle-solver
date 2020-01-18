@@ -15,7 +15,9 @@ from Settings.Fonts import Fonts
 # ==========================================================================================================
 
 # GAME LOOP: Binairo =======================================================================================
-def Binairo_GameLoop(Screen, ScreenWidth, ScreenHeight, clock, Images):
+def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
+# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
+    Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF, 32)
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
     key = None

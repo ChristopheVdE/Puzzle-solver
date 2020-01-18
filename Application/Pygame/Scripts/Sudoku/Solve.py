@@ -14,7 +14,9 @@ from Settings.Fonts import Fonts
 # ==========================================================================================================
 
 # GAME LOOP: Sudoku ========================================================================================
-def Sudoku_GameLoop(Screen, ScreenWidth, ScreenHeight, clock):
+def Sudoku_GameLoop(ScreenWidth, ScreenHeight, clock):
+# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
+    Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF, 32)
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
 # MAIN LOOP ------------------------------------------------------------------------------------------------

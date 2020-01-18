@@ -18,9 +18,11 @@ from Settings.Fonts import Fonts
 # ==========================================================================================================
 
 # MAIN MENU ================================================================================================
-def MainMenu(Screen, ScreenWidth, ScreenHeight, clock, Images):
+def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
+# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
+    Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF, 32)
+# VARIABLES ------------------------------------------------------------------------------------------------
     menu = True
-    # if button was Pressed
     SudokuSelected = False
     BinairoSelected = False
 # MAIN LOOP ------------------------------------------------------------------------------------------------

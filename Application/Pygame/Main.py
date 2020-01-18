@@ -20,7 +20,6 @@ pygame.init()
 # Display size ---------------------------------------------------------------------------------------------
 ScreenWidth = 800
 ScreenHeight = 600
-Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF, 32)
 
 # Caption --------------------------------------------------------------------------------------------------
 pygame.display.set_caption('Puzzle solver')
@@ -43,21 +42,22 @@ while True:
         if game[0] == "Menu" and game[1] == True:
             from Scripts.MainMenu.Menu import MainMenu as GameLoop
             pygame.time.delay(100)
-            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock, Images)
+            SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock, Images)
         elif game[0] == "SudokuPlay" and game[1] == True:
             from Scripts.Sudoku.Create import Sudoku_GameLoop as GameLoop
-            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
+            SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock)
         elif game[0] == "SudokuSolve" and game[1] == True:
             from Scripts.Sudoku.Solve import Sudoku_GameLoop as GameLoop
-            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
+            SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock)
         elif game[0] == "BinairoPlay" and game[1] == True:
             from Scripts.Binairo.Create import Binairo_GameLoop as GameLoop
-            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock, Images)
+            SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock, Images)
         elif game[0] == "BinairoSolve" and game[1] == True:
             from Scripts.Binairo.Solve import Binairo_GameLoop as GameLoop
-            SelectedGame = GameLoop(Screen, ScreenWidth, ScreenHeight, clock)
+            SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock, Images)
         elif game[0] == "Quit" and game[1] == True:
             pygame.quit()
-            sys.quit()
+            break
+quit()
 # ==========================================================================================================
 
