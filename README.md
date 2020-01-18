@@ -19,6 +19,4 @@ Contains:
       - script to solve binairo's
       - script to create binairo's
   
-Pygame is a work in progress, right now there is only a Main Menu.
-  
  
