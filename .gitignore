@@ -1,9 +1,7 @@
-Aantekening 2019-11-04 174513.jpg
-test.py
 /.vscode/*
-Application/Pygame/__pycache__/*
-Application/Pygame/Scripts/Binairo/__pycache__/*
-Application/Pygame/Scripts/General/__pycache__/*
-Application/Pygame/Scripts/MainMenu/__pycache__/*
-Application/Pygame/Scripts/Sudoku/__pycache__/*
-Application/Pygame/Settings/__pycache__/*
+Application/__pycache__/*
+Application/Scripts/Binairo/__pycache__/*
+Application/Scripts/General/__pycache__/*
+Application/Scripts/MainMenu/__pycache__/*
+Application/Scripts/Sudoku/__pycache__/*
+Application/Settings/__pycache__/*

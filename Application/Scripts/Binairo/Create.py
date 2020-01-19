@@ -157,7 +157,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             else:
                 Solved = True
         if Solved:
-            Message = CenteredText("Solved", Fonts["TitleFont"], (255, 0, 0,), ScreenWidth / 2, ScreenHeight / 2)
+            Message = CenteredText("Solved", Fonts["TitleFont"], (255, 0, 0,), grid.X + grid.BoardSize/ 2, grid.Y + grid.BoardSize / 2)
             Message.render(Screen)
 # UPDATE DISPLAY: BOARD ------------------------------------------------------------------------------------
         pygame.display.update()
