@@ -71,17 +71,16 @@ class board():
         RowSurface.fill(HighlightColor)
         ColSurface.fill(HighlightColor)
         # Set alpha value of highlights (transparancy)
-        RowSurface.set_alpha(10)
-        ColSurface.set_alpha(10)
-        # Check if mouse position & higlight correct row/ column
+        RowSurface.set_alpha(50)
+        ColSurface.set_alpha(50)
+        # Check if mouse is in column-area & higlight column if true
+        for col in self.Cols:
+            if col[0] + self.CubeSize > mouse[0] > col[0] - 1 and col[1] + self.BoardSize - 6 > mouse[1] > col[1] - 1:
+                self.Screen.blit(ColSurface, (col[0], col[1]))
+        # Check if mouse is in row-area & higlight row if true
         for row in self.Rows:
-            for col in self.Cols:
-                # Check if mouse is in column-area & higlight column if true
-                if col[0] + self.CubeSize > mouse[0] > col[0] - 1 and col[1] + self.BoardSize - 6 > mouse[1] > col[1] -1:
-                    self.Screen.blit(ColSurface, (col[0], col[1]))
-                # Check if mouse is in row-area & higlight row if true
-                if row[0] + self.BoardSize -6 > mouse[0] > row[0] -1 and row[1] + self.CubeSize> mouse[1] > row[1] -1:
-                    self.Screen.blit(RowSurface, (row[0], row[1]))
+            if row[0] + self.BoardSize -6 > mouse[0] > row[0] -1 and row[1] + self.CubeSize> mouse[1] > row[1] -1:
+                self.Screen.blit(RowSurface, (row[0], row[1]))
 # Create the actual board (the values) ---------------------------------------------------------------------
     def CreateBoard(self):
     # Create empty board
