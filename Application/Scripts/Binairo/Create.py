@@ -115,22 +115,18 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             grid.Immutable()
             # Print Background
             grid.CenterRectangle(ScreenWidth, ScreenHeight, 175, 0)
-            grid.DarwBoardBackground(Colors["black"])
-            grid.DrawCubes((255, 255, 255), (220,220,220))
             # Slight delay (for smaller boards)
             pygame.time.delay(100)
     # Reset board ------------------------------------------------------------------------------------------
         elif Reset.functionality(mouse, click, True):
             grid.CurrentBoard() 
             grid.Immutable()
-            grid.DrawCubes((255, 255, 255), (220,220,220))
             # Slight delay (for smaller boards)
             pygame.time.delay(100)
     # Check Board ------------------------------------------------------------------------------------------
         elif Check.functionality(mouse, click, True) or CountEmpty(grid.current) == 0:
             if not grid.current == grid.solution:
                 grid.Immutable()
-                grid.DrawCubes((255, 255, 255), (220,220,220))
             else:
                 Message = CenteredText("Solved", Fonts["TitleFont"], (255, 0, 0,), grid.X + grid.BoardSize/ 2, grid.Y + grid.BoardSize / 2)
                 Message.render(Screen)
@@ -140,22 +136,22 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
         elif Hint.functionality(mouse, click, True):
             grid.Hint()
             grid.Immutable()
-            grid.DrawCubes((255, 255, 255), (220,220,220))
             # Slight delay
             pygame.time.delay(200)
     # Row/col higlighting ----------------------------------------------------------------------------------
+        grid.DarwBoardBackground(Colors["black"])
+        grid.DrawCubes((255, 255, 255), (220,220,220))
         grid.HiglightLines(Colors["NavigationColor"], mouse)
     # Allow board updates ----------------------------------------------------------------------------------
         grid.SelectCube(mouse, click)       
         grid.Pencil(key)
-        #print(grid.current)
         grid.Updatecube(key)
         #print(grid.current)
     # Print values -----------------------------------------------------------------------------------------
         grid.PrintBoard()
 
 # UPDATE DISPLAY: BOARD ------------------------------------------------------------------------------------
-        pygame.display.update()
+        pygame.display.flip()
         clock.tick(60)
 # RESET VARIABLES ------------------------------------------------------------------------------------------
         FirstIteration = False

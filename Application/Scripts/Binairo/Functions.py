@@ -150,9 +150,7 @@ class board():
     def Updatecube(self, key=None):
         # Update value of selected cube if key is pressed
         if self.selected and self.selected[0] == "L" and key:
-            print(self.current[self.selected[1][0]][self.selected[1][1]])
             self.current[self.selected[1][0]][self.selected[1][1]] = str(key)
-            print(self.current[self.selected[1][0]][self.selected[1][1]])
 # Give hint ------------------------------------------------------------------------------------------------
     def Hint(self):
     # get list of all empty locations ----------------------------------------------------------------------
@@ -175,7 +173,7 @@ class board():
         CertainFont = pygame.font.Font('freesansbold.ttf', 20)
         CertainColor = (0, 0, 0)
         # Pencil values
-        PencilFont = pygame.font.Font('freesansbold.ttf', 5)
+        PencilFont = pygame.font.Font('freesansbold.ttf', 10)
         PencilColor = (0, 0, 0)
 
     # PRINT VALUES -----------------------------------------------------------------------------------------
@@ -187,18 +185,18 @@ class board():
                     value = CenteredText(self.current[row][col], ImmutableFont, ImmutableColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
                     value.render(self.Screen)
             # New values -----------------------------------------------------------------------------------
-                elif self.current[row][col] != "." and not (row, col) in self.immutable:
+                elif self.current[row][col] != "." and not isinstance(self.current[row][col], list) and not (row, col) in self.immutable:
                     value = CenteredText(self.current[row][col], CertainFont, CertainColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
                     value.render(self.Screen)
             # Pencil ---------------------------------------------------------------------------------------
                 elif isinstance(self.current[row][col], list) and not (row, col) in self.immutable:
                     # Coordinates for each value in pencil list
                     Coords = [
-                        (int(self.X + self.size *2/3), int(self.Y + self.size * 1/3)),
-                        (int(self.X + self.size *2/3), int(self.Y + self.size * 2/3))
+                        (int(self.selected[2][0] + self.CubeSize *2/3), int(self.selected[2][1] + self.CubeSize * 1/3)),
+                        (int(self.selected[2][0] + self.CubeSize *2/3), int(self.selected[2][1] + self.CubeSize * 2/3))
                     ]
                     # Render
-                    for i in range(self.current[row][col]):
+                    for i in range(len(self.current[row][col])):
                         value = CenteredText(self.current[row][col][i], PencilFont, PencilColor, Coords[i][0], Coords[i][1])
                         value.render(self.Screen)
 # ==========================================================================================================
