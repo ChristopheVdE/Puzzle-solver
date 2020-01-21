@@ -13,15 +13,43 @@ from Scripts.General.Classes import CenteredText
 # [CLASS] Board ============================================================================================
 class board():
 # Inititalize class ----------------------------------------------------------------------------------------
-    def __init__(self, Screen, NumberOfCubes, StartPos = None):
+    def __init__(self, Screen, NumberOfCubes, StartPos):
         self.Screen = Screen
         self.NumberOfCubes = int(NumberOfCubes)
-        if StartPos:
-            self.X = int(StartPos[0])
-            self.Y = int(StartPos[1])
+        self.X = int(StartPos[0])
+        self.Y = int(StartPos[1])
         self.CubeSize = 40
         self.spaceBetweenCubes = 1
         self.BoardSize = int((self.NumberOfCubes * self.CubeSize) + (self.NumberOfCubes * self.spaceBetweenCubes) + 2 + 4)
+        self.selected = None
+# Create a random solvable boardstate ----------------------------------------------------------------------
+    def CreateBoard(self):
+    # Create empty board
+        self.solution = []
+        for row in range(self.NumberOfCubes):
+            self.solution.append("{}".format('.' * self.NumberOfCubes))
+    # Generate a solution
+        BruteForce(self.solution)
+    # Create solvable state out of solution
+        self.solvable = SolvableState(self.solution)
+    # Convert the rows of self.solution into lists --> for comparrisonwith self.current
+        for row in range(len(self.solution)):
+            self.solution[row] = list(self.solution[row])
+# Create/reset the current board ---------------------------------------------------------------------------
+    def CurrentBoard(self):
+        self.current = []
+        for row in self.solvable:
+            self.current.append(list(str(row)))
+# Set correct board values as immutable & remove wrong values ----------------------------------------------
+    def Immutable(self):
+        self.immutable = []
+        for row in range(len(self.current)):
+            for col in range(len(self.current)):
+                if self.current[row][col] == self.solution[row][col]:
+                    self.immutable.append((row, col))
+                else:
+                    if not isinstance(self.current[row][col], list):
+                        self.current[row][col] = '.'
 # Calculate center -----------------------------------------------------------------------------------------
     def CenterRectangle(self, ScreenWidth, ScreenHeight, Unoccupy_X, Unoccupy_Y):
         # Calcualte centered X
@@ -35,24 +63,25 @@ class board():
 # Draw the background (= lines between cubes) --------------------------------------------------------------
     def DarwBoardBackground(self, BackgroundColor):
         pygame.draw.rect(self.Screen, BackgroundColor, (self.X, self.Y, self.BoardSize, self.BoardSize))
-# Draw the cubes -------------------------------------------------------------------------------------------
-    def DrawCubes(self, CubeColor):
+# Draw the empty cubes -------------------------------------------------------------------------------------
+    def DrawCubes(self, CubeColor, CorrectColor):
         # Parameters ---------------------------------------------------------------------------------------
-        self.Rows = []      #contains start-coords and size of each row
-        self.Cols = []      #contains start-coords and size of each column
-        CubeX = self.X + 3  #border arround board = 2
-        CubeY = self.Y + 3  #border arround board = 2
+        self.Rows = []      # contains start-coords and size of each row
+        self.Cols = []      # contains start-coords and size of each column
+        CubeX = self.X + 3  # border arround board = 2
+        CubeY = self.Y + 3  # border arround board = 2
         # Create cubes -------------------------------------------------------------------------------------
         for row in range(self.NumberOfCubes):
-            # 3x3 grid separation lines: rows (Sudoku)
-            if row == self.NumberOfCubes /2:
+            if row == self.NumberOfCubes /2:        # thicker line in middle of board (horizontal)
                 CubeY += 1
             for col in range(self.NumberOfCubes):
-                # 3x3 grid separation lines: columns (Sudoku)
-                if col == self.NumberOfCubes /2:
+                if col == self.NumberOfCubes /2:    # thicker line in middle of board (vertical)
                     CubeX += 1
-                # Draw cube
-                pygame.draw.rect(self.Screen, CubeColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
+            # Draw cubes ------------------------------------------------------------------------------------
+                if (row, col) in self.immutable:    # Value is correct --> dark background, light font
+                    pygame.draw.rect(self.Screen, CorrectColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
+                else:                               # Value is wrong --> light background, dark font
+                    pygame.draw.rect(self.Screen, CubeColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
             # Save coords of colum --------------------------------------------------------------------------
                 if len(self.Cols) < self.NumberOfCubes:
                     self.Cols.append((CubeX, self.Y +3))
@@ -81,76 +110,98 @@ class board():
         for row in self.Rows:
             if row[0] + self.BoardSize -6 > mouse[0] > row[0] -1 and row[1] + self.CubeSize> mouse[1] > row[1] -1:
                 self.Screen.blit(RowSurface, (row[0], row[1]))
-# Create the actual board (the values) ---------------------------------------------------------------------
-    def CreateBoard(self):
-    # Create empty board
-        self.solution = []
-        for row in range(self.NumberOfCubes):
-            self.solution.append("{}".format('.' * self.NumberOfCubes))
-    # Generate a solution
-        BruteForce(self.solution)
-    # Create solvable state out of solution
-        self.solvable = SolvableState(self.solution)
-# Set Original board values as immutable -------------------------------------------------------------------
-    def Immutable(self):
-        self.immutable = []
-        for row in range(len(self.solvable)):
-            for col in range(len(self.solvable)):
-                if self.solvable[row][col] == '0' or self.solvable[row][col] == '1':
-                    self.immutable.append((row, col))
 # Return selected cube -------------------------------------------------------------------------------------
-    def SelectCube(self, mouse, click, Cube):
+    def SelectCube(self, mouse, click):
         for row in range(len(self.Rows)):
             for col in range(len(self.Cols)):
-                if self.Cols[col][0] + self.CubeSize > mouse[0] > self.Cols[col][0] and self.Rows[row][1] + self.CubeSize > mouse[1] > self.Rows[row][1]:
-                    # left mouse to wright a value
-                    if click[0] == 1:
-                        BoardPos = (row, col)
-                        CubeCoords = (self.Cols[col][0], self.Rows[row][1])
-                        Cube = (BoardPos, CubeCoords)
-                    # right mouse to 'pencil' in a value
-                    elif click[2] == 1:
-                        BoardPos = (row, col)
-                        CubeCoords = (self.Cols[col][0], self.Rows[row][1])
-                        Cube = (BoardPos, CubeCoords)
-                    return Cube        
-# Update value of the selected cube ------------------------------------------------------------------------
-    def Updatecube(self, key = None, board = None, Cube = None):
-        # Specify the board to use
-        if board:
-            self.CurrentBoard = board
-        else:
-            self.CurrentBoard = []
-            for row in self.solvable:
-                self.CurrentBoard.append(row)
-
+                if not (row, col) in self.immutable:
+                    if self.Cols[col][0] + self.CubeSize > mouse[0] > self.Cols[col][0] and self.Rows[row][1] + self.CubeSize > mouse[1] > self.Rows[row][1]:
+                        # left mouse to wright a value
+                        if click[0] == 1:
+                            BoardPos = (row, col)
+                            CubeCoords = (self.Cols[col][0], self.Rows[row][1])
+                            self.selected = ("L", BoardPos, CubeCoords)
+                        elif click[2] == 1:
+                            BoardPos = (row, col)
+                            CubeCoords = (self.Cols[col][0], self.Rows[row][1])
+                            self.selected = ("R", BoardPos, CubeCoords)
+# Pencil values for the selected cube (temp values)---------------------------------------------------------
+    def Pencil(self, key=None):
+        # Pencil in values ---------------------------------------------------------------------------------
+        if self.selected and self.selected[0] == "R" and key:
+            if key != '.':
+            # Create list of temp values -------------------------------------------------------------------
+                if not isinstance(self.current[self.selected[1][0]][self.selected[1][1]], list):
+                    tempValues = []
+                else:
+                    tempValues = self.current[self.selected[1][0]][self.selected[1][1]]
+            # Add temp values to list ----------------------------------------------------------------------
+                if not key in tempValues:
+                    tempValues.append(str(key))
+                else:
+                    tempValues.remove(str(key))
+                tempValues.sort()
+            # Remove all temp values if delete is pressed --------------------------------------------------
+            else:
+                tempValues = '.'
+            # Update board ---------------------------------------------------------------------------------
+            self.current[self.selected[1][0]][self.selected[1][1]] = tempValues
+# Update value of the selected cube (certain values) -------------------------------------------------------
+    def Updatecube(self, key=None):
         # Update value of selected cube if key is pressed
-        if Cube and key:
-            if not Cube[0] in self.immutable:
-                self.CurrentBoard[Cube[0][0]] = UpdateBoard(self.CurrentBoard, (key, Cube[0]))
-                return self.CurrentBoard
-        return self.CurrentBoard
+        if self.selected and self.selected[0] == "L" and key:
+            print(self.current[self.selected[1][0]][self.selected[1][1]])
+            self.current[self.selected[1][0]][self.selected[1][1]] = str(key)
+            print(self.current[self.selected[1][0]][self.selected[1][1]])
+# Give hint ------------------------------------------------------------------------------------------------
+    def Hint(self):
+    # get list of all empty locations ----------------------------------------------------------------------
+        Coords = []
+        for row in range(self.NumberOfCubes):
+            for col in range(self.NumberOfCubes):
+                if self.current[row][col] == '.':
+                    Coords.append((row, col))
+    # choose a random empty location to update -------------------------------------------------------------
+        if len(Coords) != 0:
+            tip = random.choice(Coords)
+            self.current[tip[0]][tip[1]] = self.solution[tip[0]][tip[1]]
 # PRINT BOARD ----------------------------------------------------------------------------------------------
     def PrintBoard(self):
-        # Original values
-        OriginalFont = pygame.font.Font('freesansbold.ttf', 20)
-        OriginalColor = (0,0,0)
-        # New values:
-        NewFont = pygame.font.Font('freesansbold.ttf', 18)
-        NewColor = (50,50,50)
+    # FONTS & COLORS ---------------------------------------------------------------------------------------
+        # immutable values
+        ImmutableFont = pygame.font.Font('freesansbold.ttf', 20)
+        ImmutableColor = (0,0,0)
+        # Certain values:
+        CertainFont = pygame.font.Font('freesansbold.ttf', 20)
+        CertainColor = (0, 0, 0)
+        # Pencil values
+        PencilFont = pygame.font.Font('freesansbold.ttf', 5)
+        PencilColor = (0, 0, 0)
 
+    # PRINT VALUES -----------------------------------------------------------------------------------------
         for row in range(len(self.Rows)):
             for col in range(len(self.Cols)):
                 CubeCoords = (self.Cols[col][0], self.Rows[row][1])
-                if not self.CurrentBoard[row][col] == "." and (row, col) in self.immutable:
-                    value = CenteredText(self.CurrentBoard[row][col], OriginalFont, OriginalColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
+            # Immutabe values ------------------------------------------------------------------------------
+                if self.current[row][col] != "." and (row, col) in self.immutable:
+                    value = CenteredText(self.current[row][col], ImmutableFont, ImmutableColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
                     value.render(self.Screen)
-                elif not self.CurrentBoard[row][col] == "." and (row, col) not in self.immutable:
-                    value = CenteredText(self.CurrentBoard[row][col], NewFont, NewColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
+            # New values -----------------------------------------------------------------------------------
+                elif self.current[row][col] != "." and not (row, col) in self.immutable:
+                    value = CenteredText(self.current[row][col], CertainFont, CertainColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
                     value.render(self.Screen)
+            # Pencil ---------------------------------------------------------------------------------------
+                elif isinstance(self.current[row][col], list) and not (row, col) in self.immutable:
+                    # Coordinates for each value in pencil list
+                    Coords = [
+                        (int(self.X + self.size *2/3), int(self.Y + self.size * 1/3)),
+                        (int(self.X + self.size *2/3), int(self.Y + self.size * 2/3))
+                    ]
+                    # Render
+                    for i in range(self.current[row][col]):
+                        value = CenteredText(self.current[row][col][i], PencilFont, PencilColor, Coords[i][0], Coords[i][1])
+                        value.render(self.Screen)
 # ==========================================================================================================
-
-
 
 # FUNCTIONS ================================================================================================
 # Transpose board to get columns ---------------------------------------------------------------------------
