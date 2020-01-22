@@ -1,7 +1,8 @@
 /.vscode/*
-Application/__pycache__/*
-Application/Scripts/Binairo/__pycache__/*
-Application/Scripts/General/__pycache__/*
-Application/Scripts/MainMenu/__pycache__/*
-Application/Scripts/Sudoku/__pycache__/*
-Application/Settings/__pycache__/*
+./Application/__pycache__
+./Application/Scripts/Binairo/__pycache__
+./Application/Scripts/General/__pycache__
+./Application/Scripts/MainMenu/__pycache__
+./Application/Scripts/Sudoku/__pycache__
+./Application/Settings/__pycache__/*
+*.pyc
