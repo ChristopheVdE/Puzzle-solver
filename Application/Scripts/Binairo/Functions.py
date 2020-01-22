@@ -192,8 +192,8 @@ class board():
                 elif isinstance(self.current[row][col], list) and not (row, col) in self.immutable:
                     # Coordinates for each value in pencil list
                     Coords = [
-                        (int(self.selected[2][0] + self.CubeSize *2/3), int(self.selected[2][1] + self.CubeSize * 1/3)),
-                        (int(self.selected[2][0] + self.CubeSize *2/3), int(self.selected[2][1] + self.CubeSize * 2/3))
+                        (int(CubeCoords[0] + self.CubeSize *5/6), int(CubeCoords[1] + self.CubeSize * 1/6)),
+                        (int(CubeCoords[0] + self.CubeSize *5/6), int(CubeCoords[1] + self.CubeSize * 3/6))
                     ]
                     # Render
                     for i in range(len(self.current[row][col])):
