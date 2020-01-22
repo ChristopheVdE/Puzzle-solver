@@ -7,9 +7,11 @@
 ## Content:
 <details>
 <summary>Pygame application:</summary>
+  
   - Working:
     - Main menu
     - Binairo game
+    
   - In Progess
     - Binairo Solver
     - Sudoku game
@@ -17,9 +19,11 @@
 </details>
 <details>
 <summary>Terminal only scripts:</summary>
+  
   - script to solve sudoku's
   - script to solve binairo's
   - script to create binairo's
+  
 </details>
  
 ## Pygame application
@@ -27,13 +31,16 @@
 ![Screenshot](./Readme_Images/MainMenu.png)
   - Choose the type of puzzle that you want to play
   - Get some info about the selected puzzle-type (picture, rules...)
-  - [Create]: Play a randomly genereated puzzle
-  - [Solve]: Imput a premade puzzleboard and let the app find the solution
+  - "Play"-button: Play a randomly genereated puzzle
+  - "Solve"-button: Imput a premade puzzleboard and let the app find the solution
 
-## Sudoku:
+### Sudoku:
 #### Play/ Create
+  - Work in progress
 #### Solve
-
+  - Work in progress
+  
+  
 ### Binairo:
 #### Play/ Create
 ![Screenshot](./Readme_Images/BinairoPlay.png)
@@ -50,3 +57,4 @@
 Board generation can take a while depending on the selected board size.
 
 #### Solve
+  - Work in progress
