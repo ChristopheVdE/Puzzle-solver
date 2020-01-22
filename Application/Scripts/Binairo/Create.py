@@ -9,7 +9,7 @@ import random
 import pygame
 from Scripts.General.Classes import Button, CenteredText, Submenu
 from Scripts.General.Functions import ActivateGameLoop, quitgame
-from Scripts.Binairo.Functions import board, UpdateBoard, CountEmpty
+from Scripts.Binairo.Functions import board, CountEmpty
 from Settings.Colors import Colors
 from Settings.Fonts import Fonts
 # ==========================================================================================================
@@ -27,9 +27,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
     grid = None
-    CreatedBoard = None
     NumberOfCubes = 10
-    test = None
     Solved = False
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
@@ -105,13 +103,12 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
         Exit.render(mouse)
         Exit.text(Fonts["ButtonFont"], Colors["black"], "QUIT")
         SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
-        if SelectedGame: return SelectedGame
-# UPDATE DISPLAY: SCREEN & SETTINGS (NOT BOARD) ------------------------------------------------------------
-        if not grid:
-            pygame.display.update()
+        if SelectedGame: return SelectedGame  
 # BOARD ----------------------------------------------------------------------------------------------------
     # Create new Board -------------------------------------------------------------------------------------
         if not grid or New.functionality(mouse, click, True):
+            # Display update
+            pygame.display.update()
             # Initialize board
             grid = board(Screen, NumberOfCubes, (ScreenWidth, ScreenHeight))
             # Create a solvable boardstate and 
