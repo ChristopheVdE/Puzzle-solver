@@ -30,6 +30,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
     CreatedBoard = None
     NumberOfCubes = 10
     test = None
+    Solved = False
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
         key = None
@@ -140,8 +141,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
                 # grid.DarwBoardBackground(Colors["black"])
                 # grid.DrawCubes((255, 255, 255), (220,220,220))
             else:
-                Message = CenteredText("Solved", Fonts["TitleFont"], (255, 0, 0,), grid.X + grid.BoardSize/ 2, grid.Y + grid.BoardSize / 2)
-                Message.render(Screen)
+                Solved = True
             # Slight delay (for smaller boards)
             pygame.time.delay(100)
     # Get Hint ---------------------------------------------------------------------------------------------
@@ -160,6 +160,10 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
         grid.Updatecube(key)
     # Print values -----------------------------------------------------------------------------------------
         grid.PrintBoard()
+    # Print solved ------------------
+        if Solved:
+            Message = CenteredText("Solved", Fonts["TitleFont"], (255, 0, 0,), grid.X + grid.BoardSize/ 2, grid.Y + grid.BoardSize / 2)
+            Message.render(Screen)
 
 # UPDATE DISPLAY: BOARD ------------------------------------------------------------------------------------
         pygame.display.update()
