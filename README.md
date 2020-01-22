@@ -69,6 +69,7 @@
   - automatic highlighting of the selcted cube, row and column
   
   Usage:
+  
     - Left mouse button: select a cube in which to add values of which you are certain
     - Right mouse button: select a cube in which to add TEMPORARY values (values of which you aren't certain)
     - Delete or ".": remove all values from teh selected cube
