@@ -13,8 +13,7 @@ from Scripts.General.Classes import CenteredText
 # [CLASS] Board ============================================================================================
 class board():
 # Inititalize class ----------------------------------------------------------------------------------------
-    def __init__(self, Screen, NumberOfCubes, StartPos):
-        self.Screen = Screen
+    def __init__(self, NumberOfCubes, StartPos):
         self.NumberOfCubes = int(NumberOfCubes)
         self.X = int(StartPos[0])
         self.Y = int(StartPos[1])
@@ -60,16 +59,17 @@ class board():
         self.Y = self.Y / 2 - self.BoardSize / 2
         while self.Y + self.BoardSize > ScreenHeight - Unoccupy_Y:
             self.Y = self.Y - (self.CubeSize + 1)
-# Draw the background (= lines between cubes) --------------------------------------------------------------
-    def DarwBoardBackground(self, BackgroundColor):
-        pygame.draw.rect(self.Screen, BackgroundColor, (self.X, self.Y, self.BoardSize, self.BoardSize))
+# Create board surface and fill it (background) ------------------------------------------------------------
+    def BoardBackground(self, BackgroundColor):
+        self.BoardSurface = pygame.Surface((self.BoardSize, self.BoardSize), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
+        self.BoardSurface.fill(BackgroundColor)
 # Draw the empty cubes -------------------------------------------------------------------------------------
     def DrawCubes(self, CubeColor, CorrectColor):
         # Parameters ---------------------------------------------------------------------------------------
         self.Rows = []      # contains start-coords and size of each row
         self.Cols = []      # contains start-coords and size of each column
-        CubeX = self.X + 3  # border arround board = 2
-        CubeY = self.Y + 3  # border arround board = 2
+        CubeX = 3  # border arround board = 2
+        CubeY = 3  # border arround board = 2
         # Create cubes -------------------------------------------------------------------------------------
         for row in range(self.NumberOfCubes):
             if row == self.NumberOfCubes /2:        # thicker line in middle of board (horizontal)
@@ -79,17 +79,17 @@ class board():
                     CubeX += 1
             # Draw cubes ------------------------------------------------------------------------------------
                 if (row, col) in self.immutable:    # Value is correct --> dark background, light font
-                    pygame.draw.rect(self.Screen, CorrectColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
+                    pygame.draw.rect(self.BoardSurface, CorrectColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
                 else:                               # Value is wrong --> light background, dark font
-                    pygame.draw.rect(self.Screen, CubeColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
+                    pygame.draw.rect(self.BoardSurface, CubeColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
             # Save coords of colum --------------------------------------------------------------------------
                 if len(self.Cols) < self.NumberOfCubes:
-                    self.Cols.append((CubeX, self.Y +3))
+                    self.Cols.append((CubeX, 3))
                 CubeX += self.CubeSize + self.spaceBetweenCubes
             # Save coords of Row ----------------------------------------------------------------------------
-            self.Rows.append((self.X +3, CubeY))
+            self.Rows.append((3, CubeY))
             # Reset positions for new row -------------------------------------------------------------------
-            CubeX = self.X + 3
+            CubeX = 3
             CubeY += self.CubeSize + self.spaceBetweenCubes
 # Highlight row & col of the location of the mouse ---------------------------------------------------------
     def HiglightLines(self, HighlightColor, mouse):
@@ -104,18 +104,18 @@ class board():
         ColSurface.set_alpha(50)
         # Check if mouse is in column-area & higlight column if true
         for col in self.Cols:
-            if col[0] + self.CubeSize > mouse[0] > col[0] - 1 and col[1] + self.BoardSize - 6 > mouse[1] > col[1] - 1:
-                self.Screen.blit(ColSurface, (col[0], col[1]))
+            if self.X + col[0] + self.CubeSize > mouse[0] > self.X + col[0] - 1 and self.Y + col[1] + self.BoardSize - 6 > mouse[1] > self.Y + col[1] - 1:
+                self.BoardSurface.blit(ColSurface, (col[0], col[1]))
         # Check if mouse is in row-area & higlight row if true
         for row in self.Rows:
-            if row[0] + self.BoardSize -6 > mouse[0] > row[0] -1 and row[1] + self.CubeSize> mouse[1] > row[1] -1:
-                self.Screen.blit(RowSurface, (row[0], row[1]))
+            if self.X + row[0] + self.BoardSize -6 > mouse[0] > self.X + row[0] -1 and self.Y + row[1] + self.CubeSize> mouse[1] > self.Y + row[1] -1:
+                self.BoardSurface.blit(RowSurface, (row[0], row[1]))
 # Return selected cube -------------------------------------------------------------------------------------
     def SelectCube(self, mouse, click):
         for row in range(len(self.Rows)):
             for col in range(len(self.Cols)):
                 if not (row, col) in self.immutable:
-                    if self.Cols[col][0] + self.CubeSize > mouse[0] > self.Cols[col][0] and self.Rows[row][1] + self.CubeSize > mouse[1] > self.Rows[row][1]:
+                    if self.X + self.Cols[col][0] + self.CubeSize > mouse[0] > self.X + self.Cols[col][0] and self.Y + self.Rows[row][1] + self.CubeSize > mouse[1] > self.Y + self.Rows[row][1]:
                         # left mouse to wright a value
                         if click[0] == 1:
                             BoardPos = (row, col)
@@ -126,9 +126,8 @@ class board():
                             CubeCoords = (self.Cols[col][0], self.Rows[row][1])
                             self.selected = ("R", BoardPos, CubeCoords)
         if self.selected:
-            if not self.selected[2][0] + self.CubeSize > mouse[0] > self.selected[2][0] and not self.selected[2][1] + self.CubeSize > mouse[0] > self.selected[2][1]:
+            if not self.X + self.selected[2][0] + self.CubeSize > mouse[0] > self.X + self.selected[2][0] and not self.Y + self.selected[2][1] + self.CubeSize > mouse[0] > self.Y + self.selected[2][1]:
                 self.selected = None
-
 # Pencil values for the selected cube (temp values)---------------------------------------------------------
     def Pencil(self, key=None):
         # Pencil in values ---------------------------------------------------------------------------------
@@ -167,9 +166,9 @@ class board():
         if len(Coords) != 0:
             tip = random.choice(Coords)
             self.current[tip[0]][tip[1]] = self.solution[tip[0]][tip[1]]
-# PRINT BOARD ----------------------------------------------------------------------------------------------
-    def PrintBoard(self):
-    # FONTS & COLORS ---------------------------------------------------------------------------------------
+# Check & Print Board --------------------------------------------------------------------------------------
+    def PrintBoard(self, Screen):
+    # Fonts & Colors ---------------------------------------------------------------------------------------
         # immutable values
         ImmutableFont = pygame.font.Font('freesansbold.ttf', 20)
         ImmutableColor = (0,0,0)
@@ -179,19 +178,18 @@ class board():
         # Pencil values
         PencilFont = pygame.font.Font('freesansbold.ttf', 10)
         PencilColor = (0, 0, 0)
-
-    # PRINT VALUES -----------------------------------------------------------------------------------------
+    # Print values -----------------------------------------------------------------------------------------
         for row in range(len(self.Rows)):
             for col in range(len(self.Cols)):
                 CubeCoords = (self.Cols[col][0], self.Rows[row][1])
             # Immutabe values ------------------------------------------------------------------------------
                 if self.current[row][col] != "." and (row, col) in self.immutable:
                     value = CenteredText(self.current[row][col], ImmutableFont, ImmutableColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
-                    value.render(self.Screen)
+                    value.render(self.BoardSurface)
             # New values -----------------------------------------------------------------------------------
                 elif self.current[row][col] != "." and not isinstance(self.current[row][col], list) and not (row, col) in self.immutable:
                     value = CenteredText(self.current[row][col], CertainFont, CertainColor, (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
-                    value.render(self.Screen)
+                    value.render(self.BoardSurface)
             # Pencil ---------------------------------------------------------------------------------------
                 elif isinstance(self.current[row][col], list) and not (row, col) in self.immutable:
                     # Coordinates for each value in pencil list
@@ -202,7 +200,14 @@ class board():
                     # Render
                     for i in range(len(self.current[row][col])):
                         value = CenteredText(self.current[row][col][i], PencilFont, PencilColor, Coords[i][0], Coords[i][1])
-                        value.render(self.Screen)
+                        value.render(self.BoardSurface)
+    # Render BoardSurface on Main-Screen -------------------------------------------------------------------
+        Screen.blit(self.BoardSurface, (self.X, self.Y))
+# Check board ----------------------------------------------------------------------------------------------
+    def CheckBoard(self, Screen, TitleFont, TitleColor):
+        if self.current == self.solution:
+            Message = CenteredText("Solved", TitleFont, TitleColor, self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
+            Message.render(Screen)
 # ==========================================================================================================
 
 # FUNCTIONS ================================================================================================

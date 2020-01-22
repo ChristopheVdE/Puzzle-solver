@@ -9,7 +9,7 @@ import random
 import pygame
 from Scripts.General.Classes import Button, CenteredText, Submenu
 from Scripts.General.Functions import ActivateGameLoop, quitgame
-from Scripts.Binairo.Functions import board, CountEmpty
+from Scripts.Binairo.Functions import board
 from Settings.Colors import Colors
 from Settings.Fonts import Fonts
 # ==========================================================================================================
@@ -17,18 +17,16 @@ from Settings.Fonts import Fonts
 # GAME LOOP: Binairo =======================================================================================
 def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
 # INITITIALIZE SCREEN --------------------------------------------------------------------------------------
-    Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF, 32)
+    Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
     Screen.fill(Colors["BackgroundColor"])
 # OPTIONS SUBMENU ------------------------------------------------------------------------------------------
     Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
     Title.Outline()
     Title.Title("Binairo", Fonts["ButtonFont"], Colors["black"])
-
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
     grid = None
     NumberOfCubes = 10
-    Solved = False
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
         key = None
@@ -45,14 +43,6 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
 # MOUSE POSITION & CLICKS ----------------------------------------------------------------------------------
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-
-# RESET SCREEN ---------------------------------------------------------------------------------------------
-        Screen.fill(Colors["BackgroundColor"])
-# OPTIONS SUBMENU ------------------------------------------------------------------------------------------
-        Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
-        Title.Outline()
-        Title.Title("Binairo", Fonts["ButtonFont"], Colors["black"])
-
 # SETTINGS BUTTONS -----------------------------------------------------------------------------------------
     # Number of cubes per row/ Board size ------------------------------------------------------------------
         # Dispay number
@@ -110,7 +100,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             # Display update
             pygame.display.update()
             # Initialize board
-            grid = board(Screen, NumberOfCubes, (ScreenWidth, ScreenHeight))
+            grid = board(NumberOfCubes, (ScreenWidth, ScreenHeight))
             # Create a solvable boardstate and 
             grid.CreateBoard()
             # Current board = solvable board
@@ -119,26 +109,17 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             grid.Immutable()
             # Print Background
             grid.CenterRectangle(ScreenWidth, ScreenHeight, 175, 0)
-            # grid.DarwBoardBackground(Colors["black"])
-            # grid.DrawCubes((255, 255, 255), (220,220,220))
             # Slight delay (for smaller boards)
             pygame.time.delay(100)
     # Reset board ------------------------------------------------------------------------------------------
         elif Reset.functionality(mouse, click, True):
             grid.CurrentBoard() 
             grid.Immutable()
-            # grid.DarwBoardBackground(Colors["black"])
-            # grid.DrawCubes((255, 255, 255), (220,220,220))
             # Slight delay (for smaller boards)
             pygame.time.delay(100)
     # Check Board ------------------------------------------------------------------------------------------
-        elif Check.functionality(mouse, click, True) or CountEmpty(grid.current) == 0:
-            if not grid.current == grid.solution:
-                grid.Immutable()
-                # grid.DarwBoardBackground(Colors["black"])
-                # grid.DrawCubes((255, 255, 255), (220,220,220))
-            else:
-                Solved = True
+        elif Check.functionality(mouse, click, True):
+            grid.Immutable()
             # Slight delay (for smaller boards)
             pygame.time.delay(100)
     # Get Hint ---------------------------------------------------------------------------------------------
@@ -148,7 +129,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             # Slight delay
             pygame.time.delay(200)
     # Row/col higlighting ----------------------------------------------------------------------------------
-        grid.DarwBoardBackground(Colors["black"])
+        grid.BoardBackground(Colors["black"])
         grid.DrawCubes((255, 255, 255), (220,220,220))
         grid.HiglightLines(Colors["NavigationColor"], mouse)
     # Allow board updates ----------------------------------------------------------------------------------
@@ -156,12 +137,8 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
         grid.Pencil(key)
         grid.Updatecube(key)
     # Print values -----------------------------------------------------------------------------------------
-        grid.PrintBoard()
-    # Print solved ------------------
-        if Solved:
-            Message = CenteredText("Solved", Fonts["TitleFont"], (255, 0, 0,), grid.X + grid.BoardSize/ 2, grid.Y + grid.BoardSize / 2)
-            Message.render(Screen)
-
+        grid.PrintBoard(Screen)
+        grid.CheckBoard(Screen, Fonts["TitleFont"], (255,0,0))
 # UPDATE DISPLAY: BOARD ------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
