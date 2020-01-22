@@ -5,3 +5,4 @@ Application/Scripts/General/__pycache__/*
 Application/Scripts/MainMenu/__pycache__/*
 Application/Scripts/Sudoku/__pycache__/*
 Application/Settings/__pycache__/*
+*.pyc
