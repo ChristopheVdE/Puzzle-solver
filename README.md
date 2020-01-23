@@ -11,9 +11,9 @@
   - Working:
     - Main menu
     - Binairo game
+    - Binairo Solver
     
   - In Progess
-    - Binairo Solver
     - Sudoku game
     - Sudoku Solver
 </details>
@@ -70,7 +70,7 @@
   
   Usage:
   
-    - Left mouse button: select a cube in which to add values of which you are certain
+    - Left mouse button: select a cube in which to add a value of which you are certain
     - Right mouse button: select a cube in which to add TEMPORARY values (values of which you aren't certain)
     - Delete or ".": remove all values from teh selected cube
 
@@ -79,6 +79,15 @@
    </details>
   <details>
     <summary>Solve</summary>
-    Work in progress
+  
+The algorithm will search for a solution for the board. If the board has no valid solution it will display a message saying: "Impossible".
+  
+Usage:
+  -Left mouse button: select a cube in which to add a value
+  - Delete or ".": remove all values from teh selected cube
+  - Press "Solve" when you have created your test-board
+
+        
+    
    </details>
 </details>  
