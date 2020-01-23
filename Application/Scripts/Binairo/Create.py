@@ -16,13 +16,6 @@ from Settings.Fonts import Fonts
 
 # GAME LOOP: Binairo =======================================================================================
 def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
-# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
-    Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
-    Screen.fill(Colors["BackgroundColor"])
-# OPTIONS SUBMENU ------------------------------------------------------------------------------------------
-    Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
-    Title.Outline()
-    Title.Title("Binairo", Fonts["ButtonFont"], Colors["black"])
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
     grid = None
@@ -43,7 +36,14 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
 # MOUSE POSITION & CLICKS ----------------------------------------------------------------------------------
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-# SETTINGS BUTTONS -----------------------------------------------------------------------------------------
+# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
+        Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
+        Screen.fill(Colors["BackgroundColor"])
+# OPTIONS SUBMENU ------------------------------------------------------------------------------------------
+        Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
+        Title.Outline()
+        Title.Title("Binairo", Fonts["ButtonFont"], Colors["black"])
+# OPTIONS BUTTONS -----------------------------------------------------------------------------------------
     # Number of cubes per row/ Board size ------------------------------------------------------------------
         # Dispay number
         pygame.draw.rect(Screen, (255, 0, 0), (ScreenWidth - 160, ScreenHeight/2 - 120, 40, 40))
@@ -101,8 +101,12 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             pygame.display.update()
             # Initialize board
             grid = board(NumberOfCubes, (ScreenWidth, ScreenHeight))
-            # Create a solvable boardstate and 
-            grid.CreateBoard()
+            # Create empty board
+            grid.CreateEmptyBoard()
+            # BruteForce a solution
+            grid.BruteForce()
+            # Create a solvable boardstate for the solution
+            grid.SolvableState()
             # Current board = solvable board
             grid.CurrentBoard()
             # Make the original values immutable
