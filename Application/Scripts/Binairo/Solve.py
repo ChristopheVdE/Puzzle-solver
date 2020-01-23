@@ -1,5 +1,5 @@
 ############################################################################################################
-# NAME: Binairo: solve
+# NAME: Binairo: create
 # AUTHOR: Christophe Van den Eynde
 # FUNCTION: Create playable boards
 ############################################################################################################
@@ -9,24 +9,20 @@ import random
 import pygame
 from Scripts.General.Classes import Button, CenteredText, Submenu
 from Scripts.General.Functions import ActivateGameLoop, quitgame
-from Scripts.Binairo.Functions import board, UpdateBoard, CountEmpty
+from Scripts.Binairo.Functions import board
 from Settings.Colors import Colors
 from Settings.Fonts import Fonts
 # ==========================================================================================================
 
 # GAME LOOP: Binairo =======================================================================================
 def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
-# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
-    Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF, 32)
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
-    key = None
     grid = None
-    Cube = None
-    CreatedBoard = None
     NumberOfCubes = 10
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
+        key = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -37,22 +33,17 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
                     key = '1'
                 if event.key == pygame.K_DELETE or event.key == pygame.K_KP_PERIOD:
                     key = '.'
-# SCREEN ---------------------------------------------------------------------------------------------------
-    # Set background color
-        Screen.fill(Colors["BackgroundColor"])
-        """
-    # Display title
-        Title = CenteredText("Binairo", Fonts["TitleFont"], Colors["black"], int(ScreenWidth / 2), 50)
-        Title.render(Screen)
-        """
 # MOUSE POSITION & CLICKS ----------------------------------------------------------------------------------
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
+# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
+        Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
+        Screen.fill(Colors["BackgroundColor"])
 # OPTIONS SUBMENU ------------------------------------------------------------------------------------------
         Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
         Title.Outline()
         Title.Title("Binairo", Fonts["ButtonFont"], Colors["black"])
-# SETTINGS BUTTONS -----------------------------------------------------------------------------------------
+# OPTIONS BUTTONS -----------------------------------------------------------------------------------------
     # Number of cubes per row/ Board size ------------------------------------------------------------------
         # Dispay number
         pygame.draw.rect(Screen, (255, 0, 0), (ScreenWidth - 160, ScreenHeight/2 - 120, 40, 40))
@@ -78,18 +69,10 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
         New = Button(Screen, ScreenWidth - 95, ScreenHeight/2 - 120, 70, 40, (255, 0, 0), (255, 255, 0))
         New.render(mouse)
         New.text(Fonts["ButtonFont"], Colors["black"], "New")
-    # Reset board ------------------------------------------------------------------------------------------
-        Reset = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 70, 135, 40, (255, 0, 0), (255, 255, 0))
-        Reset.render(mouse)
-        Reset.text(Fonts["ButtonFont"], Colors["black"], "Reset")
-    # Get Hint ---------------------------------------------------------------------------------------------
-        Hint = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 20, 135, 40, (255, 0, 0), (255, 255, 0))
-        Hint.render(mouse)
-        Hint.text(Fonts["ButtonFont"], Colors["black"], "Hint")
-    # Check current (partial) board ------------------------------------------------------------------------
-        Check = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 30, 135, 40, (255, 0, 0), (255, 255, 0))
-        Check.render(mouse)
-        Check.text(Fonts["ButtonFont"], Colors["black"], "Check")
+    # Solve board ------------------------------------------------------------------------------------------
+        Solve = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 70, 135, 40, (255, 0, 0), (255, 255, 0))
+        Solve.render(mouse)
+        Solve.text(Fonts["ButtonFont"], Colors["black"], "Solve")
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button ------------------------------------------------------------------------------------------
         Menu = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 90, 65, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
@@ -102,69 +85,46 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
         Exit.render(mouse)
         Exit.text(Fonts["ButtonFont"], Colors["black"], "QUIT")
         SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
-        if SelectedGame: return SelectedGame
-# UPDATE DISPLAY: SCREEN & SETTINGS (NOT BOARD) ------------------------------------------------------------
-        if not grid:
-            pygame.display.update()
+        if SelectedGame: return SelectedGame  
 # BOARD ----------------------------------------------------------------------------------------------------
-    # inititialize board class -----------------------------------------------------------------------------
+    # Create new Board -------------------------------------------------------------------------------------
         if not grid or New.functionality(mouse, click, True):
-            # Set variables
-            FirstIteration = True
-            UpdatedBoard = None
-            Solved = False        
+            # Display update
+            pygame.display.update()
             # Initialize board
-            grid = board(Screen, NumberOfCubes, (ScreenWidth, ScreenHeight))
+            grid = board(NumberOfCubes, (ScreenWidth, ScreenHeight))
+            # Create empy board
+            grid.CreateEmptyBoard()
+            # Current board = solvable board (= empty board)
+            grid.CurrentBoard()
+            # Print Background
             grid.CenterRectangle(ScreenWidth, ScreenHeight, 175, 0)
+            # Slight delay (for smaller boards)
             pygame.time.delay(100)
-    # Print board (cubes & lines --> No values) ------------------------------------------------------------
-        grid.DarwBoardBackground(Colors["black"])
-        grid.DrawCubes((255, 255, 255))
+    # Solve board ------------------------------------------------------------------------------------------
+        elif Solve.functionality(mouse, click, True):
+            grid.PrepareSolve()
+            # check for errors on raw input before looking for cerain values
+            if not grid.Errors():
+                # Find certain values & update board with them
+                grid.FindCertain()
+            # check for errors on processed input before brute forcing solution (extra safety)
+            if not grid.Errors():
+                grid.BruteForce()                
+            grid.PrepareRender()
+    # Row/col higlighting ----------------------------------------------------------------------------------
+        grid.BoardBackground(Colors["black"])
+        grid.DrawCubes((255, 255, 255), (220,220,220))
         grid.HiglightLines(Colors["NavigationColor"], mouse)
-    # Create new board -------------------------------------------------------------------------------------
-        if FirstIteration:
-            grid.CreateBoard()
-            grid.Immutable()
-    # Reset board ------------------------------------------------------------------------------------------
-        if Reset.functionality(mouse, click, True):
-            UpdatedBoard = []
-            for line in grid.solvable:
-                UpdatedBoard.append(line)
-    # Give hint --------------------------------------------------------------------------------------------
-        if Hint.functionality(mouse, click, True):
-            Coords = []
-            for row in range(grid.NumberOfCubes):
-                for char in range(grid.NumberOfCubes):
-                    if grid.CurrentBoard[row][char] == '.':
-                        Coords.append((row, char))
-            if len(Coords) != 0:
-                tip = random.choice(Coords)
-                grid.CurrentBoard[tip[0]] = UpdateBoard(grid.CurrentBoard, (grid.solution[tip[0]][tip[1]], tip))
-            pygame.time.delay(200)
     # Allow board updates ----------------------------------------------------------------------------------
-        Cube = grid.SelectCube(mouse, click, Cube)
-        UpdatedBoard = grid.Updatecube(key, UpdatedBoard, Cube)
+        grid.SelectCube(mouse, click)       
+        grid.Updatecube(key)
     # Print values -----------------------------------------------------------------------------------------
-        grid.PrintBoard()
-    # Check board ------------------------------------------------------------------------------------------
-        if Check.functionality(mouse, click, True) or CountEmpty(grid.CurrentBoard) == 0:
-            if not grid.solution == grid.CurrentBoard:
-                for row in range(grid.NumberOfCubes):
-                    if not grid.solution[row] == grid.CurrentBoard[row]:
-                        for char in range(grid.NumberOfCubes):
-                            if grid.CurrentBoard[row][char] != '.' and grid.CurrentBoard[row][char] != grid.solution[row][char]:
-                                grid.CurrentBoard[row] = UpdateBoard(grid.CurrentBoard, ('.', (row, char)))
-            else:
-                Solved = True
-        if Solved:
-            Message = CenteredText("Solved", Fonts["TitleFont"], (255, 0, 0,), ScreenWidth / 2, ScreenHeight / 2)
-            Message.render(Screen)
+        grid.PrintBoard(Screen)
+        grid.CheckBoard(Screen, Fonts["TitleFont"], (255,0,0))
 # UPDATE DISPLAY: BOARD ------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
-# RESET VARIABLES ------------------------------------------------------------------------------------------
-        FirstIteration = False
-        key = None
 # COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
     return ActivateGameLoop("Quit")
 # ==========================================================================================================

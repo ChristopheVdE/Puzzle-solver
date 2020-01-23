@@ -10,7 +10,7 @@ import random
 from Scripts.General.Classes import CenteredText
 # ==========================================================================================================
 
-# [CLASS] Board ============================================================================================
+# Board ====================================================================================================
 class board():
 # Inititalize class ----------------------------------------------------------------------------------------
     def __init__(self, NumberOfCubes, StartPos):
@@ -21,20 +21,60 @@ class board():
         self.spaceBetweenCubes = 1
         self.BoardSize = int((self.NumberOfCubes * self.CubeSize) + (self.NumberOfCubes * self.spaceBetweenCubes) + 2 + 4)
         self.selected = None
-# Create a random solvable boardstate ----------------------------------------------------------------------
-    def CreateBoard(self):
-    # Create empty board
+# Create empty board ---------------------------------------------------------------------------------------
+    def CreateEmptyBoard(self):
         self.solution = []
+        self.solvable = []
+        self.immutable = []
         for row in range(self.NumberOfCubes):
             self.solution.append("{}".format('.' * self.NumberOfCubes))
-    # Generate a solution
+            self.solvable.append("{}".format('.' * self.NumberOfCubes))
+# [SOLVE] Prepare solving ----------------------------------------------------------------------------------
+    def PrepareSolve(self):
+        # Immutatble values = original values
+        self.immutable = []
+        for row in range(len(self.current)):
+            for col in range(len(self.current)):
+                if not self.current[row][col] == '.':
+                    self.immutable.append((row, col))
+        # Set self.solution equal to self.current (in string form)
+        self.solution = []
+        row = ''
+        for line in self.current:
+            for char in line:
+                row += str(char)
+            self.solution.append(row)
+            row = ''
+# [SOLVE] Look for errors ----------------------------------------------------------------------------------
+    def Errors(self):
+        for row in self.solution:
+            if "000" in row or "111" in row or row.count('0') > self.NumberOfCubes / 2 or row.count('1') > self.NumberOfCubes / 2:
+                return True
+        for row in TransposeBoard(self.solution):
+            if "000" in row or "111" in row or row.count('0') > self.NumberOfCubes / 2 or row.count('1') > self.NumberOfCubes / 2:
+                return True
+        return False
+# [SOLVE] Solve the board: look for certain values ---------------------------------------------------------
+    def FindCertain(self):
+        self.solution, count = UpdateCertain(self.solution)
+# Solve the board: Brute-forcing ---------------------------------------------------------------------------
+    def BruteForce(self):
         BruteForce(self.solution)
+# [SOLVE] Prepare board for printing -----------------------------------------------------------------------
+    def PrepareRender(self):
+        self.current = []
+        for row in range(len(self.solution)):
+            #self.current.append(list(row))
+            self.current.append(list(self.solution[row]))
+            self.solution[row] = list(self.solution[row])
+# [PLAY] Create a random solvable boardstate ---------------------------------------------------------------
+    def SolvableState(self):
     # Create solvable state out of solution
         self.solvable = SolvableState(self.solution)
     # Convert the rows of self.solution into lists --> for comparrisonwith self.current
         for row in range(len(self.solution)):
             self.solution[row] = list(self.solution[row])
-# Create/reset the current board ---------------------------------------------------------------------------
+# [PLAY] Create/reset the current board --------------------------------------------------------------------
     def CurrentBoard(self):
         self.current = []
         for row in self.solvable:
@@ -128,7 +168,7 @@ class board():
         if self.selected:
             if not self.X + self.selected[2][0] + self.CubeSize > mouse[0] > self.X + self.selected[2][0] and not self.Y + self.selected[2][1] + self.CubeSize > mouse[0] > self.Y + self.selected[2][1]:
                 self.selected = None
-# Pencil values for the selected cube (temp values)---------------------------------------------------------
+# [PLAY] Pencil values for the selected cube (temp values)--------------------------------------------------
     def Pencil(self, key=None):
         # Pencil in values ---------------------------------------------------------------------------------
         if self.selected and self.selected[0] == "R" and key:
@@ -154,7 +194,7 @@ class board():
         # Update value of selected cube if key is pressed
         if self.selected and self.selected[0] == "L" and key:
             self.current[self.selected[1][0]][self.selected[1][1]] = str(key)
-# Give hint ------------------------------------------------------------------------------------------------
+# [PLAY] Give hint -----------------------------------------------------------------------------------------
     def Hint(self):
     # get list of all empty locations ----------------------------------------------------------------------
         Coords = []
@@ -166,7 +206,7 @@ class board():
         if len(Coords) != 0:
             tip = random.choice(Coords)
             self.current[tip[0]][tip[1]] = self.solution[tip[0]][tip[1]]
-# Check & Print Board --------------------------------------------------------------------------------------
+# Print Board ----------------------------------------------------------------------------------------------
     def PrintBoard(self, Screen):
     # Fonts & Colors ---------------------------------------------------------------------------------------
         # immutable values
@@ -205,8 +245,11 @@ class board():
         Screen.blit(self.BoardSurface, (self.X, self.Y))
 # Check board ----------------------------------------------------------------------------------------------
     def CheckBoard(self, Screen, TitleFont, TitleColor):
-        if self.current == self.solution:
+        if self.current == self.solution and CountEmpty(self.current) == 0:
             Message = CenteredText("Solved", TitleFont, TitleColor, self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
+            Message.render(Screen)
+        elif self.current == self.solution and CountEmpty(self.current) != 0:
+            Message = CenteredText("Impossible", TitleFont, TitleColor, self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
             Message.render(Screen)
 # ==========================================================================================================
 
