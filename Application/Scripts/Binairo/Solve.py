@@ -73,16 +73,6 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
         Solve = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 70, 135, 40, (255, 0, 0), (255, 255, 0))
         Solve.render(mouse)
         Solve.text(Fonts["ButtonFont"], Colors["black"], "Solve")
-        """
-    # Get Hint ---------------------------------------------------------------------------------------------
-        Hint = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 20, 135, 40, (255, 0, 0), (255, 255, 0))
-        Hint.render(mouse)
-        Hint.text(Fonts["ButtonFont"], Colors["black"], "Hint")
-    # Check current (partial) board ------------------------------------------------------------------------
-        Check = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 30, 135, 40, (255, 0, 0), (255, 255, 0))
-        Check.render(mouse)
-        Check.text(Fonts["ButtonFont"], Colors["black"], "Check")
-        """
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button ------------------------------------------------------------------------------------------
         Menu = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 90, 65, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
@@ -107,31 +97,21 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             grid.CreateEmptyBoard()
             # Current board = solvable board (= empty board)
             grid.CurrentBoard()
-            # Make the original values immutable
-            # grid.Immutable()
             # Print Background
             grid.CenterRectangle(ScreenWidth, ScreenHeight, 175, 0)
             # Slight delay (for smaller boards)
             pygame.time.delay(100)
-        """
-    # Reset board ------------------------------------------------------------------------------------------
-        elif Reset.functionality(mouse, click, True):
-            grid.CurrentBoard() 
-            grid.Immutable()
-            # Slight delay (for smaller boards)
-            pygame.time.delay(100)
-    # Check Board ------------------------------------------------------------------------------------------
-        elif Check.functionality(mouse, click, True):
-            grid.Immutable()
-            # Slight delay (for smaller boards)
-            pygame.time.delay(100)
-    # Get Hint ---------------------------------------------------------------------------------------------
-        elif Hint.functionality(mouse, click, True):
-            grid.Hint()
-            grid.Immutable()
-            # Slight delay
-            pygame.time.delay(200)
-        """
+    # Solve board ------------------------------------------------------------------------------------------
+        elif Solve.functionality(mouse, click, True):
+            grid.PrepareSolve()
+            # check for errors on raw input before looking for cerain values
+            if not grid.Errors():
+                # Find certain values & update board with them
+                grid.FindCertain()
+            # check for errors on processed input before brute forcing solution (extra safety)
+            if not grid.Errors():
+                grid.BruteForce()                
+            grid.PrepareRender()
     # Row/col higlighting ----------------------------------------------------------------------------------
         grid.BoardBackground(Colors["black"])
         grid.DrawCubes((255, 255, 255), (220,220,220))

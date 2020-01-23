@@ -10,7 +10,7 @@ import random
 from Scripts.General.Classes import CenteredText
 # ==========================================================================================================
 
-# [CLASS] Board ============================================================================================
+# Board ====================================================================================================
 class board():
 # Inititalize class ----------------------------------------------------------------------------------------
     def __init__(self, NumberOfCubes, StartPos):
@@ -29,8 +29,14 @@ class board():
         for row in range(self.NumberOfCubes):
             self.solution.append("{}".format('.' * self.NumberOfCubes))
             self.solvable.append("{}".format('.' * self.NumberOfCubes))
-# [SOLVE] Solve the board: look for certain values --------------------------------------------------------------------------
-    def FindCertain(self):
+# [SOLVE] Prepare solving ----------------------------------------------------------------------------------
+    def PrepareSolve(self):
+        # Immutatble values = original values
+        self.immutable = []
+        for row in range(len(self.current)):
+            for col in range(len(self.current)):
+                if not self.current[row][col] == '.':
+                    self.immutable.append((row, col))
         # Set self.solution equal to self.current (in string form)
         self.solution = []
         row = ''
@@ -38,16 +44,29 @@ class board():
             for char in line:
                 row += str(char)
             self.solution.append(row)
-        # Look for certain values
+            row = ''
+# [SOLVE] Look for errors ----------------------------------------------------------------------------------
+    def Errors(self):
+        for row in self.solution:
+            if "000" in row or "111" in row or row.count('0') > self.NumberOfCubes / 2 or row.count('1') > self.NumberOfCubes / 2:
+                return True
+        for row in TransposeBoard(self.solution):
+            if "000" in row or "111" in row or row.count('0') > self.NumberOfCubes / 2 or row.count('1') > self.NumberOfCubes / 2:
+                return True
+        return False
+# [SOLVE] Solve the board: look for certain values ---------------------------------------------------------
+    def FindCertain(self):
         self.solution, count = UpdateCertain(self.solution)
 # Solve the board: Brute-forcing ---------------------------------------------------------------------------
     def BruteForce(self):
         BruteForce(self.solution)
 # [SOLVE] Prepare board for printing -----------------------------------------------------------------------
-    def PrintSolve(self):
+    def PrepareRender(self):
         self.current = []
-        for row in self.solution:
-            self.current.append(row)
+        for row in range(len(self.solution)):
+            #self.current.append(list(row))
+            self.current.append(list(self.solution[row]))
+            self.solution[row] = list(self.solution[row])
 # [PLAY] Create a random solvable boardstate ---------------------------------------------------------------
     def SolvableState(self):
     # Create solvable state out of solution
@@ -224,10 +243,13 @@ class board():
                         value.render(self.BoardSurface)
     # Render BoardSurface on Main-Screen -------------------------------------------------------------------
         Screen.blit(self.BoardSurface, (self.X, self.Y))
-# [PLAY] Check board ---------------------------------------------------------------------------------------
+# Check board ----------------------------------------------------------------------------------------------
     def CheckBoard(self, Screen, TitleFont, TitleColor):
-        if self.current == self.solution:
+        if self.current == self.solution and CountEmpty(self.current) == 0:
             Message = CenteredText("Solved", TitleFont, TitleColor, self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
+            Message.render(Screen)
+        elif self.current == self.solution and CountEmpty(self.current) != 0:
+            Message = CenteredText("Impossible", TitleFont, TitleColor, self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
             Message.render(Screen)
 # ==========================================================================================================
 
