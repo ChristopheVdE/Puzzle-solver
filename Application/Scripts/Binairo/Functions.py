@@ -79,7 +79,7 @@ class board():
         self.current = []
         for row in self.solvable:
             self.current.append(list(str(row)))
-# Set correct board values as immutable & remove wrong values ----------------------------------------------
+# [PLAY] Set correct board values as immutable & remove wrong values ---------------------------------------
     def Immutable(self):
         self.immutable = []
         for row in range(len(self.current)):
@@ -299,11 +299,9 @@ def Certain(BoardState):
 # Update board ---------------------------------------------------------------------------------------------
 def UpdateBoard(BoardState, update):
     # Define variables
-    line = []
     new_line = ""
     # create a list of all characters in the line that needs updating
-    for char in BoardState[update[1][0]]:
-        line.append(char)
+    line = list(BoardState[update[1][0]])
     # Update line with the found value at the correct position
     line[update[1][1]] = update[0]
     # convert line back to string
