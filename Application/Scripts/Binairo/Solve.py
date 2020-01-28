@@ -5,7 +5,6 @@
 ############################################################################################################
 
 # IMPORT PACKAGES ==========================================================================================
-import random
 import pygame
 from Scripts.General.Classes import Button, CenteredText, Submenu
 from Scripts.General.Functions import ActivateGameLoop, quitgame

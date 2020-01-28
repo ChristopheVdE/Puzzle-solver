@@ -48,13 +48,13 @@ class board():
 # [SOLVE] Look for errors ----------------------------------------------------------------------------------
     def Errors(self):
         for row in self.solution:
-            for i in range(1-10):
-                if row.count(i) > 1: return True
-                # 3x3 grid
+            for i in range(1,10):
+                if row.count(str(i)) > 1:
+                    return True
         for row in TransposeBoard(self.solution):
-            for i in range(1-10):
-                if row.count(i) > 1: return True
-                # 3x3 grid
+            for i in range(1,10):
+                if row.count(str(i)) > 1:
+                    return True
         return False
 # [SOLVE] Solve the board: look for certain values ---------------------------------------------------------
     def FindCertain(self):
@@ -254,10 +254,10 @@ class board():
         Screen.blit(self.BoardSurface, (self.X, self.Y))
 # Check board ----------------------------------------------------------------------------------------------
     def CheckBoard(self, Screen, TitleFont, TitleColor):
-        if self.current == self.solution and CountEmpty(self.current) == 0:
+        if self.current == self.solution and len(find_empty(self.current)) == 0:
             Message = CenteredText("Solved", TitleFont, TitleColor, self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
             Message.render(Screen)
-        elif self.current == self.solution and CountEmpty(self.current) != 0:
+        elif self.current == self.solution and len(find_empty(self.current)) != 0:
             Message = CenteredText("Impossible", TitleFont, TitleColor, self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
             Message.render(Screen)
 # ==========================================================================================================
@@ -399,3 +399,15 @@ def SolvableState(Solution):
         
     # Return final board ----------------------------------------------------------------------------------------
     return EmptiedBoard
+
+
+
+# Transpose board to get columns ---------------------------------------------------------------------------
+def TransposeBoard(BoardState):
+    columns = []
+    for column_nr in range(len(BoardState)):
+        line = ''
+        for row in BoardState:
+            line += row[column_nr]
+        columns.append(line)
+    return columns
