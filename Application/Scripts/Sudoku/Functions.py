@@ -55,6 +55,14 @@ class board():
             for i in range(1,10):
                 if row.count(str(i)) > 1:
                     return True
+        for row in [0, 3, 6]:
+            for col in [0, 3, 6]:
+                print(box(self.solution, (row, col)))
+                for i in range(1, 10):
+
+                    if box(self.solution, (row, col)).count(str(i)) > 1:
+                        return True
+        print()
         return False
 # [SOLVE] Solve the board: look for certain values ---------------------------------------------------------
     def FindCertain(self):
@@ -330,7 +338,6 @@ def UpdateCertain(BoardState):
         if og_board == BoardState:
             return BoardState, count
 
-
 # Brute force a solution -----------------------------------------------------------------------------------
 def BruteForce(board):
     # Find empty positions --------------------------------------------------------------------
@@ -399,8 +406,6 @@ def SolvableState(Solution):
         
     # Return final board ----------------------------------------------------------------------------------------
     return EmptiedBoard
-
-
 
 # Transpose board to get columns ---------------------------------------------------------------------------
 def TransposeBoard(BoardState):

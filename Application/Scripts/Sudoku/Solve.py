@@ -100,8 +100,8 @@ def Sudoku_GameLoop(ScreenWidth, ScreenHeight, clock):
                 # Find certain values & update board with them
                 grid.FindCertain()
             # check for errors on processed input before brute forcing solution (extra safety)
-            if not grid.Errors():
-                grid.BruteForce()                
+                if not grid.Errors():
+                    grid.BruteForce()                
             grid.PrepareRender()
     # Row/col higlighting ----------------------------------------------------------------------------------
         grid.BoardBackground(Colors["black"])
