@@ -43,11 +43,28 @@
 <summary>Sudoku</summary>
   <details>
     <summary>Play/ Create</summary>
-    Work in progress
+    
+  - A random board will be automatically created
+  - A new board can be created by pressing "New"*
+  - The board can be resetted to it's original state
+  - The "Hint"-button will fill in a random empty cube
+  - The "Check"-button:
+      - removes all wrong values from the board
+      - gives all correct values a grey cube-background
+      - disables selection of the correct values so that they cant be changed anymore.
+  - automatic highlighting of the selcted cube, row and column
+  
    </details>
   <details>
     <summary>Solve</summary>
-    Work in progress
+
+The algorithm will search for a solution for the board. If the board has no valid solution it will display a message saying: "Impossible".
+  
+Usage:
+  - Left mouse button: select a cube in which to add a value
+  - Delete or "0": remove all values from the selected cube
+  - Press "Solve" when you have created your test-board
+
    </details>
 </details>  
   
@@ -83,8 +100,8 @@
 The algorithm will search for a solution for the board. If the board has no valid solution it will display a message saying: "Impossible".
   
 Usage:
-  -Left mouse button: select a cube in which to add a value
-  - Delete or ".": remove all values from teh selected cube
+  - Left mouse button: select a cube in which to add a value
+  - Delete or ".": remove all values from the selected cube
   - Press "Solve" when you have created your test-board
 
         
