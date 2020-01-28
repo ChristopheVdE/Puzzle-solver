@@ -5,7 +5,6 @@
 ############################################################################################################
 
 # IMPORT PACKAGES ==========================================================================================
-import random
 import pygame
 from Scripts.General.Classes import Button, CenteredText, Submenu
 from Scripts.General.Functions import ActivateGameLoop, quitgame
@@ -43,7 +42,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
         Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
         Title.Outline()
         Title.Title("Binairo", Fonts["ButtonFont"], Colors["black"])
-# OPTIONS BUTTONS -----------------------------------------------------------------------------------------
+# OPTIONS BUTTONS ------------------------------------------------------------------------------------------
     # Number of cubes per row/ Board size ------------------------------------------------------------------
         # Dispay number
         pygame.draw.rect(Screen, (255, 0, 0), (ScreenWidth - 160, ScreenHeight/2 - 120, 40, 40))
@@ -143,7 +142,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
     # Print values -----------------------------------------------------------------------------------------
         grid.PrintBoard(Screen)
         grid.CheckBoard(Screen, Fonts["TitleFont"], (255,0,0))
-# UPDATE DISPLAY: BOARD ------------------------------------------------------------------------------------
+# UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
 # COMPLETELY CLOSE THE GAME WHEN SCREEN IS CLOSED ----------------------------------------------------------
