@@ -19,6 +19,8 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
     running = True
     grid = None
     NumberOfCubes = 10
+# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
+    Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
         key = None
@@ -35,8 +37,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
 # MOUSE POSITION & CLICKS ----------------------------------------------------------------------------------
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
-        Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
+# SCREEN BACKGOURND ----------------------------------------------------------------------------------------
         Screen.fill(Colors["BackgroundColor"])
 # OPTIONS SUBMENU ------------------------------------------------------------------------------------------
         Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
