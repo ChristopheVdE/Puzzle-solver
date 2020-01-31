@@ -12,10 +12,9 @@
     - Main menu
     - Binairo game
     - Binairo Solver
-    
-  - In Progess
-    - Sudoku game
     - Sudoku Solver
+    - Sudoku game
+
 </details>
 <details>
 <summary>Terminal only scripts:</summary>
