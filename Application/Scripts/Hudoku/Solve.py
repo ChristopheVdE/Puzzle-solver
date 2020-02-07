@@ -105,7 +105,8 @@ def Hudoku_GameLoop(ScreenWidth, ScreenHeight, clock):
             grid.PrepareRender()
     # Row/col higlighting ----------------------------------------------------------------------------------
         grid.BoardBackground(Colors["black"])
-        grid.DrawCubes((255, 255, 255), (220,220,220))
+        grid.DrawCubes((255, 255, 255), (220, 220, 220))
+        grid.drawH((255,0,0))
         grid.HiglightLines(Colors["NavigationColor"], mouse)
     # Allow board updates ----------------------------------------------------------------------------------
         grid.SelectCube(mouse, click)       

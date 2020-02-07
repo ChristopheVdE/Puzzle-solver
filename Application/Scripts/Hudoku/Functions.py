@@ -118,8 +118,8 @@ class board():
         # Parameters ---------------------------------------------------------------------------------------
         self.Rows = []      #contains start-coords and size of each row
         self.Cols = []      #contains start-coords and size of each column
-        CubeX = 3  #border arround board = 2
-        CubeY = 3  #border arround board = 2
+        CubeX = 3           #border arround board = 2
+        CubeY = 3           #border arround board = 2
         # Create cubes -------------------------------------------------------------------------------------
         for row in range(self.NumberOfCubes):
             if row in [3, 6]:                       # 3x3 grid separation lines: rows (Sudoku)
@@ -141,6 +141,25 @@ class board():
             # Reset positions for new row -------------------------------------------------------------------
             CubeX = 3
             CubeY += self.CubeSize + self.spaceBetweenCubes
+# Draw the 'H' ---------------------------------------------------------------------------------------------
+    def drawH(self, Hcolor):
+        # long vertical lines
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[3][0] - 2, self.Rows[2][1]), (self.Cols[3][0] - 2, self.Rows[6][1]), 4)
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[6][0] - 2, self.Rows[2][1]), (self.Cols[6][0] - 2, self.Rows[6][1]), 4)
+        # short vertical lines parts
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[4][0] - 1, self.Rows[2][1]), (self.Cols[4][0] - 1, self.Rows[4][1]), 3) #top part
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[5][0] - 1, self.Rows[2][1]), (self.Cols[5][0] - 1, self.Rows[4][1]), 3) #top part
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[4][0] - 1, self.Rows[5][1]), (self.Cols[4][0] - 1, self.Rows[6][1]), 3) #bottom part
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[5][0] - 1, self.Rows[5][1]), (self.Cols[5][0] - 1, self.Rows[6][1]), 3) #bottom part
+        # horizontal lines (top + bottom)
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[3][0] - 2, self.Rows[2][1] - 1), (self.Cols[4][0] - 2, self.Rows[2][1] - 1), 3)
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[3][0] - 2, self.Rows[6][1] - 2), (self.Cols[4][0] - 2, self.Rows[6][1] - 2), 4)
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[5][0] - 2, self.Rows[2][1] - 2), (self.Cols[6][0] - 2, self.Rows[2][1] - 2), 3)
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[5][0] - 2, self.Rows[6][1] - 1), (self.Cols[6][0] - 2, self.Rows[6][1] - 1), 4)
+        # horizontal lines (bridge)
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[4][0] - 2, self.Rows[4][1] - 1), (self.Cols[5][0] - 2, self.Rows[4][1] - 1), 3)
+        pygame.draw.line(self.BoardSurface, Hcolor, (self.Cols[4][0] - 2, self.Rows[5][1] - 2), (self.Cols[5][0] - 2, self.Rows[5][1] - 2), 3)
+
 # Highlight row & col of the location of the mouse ---------------------------------------------------------
     def HiglightLines(self, HighlightColor, mouse):
         # Create new surfaces for the higlights
@@ -307,7 +326,6 @@ def Hvalues(board):
     values = []
     for pos in positions:
         values.append(board[pos[0]][pos[1]])
-    print(values)
     return values
 
 # Return all valid options for the selected position -------------------------------------------------------
