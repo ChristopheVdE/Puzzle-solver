@@ -24,6 +24,7 @@ def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
 # VARIABLES ------------------------------------------------------------------------------------------------
     menu = True
     SudokuSelected = False
+    HudokuSelected = False
     BinairoSelected = False
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     while menu:
@@ -47,8 +48,12 @@ def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
         Sudoku = Button(Screen, 155, ScreenHeight / 7 + 95, 218, 40, Colors["ButtonColor"], Colors["HighlightColor"], SudokuSelected)
         Sudoku.render(mouse)
         Sudoku.text(Fonts["ButtonFont"], Colors["black"], "Sudoku")
+    # Select Hudoku button
+        Hudoku = Button(Screen, 155, ScreenHeight / 7 + 145, 218, 40, Colors["ButtonColor"], Colors["HighlightColor"], SudokuSelected)
+        Hudoku.render(mouse)
+        Hudoku.text(Fonts["ButtonFont"], Colors["black"], "Hudoku")
     # Select Binairo button
-        Binairo = Button(Screen, 155, ScreenHeight / 7 + 145, 218, 40, Colors["ButtonColor"], Colors["HighlightColor"], BinairoSelected)
+        Binairo = Button(Screen, 155, ScreenHeight / 7 + 195, 218, 40, Colors["ButtonColor"], Colors["HighlightColor"], BinairoSelected)
         Binairo.render(mouse)
         Binairo.text(Fonts["ButtonFont"], Colors["black"], "Binairo")        
 # [SUBMENU] PUZZLE INFO ------------------------------------------------------------------------------------
@@ -61,6 +66,7 @@ def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
         if (Sudoku.X + Sudoku.Width > mouse[0] > Sudoku.X and Sudoku.Y + Sudoku.Height > mouse[1] > Sudoku.Y) or SudokuSelected:
             if click[0] == 1:
                 SudokuSelected = True
+            HudokuSelected = False
             BinairoSelected = False
         # Puzzle image & text
             PuzzleInfo.Image(Images + '\Sudoku.jpg')
@@ -77,12 +83,35 @@ def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
             Solve.text(Fonts["ButtonFont"], Colors["black"], "SOLVE")
             SelectedGame = Solve.functionality(mouse, click, ActivateGameLoop("SudokuSolve"))
             if SelectedGame: return SelectedGame
+    # PUZZLE INFO: HUDOKU ----------------------------------------------------------------------------------
+        # Hudoku button activation
+        if (Hudoku.X + Hudoku.Width > mouse[0] > Hudoku.X and Hudoku.Y + Hudoku.Height > mouse[1] > Hudoku.Y) or HudokuSelected:
+            if click[0] == 1:
+                HudokuSelected = True
+            SudokuSelected = False
+            BinairoSelected = False
+        # Puzzle image & text
+            PuzzleInfo.Image(Images + '\Hudoku.png')
+            PuzzleInfo.MultiLineText("Fill a 9×9 grid.\nEach column, row and 3×3 grid should contain all digits from 1 to 9.\nThe 'H' in the middle counts as an extra grid and must also contain all values from 1 to 9", Fonts["ButtonFont"], Colors["black"])
+        # Play button
+            Play = Button(Screen, PuzzleInfo.X + 15, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Playbutton"], Colors["PlayHighlight"])
+            Play.render(mouse)
+            Play.text(Fonts["ButtonFont"], Colors["black"], "PLAY")
+            SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("HudokuPlay"))
+            if SelectedGame: return SelectedGame
+        # Solve button
+            Solve = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Playbutton"], Colors["PlayHighlight"])
+            Solve.render(mouse)
+            Solve.text(Fonts["ButtonFont"], Colors["black"], "SOLVE")
+            SelectedGame = Solve.functionality(mouse, click, ActivateGameLoop("HudokuSolve"))
+            if SelectedGame: return SelectedGame
     # PUZZLE INFO: BINAIRO ---------------------------------------------------------------------------------
         # Sudoku button activation
         if (Binairo.X + Binairo.Width > mouse[0] > Binairo.X and Binairo.Y + Binairo.Height > mouse[1] > Binairo.Y) or BinairoSelected:
             if click[0] == 1:
                 BinairoSelected = True
             SudokuSelected = False
+            HudokuSelected = False
         # Puzzle image & text
             PuzzleInfo.Image(Images + '\Binairo.png')
             PuzzleInfo.MultiLineText("Each column/ row needs to have te same ammount of 1 and 0.\nMax 2 times the same number next to eachother.\nNo identical rows/ columns alowed.", Fonts["ButtonFont"], Colors["black"])

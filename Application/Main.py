@@ -49,6 +49,12 @@ while True:
         elif game[0] == "SudokuSolve" and game[1] == True:
             from Scripts.Sudoku.Solve import Sudoku_GameLoop as GameLoop
             SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock)
+        elif game[0] == "HudokuPlay" and game[1] == True:
+            from Scripts.Hudoku.Create import Hudoku_GameLoop as GameLoop
+            SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock)
+        elif game[0] == "HudokuSolve" and game[1] == True:
+            from Scripts.Hudoku.Solve import Hudoku_GameLoop as GameLoop
+            SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock)
         elif game[0] == "BinairoPlay" and game[1] == True:
             from Scripts.Binairo.Create import Binairo_GameLoop as GameLoop
             SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock, Images)
