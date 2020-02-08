@@ -50,7 +50,7 @@ def Sudoku_GameLoop(ScreenWidth, ScreenHeight, clock):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 # SCREEN BACKGOURND ----------------------------------------------------------------------------------------
-        Screen.fill(Colors["BackgroundColor"])
+        Screen.fill(Colors["Background"])
 # OPTIONS SUBMENU ------------------------------------------------------------------------------------------
         Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["Background"])
         Title.Outline()
