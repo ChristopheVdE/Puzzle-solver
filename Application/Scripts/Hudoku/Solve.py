@@ -17,6 +17,8 @@ def Hudoku_GameLoop(ScreenWidth, ScreenHeight, clock):
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
     grid = None
+# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
+    Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
         key = None
@@ -47,9 +49,8 @@ def Hudoku_GameLoop(ScreenWidth, ScreenHeight, clock):
 # MOUSE POSITION & CLICKS ----------------------------------------------------------------------------------
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-# INITITIALIZE SCREEN --------------------------------------------------------------------------------------
-        Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
-        Screen.fill(Colors["Background"])
+# SCREEN BACKGROUND ----------------------------------------------------------------------------------------
+        Screen.fill((Colors["BackgroundColor"]))
 # OPTIONS SUBMENU ------------------------------------------------------------------------------------------
         Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["Background"])
         Title.Outline()
