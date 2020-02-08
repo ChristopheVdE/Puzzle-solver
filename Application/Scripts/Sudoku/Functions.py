@@ -57,12 +57,9 @@ class board():
                     return True
         for row in [0, 3, 6]:
             for col in [0, 3, 6]:
-                print(box(self.solution, (row, col)))
                 for i in range(1, 10):
-
                     if box(self.solution, (row, col)).count(str(i)) > 1:
                         return True
-        print()
         return False
 # [SOLVE] Solve the board: look for certain values ---------------------------------------------------------
     def FindCertain(self):
@@ -81,7 +78,7 @@ class board():
     def SolvableState(self):
     # Create solvable state out of solution
         self.solvable = SolvableState(self.solution)
-    # Convert the rows of self.solution into lists --> for comparrisonwith self.current
+    # Convert the rows of self.solution into lists --> for comparrison with self.current
         for row in range(len(self.solution)):
             self.solution[row] = list(self.solution[row])
 # [PLAY] Create/reset the current board --------------------------------------------------------------------
@@ -110,9 +107,9 @@ class board():
         while self.Y + self.BoardSize > ScreenHeight - Unoccupy_Y:
             self.Y = self.Y - (self.CubeSize + 1)
 # Create board surface and fill it (background) ------------------------------------------------------------
-    def BoardBackground(self, BackgroundColor):
+    def BoardBackground(self, Background):
         self.BoardSurface = pygame.Surface((self.BoardSize, self.BoardSize), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
-        self.BoardSurface.fill(BackgroundColor)
+        self.BoardSurface.fill(Background)
 # Draw the empty cubes -------------------------------------------------------------------------------------
     def DrawCubes(self, CubeColor, CorrectColor):
         # Parameters ---------------------------------------------------------------------------------------
@@ -375,12 +372,24 @@ def SolvableState(Solution):
     for row in range(9):
         for char in range(9):
             coords.append((row, char))
-
+    
     # Create duplicate boards for testing ------------------------------------------------------------------
     EmptiedBoard = []
     for i in Solution:
         EmptiedBoard.append(i)
 
+    """
+    # 17 is the minimum ammount of given values needed to solve a sudoku with only 1 solution
+    # However 17 given values don't mean that the sudoku has only 1 solution
+    while len(coords) != 17:
+        position = random.choice(coords)
+        index = coords.index(position)
+
+        EmptiedBoard[position[0]] = UpdateBoard(EmptiedBoard, position, "0")
+
+        del coords[index]
+
+    """
     # Loop through coordinates and see if removal of value at coord still gives same solution of board ----------
     while len(coords) != 0:
         # Choose a random position out of coordinates & index of said position in the list of coordinates
@@ -403,7 +412,7 @@ def SolvableState(Solution):
 
         # Remove tested position out of coordinates list
         del coords[index]
-        
+
     # Return final board ----------------------------------------------------------------------------------------
     return EmptiedBoard
 

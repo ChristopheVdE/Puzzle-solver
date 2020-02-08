@@ -13,8 +13,7 @@ import importlib
 # Import modules -------------------------------------------------------------------------------------------
 from Scripts.General.Classes import Button, CenteredText, MultiLineText, Submenu
 from Scripts.General.Functions import quitgame, ActivateGameLoop
-from Settings.Colors import Colors
-from Settings.Fonts import Fonts
+from Settings.Default import Colors, Fonts
 # ==========================================================================================================
 
 # MAIN MENU ================================================================================================
@@ -35,30 +34,30 @@ def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
     # Background
-        Screen.fill(Colors["BackgroundColor"])
+        Screen.fill(Colors["Background"])
     # Title
         MenuTitle = CenteredText("Puzzle Solver", Fonts["TitleFont"], Colors["black"], ScreenWidth/2, ScreenHeight/7)
         MenuTitle.render(Screen)
 # [SUBMENU] CHOOSE PUZZLE ----------------------------------------------------------------------------------
     # Title
-        PuzzleType = Submenu(Screen, 140, ScreenHeight/7 + 70, 250, 325, Colors["black"], Colors["BackgroundColor"])
+        PuzzleType = Submenu(Screen, 140, ScreenHeight/7 + 70, 250, 325, Colors["black"], Colors["Background"])
         PuzzleType.Outline()
         PuzzleType.Title("CHOOSE PUZZLE", Fonts["ButtonFont"], Colors["black"])
     # Select Sudoku button
-        Sudoku = Button(Screen, 155, ScreenHeight / 7 + 95, 218, 40, Colors["ButtonColor"], Colors["HighlightColor"], SudokuSelected)
+        Sudoku = Button(Screen, 155, ScreenHeight / 7 + 95, 218, 40, Colors["PuzzleSelector"], Colors["PuzzleHighlight"], SudokuSelected)
         Sudoku.render(mouse)
         Sudoku.text(Fonts["ButtonFont"], Colors["black"], "Sudoku")
     # Select Hudoku button
-        Hudoku = Button(Screen, 155, ScreenHeight / 7 + 145, 218, 40, Colors["ButtonColor"], Colors["HighlightColor"], SudokuSelected)
+        Hudoku = Button(Screen, 155, ScreenHeight / 7 + 145, 218, 40, Colors["PuzzleSelector"], Colors["PuzzleHighlight"], SudokuSelected)
         Hudoku.render(mouse)
         Hudoku.text(Fonts["ButtonFont"], Colors["black"], "Hudoku")
     # Select Binairo button
-        Binairo = Button(Screen, 155, ScreenHeight / 7 + 195, 218, 40, Colors["ButtonColor"], Colors["HighlightColor"], BinairoSelected)
+        Binairo = Button(Screen, 155, ScreenHeight / 7 + 195, 218, 40, Colors["PuzzleSelector"], Colors["PuzzleHighlight"], BinairoSelected)
         Binairo.render(mouse)
         Binairo.text(Fonts["ButtonFont"], Colors["black"], "Binairo")        
 # [SUBMENU] PUZZLE INFO ------------------------------------------------------------------------------------
     # GENERAL ----------------------------------------------------------------------------------------------
-        PuzzleInfo = Submenu(Screen, 140 + 270, ScreenHeight/7 + 70, 250, 325, Colors["black"], Colors["BackgroundColor"])
+        PuzzleInfo = Submenu(Screen, 140 + 270, ScreenHeight/7 + 70, 250, 325, Colors["black"], Colors["Background"])
         PuzzleInfo.Outline()
         PuzzleInfo.Title("PUZZLE INFO", Fonts["ButtonFont"], Colors["black"])
     # PUZZLE INFO: SUDOKU ----------------------------------------------------------------------------------
@@ -72,13 +71,13 @@ def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
             PuzzleInfo.Image(Images + '\Sudoku.jpg')
             PuzzleInfo.MultiLineText("Fill a 9×9 grid.\nEach column, row and 3×3 grid should contain all digits from 1 to 9.", Fonts["ButtonFont"], Colors["black"])
         # Play button
-            Play = Button(Screen, PuzzleInfo.X + 15, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Playbutton"], Colors["PlayHighlight"])
+            Play = Button(Screen, PuzzleInfo.X + 15, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Play"], Colors["PlayHighlight"])
             Play.render(mouse)
             Play.text(Fonts["ButtonFont"], Colors["black"], "PLAY")
             SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("SudokuPlay"))
             if SelectedGame: return SelectedGame
         # Solve button
-            Solve = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Playbutton"], Colors["PlayHighlight"])
+            Solve = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Play"], Colors["PlayHighlight"])
             Solve.render(mouse)
             Solve.text(Fonts["ButtonFont"], Colors["black"], "SOLVE")
             SelectedGame = Solve.functionality(mouse, click, ActivateGameLoop("SudokuSolve"))
@@ -94,13 +93,13 @@ def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
             PuzzleInfo.Image(Images + '\Hudoku.png')
             PuzzleInfo.MultiLineText("Fill a 9×9 grid.\nEach column, row and 3×3 grid should contain all digits from 1 to 9.\nThe 'H' in the middle counts as an extra grid and must also contain all values from 1 to 9", Fonts["ButtonFont"], Colors["black"])
         # Play button
-            Play = Button(Screen, PuzzleInfo.X + 15, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Playbutton"], Colors["PlayHighlight"])
+            Play = Button(Screen, PuzzleInfo.X + 15, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Play"], Colors["PlayHighlight"])
             Play.render(mouse)
             Play.text(Fonts["ButtonFont"], Colors["black"], "PLAY")
             SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("HudokuPlay"))
             if SelectedGame: return SelectedGame
         # Solve button
-            Solve = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Playbutton"], Colors["PlayHighlight"])
+            Solve = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Play"], Colors["PlayHighlight"])
             Solve.render(mouse)
             Solve.text(Fonts["ButtonFont"], Colors["black"], "SOLVE")
             SelectedGame = Solve.functionality(mouse, click, ActivateGameLoop("HudokuSolve"))
@@ -116,19 +115,19 @@ def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
             PuzzleInfo.Image(Images + '\Binairo.png')
             PuzzleInfo.MultiLineText("Each column/ row needs to have te same ammount of 1 and 0.\nMax 2 times the same number next to eachother.\nNo identical rows/ columns alowed.", Fonts["ButtonFont"], Colors["black"])
         # Play button
-            Play = Button(Screen, PuzzleInfo.X + 15, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Playbutton"], Colors["PlayHighlight"])
+            Play = Button(Screen, PuzzleInfo.X + 15, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Play"], Colors["PlayHighlight"])
             Play.render(mouse)
             Play.text(Fonts["ButtonFont"], Colors["black"], "PLAY")
             SelectedGame = Play.functionality(mouse, click, ActivateGameLoop("BinairoPlay"))
             if SelectedGame: return SelectedGame
         # Solve button
-            Solve = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Playbutton"], Colors["PlayHighlight"])
+            Solve = Button(Screen, PuzzleInfo.X + 135, PuzzleInfo.Y + PuzzleInfo.Height - 50, 100, 40, Colors["Play"], Colors["PlayHighlight"])
             Solve.render(mouse)
             Solve.text(Fonts["ButtonFont"], Colors["black"], "SOLVE")
             SelectedGame = Solve.functionality(mouse, click, ActivateGameLoop("BinairoSolve"))
             if SelectedGame: return SelectedGame
 # EXIT BUTTON ----------------------------------------------------------------------------------------------
-        Exit = Button(Screen, ScreenWidth/2 - 50, ScreenHeight - 75, 100, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
+        Exit = Button(Screen, ScreenWidth/2 - 50, ScreenHeight - 75, 100, 40, Colors["Navigation"], Colors["NavigationHighlight"])
         Exit.render(mouse)
         Exit.text(Fonts["ButtonFont"], Colors["black"], "EXIT")
         SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))

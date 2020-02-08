@@ -110,9 +110,9 @@ class board():
         while self.Y + self.BoardSize > ScreenHeight - Unoccupy_Y:
             self.Y = self.Y - (self.CubeSize + 1)
 # Create board surface and fill it (background) ------------------------------------------------------------
-    def BoardBackground(self, BackgroundColor):
+    def BoardBackground(self, Background):
         self.BoardSurface = pygame.Surface((self.BoardSize, self.BoardSize), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
-        self.BoardSurface.fill(BackgroundColor)
+        self.BoardSurface.fill(Background)
 # Draw the empty cubes -------------------------------------------------------------------------------------
     def DrawCubes(self, CubeColor, CorrectColor):
         # Parameters ---------------------------------------------------------------------------------------

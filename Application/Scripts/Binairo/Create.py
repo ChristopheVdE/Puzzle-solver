@@ -9,8 +9,7 @@ import pygame
 from Scripts.General.Classes import Button, CenteredText, Submenu
 from Scripts.General.Functions import ActivateGameLoop, quitgame
 from Scripts.Binairo.Functions import board
-from Settings.Colors import Colors
-from Settings.Fonts import Fonts
+from Settings.Default import Colors, Fonts
 # ==========================================================================================================
 
 # GAME LOOP: Binairo =======================================================================================
@@ -37,19 +36,19 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
         click = pygame.mouse.get_pressed()
 # INITITIALIZE SCREEN --------------------------------------------------------------------------------------
         Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
-        Screen.fill(Colors["BackgroundColor"])
+        Screen.fill(Colors["Background"])
 # OPTIONS SUBMENU ------------------------------------------------------------------------------------------
-        Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
+        Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["Background"])
         Title.Outline()
         Title.Title("Binairo", Fonts["ButtonFont"], Colors["black"])
 # OPTIONS BUTTONS ------------------------------------------------------------------------------------------
     # Number of cubes per row/ Board size ------------------------------------------------------------------
         # Dispay number
-        pygame.draw.rect(Screen, (255, 0, 0), (ScreenWidth - 160, ScreenHeight/2 - 120, 40, 40))
+        pygame.draw.rect(Screen, Colors["Options"], (ScreenWidth - 160, ScreenHeight/2 - 120, 40, 40))
         Cubes = CenteredText(str(NumberOfCubes), Fonts["ButtonFont"], Colors["black"], int(ScreenWidth - 160 + 20), ScreenHeight/2 - 120 + 40/2)
         Cubes.render(Screen)
         # Increase number
-        Increase = Button(Screen, ScreenWidth - 120, ScreenHeight/2 - 120, 20, 20, (255, 0, 0), (255, 255, 0))
+        Increase = Button(Screen, ScreenWidth - 120, ScreenHeight/2 - 120, 20, 20, Colors["Options"], Colors["OptionsHighlight"])
         Increase.render(mouse)
         Increase.image(Images + '\ArrowUp.png')
         NrCubes = Increase.functionality(mouse, click, int(NumberOfCubes + 2))
@@ -57,7 +56,7 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             pygame.time.delay(150)
             NumberOfCubes = NrCubes
         # Decrease number
-        Decrease = Button(Screen, ScreenWidth - 120, ScreenHeight/2 - 100, 20, 20, (255, 0, 0), (255, 255, 0))
+        Decrease = Button(Screen, ScreenWidth - 120, ScreenHeight/2 - 100, 20, 20, Colors["Options"], Colors["OptionsHighlight"])
         Decrease.render(mouse)
         Decrease.image(Images + '\ArrowDown.png')
         NrCubes = Decrease.functionality(mouse, click, int(NumberOfCubes - 2))
@@ -65,30 +64,30 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             pygame.time.delay(150)
             NumberOfCubes = NrCubes
     # Create new board -------------------------------------------------------------------------------------
-        New = Button(Screen, ScreenWidth - 95, ScreenHeight/2 - 120, 70, 40, (255, 0, 0), (255, 255, 0))
+        New = Button(Screen, ScreenWidth - 95, ScreenHeight/2 - 120, 70, 40, Colors["Options"], Colors["OptionsHighlight"])
         New.render(mouse)
         New.text(Fonts["ButtonFont"], Colors["black"], "New")
     # Reset board ------------------------------------------------------------------------------------------
-        Reset = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 70, 135, 40, (255, 0, 0), (255, 255, 0))
+        Reset = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 70, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
         Reset.render(mouse)
         Reset.text(Fonts["ButtonFont"], Colors["black"], "Reset")
     # Get Hint ---------------------------------------------------------------------------------------------
-        Hint = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 20, 135, 40, (255, 0, 0), (255, 255, 0))
+        Hint = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 20, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
         Hint.render(mouse)
         Hint.text(Fonts["ButtonFont"], Colors["black"], "Hint")
     # Check current (partial) board ------------------------------------------------------------------------
-        Check = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 30, 135, 40, (255, 0, 0), (255, 255, 0))
+        Check = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 30, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
         Check.render(mouse)
         Check.text(Fonts["ButtonFont"], Colors["black"], "Check")
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button ------------------------------------------------------------------------------------------
-        Menu = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 90, 65, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
+        Menu = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 90, 65, 40, Colors["Navigation"], Colors["NavigationHighlight"])
         Menu.render(mouse)
         Menu.text(Fonts["ButtonFont"], Colors["black"], "MENU")
         SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Menu"))
         if SelectedGame: return SelectedGame
     # Exit Button ------------------------------------------------------------------------------------------
-        Exit = Button(Screen, ScreenWidth - 90, ScreenHeight/2 + 90, 65, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
+        Exit = Button(Screen, ScreenWidth - 90, ScreenHeight/2 + 90, 65, 40, Colors["Navigation"], Colors["NavigationHighlight"])
         Exit.render(mouse)
         Exit.text(Fonts["ButtonFont"], Colors["black"], "QUIT")
         SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
@@ -133,15 +132,15 @@ def Binairo_GameLoop(ScreenWidth, ScreenHeight, clock, Images):
             pygame.time.delay(200)
     # Row/col higlighting ----------------------------------------------------------------------------------
         grid.BoardBackground(Colors["black"])
-        grid.DrawCubes((255, 255, 255), (220,220,220))
-        grid.HiglightLines(Colors["NavigationColor"], mouse)
+        grid.DrawCubes(Colors["Cube"], Colors["Correct"])
+        grid.HiglightLines(Colors["Navigation"], mouse)
     # Allow board updates ----------------------------------------------------------------------------------
         grid.SelectCube(mouse, click)       
         grid.Pencil(key)
         grid.Updatecube(key)
     # Print values -----------------------------------------------------------------------------------------
         grid.PrintBoard(Screen)
-        grid.CheckBoard(Screen, Fonts["TitleFont"], (255,0,0))
+        grid.CheckBoard(Screen, Fonts["TitleFont"], Colors["Message"])
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
