@@ -9,8 +9,7 @@ import pygame
 from Scripts.General.Classes import Button, CenteredText, Submenu
 from Scripts.General.Functions import ActivateGameLoop, quitgame
 from Scripts.Hudoku.Functions import board
-from Settings.Colors import Colors
-from Settings.Fonts import Fonts
+from Settings.Default import Colors, Fonts
 # ==========================================================================================================
 
 # GAME LOOP: Sudoku ========================================================================================
@@ -50,31 +49,31 @@ def Hudoku_GameLoop(ScreenWidth, ScreenHeight, clock):
         click = pygame.mouse.get_pressed()
 # INITITIALIZE SCREEN --------------------------------------------------------------------------------------
         Screen = pygame.display.set_mode((ScreenWidth, ScreenHeight), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
-        Screen.fill(Colors["BackgroundColor"])
+        Screen.fill(Colors["Background"])
 # OPTIONS SUBMENU ------------------------------------------------------------------------------------------
-        Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["BackgroundColor"])
+        Title = Submenu(Screen, ScreenWidth - 165, ScreenHeight / 2 - 150, 145, 300, Colors["black"], Colors["Background"])
         Title.Outline()
-        Title.Title("Hudoku", Fonts["ButtonFont"], Colors["black"])
+        Title.Title("Hudoku", Fonts["Button"], Colors["black"])
 # OPTIONS BUTTONS ------------------------------------------------------------------------------------------
     # Create new board -------------------------------------------------------------------------------------
-        New = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 120, 135, 40, (255, 0, 0), (255, 255, 0))
+        New = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 120, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
         New.render(mouse)
-        New.text(Fonts["ButtonFont"], Colors["black"], "New")
+        New.text(Fonts["Button"], Colors["black"], "New")
     # Reset board ------------------------------------------------------------------------------------------
-        Solve = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 70, 135, 40, (255, 0, 0), (255, 255, 0))
+        Solve = Button(Screen, ScreenWidth - 160, ScreenHeight/2 - 70, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
         Solve.render(mouse)
-        Solve.text(Fonts["ButtonFont"], Colors["black"], "Solve")
+        Solve.text(Fonts["Button"], Colors["black"], "Solve")
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     # Menu button ------------------------------------------------------------------------------------------
-        Menu = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 90, 65, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
+        Menu = Button(Screen, ScreenWidth - 160, ScreenHeight/2 + 90, 65, 40, Colors["Navigation"], Colors["NavigationHighlight"])
         Menu.render(mouse)
-        Menu.text(Fonts["ButtonFont"], Colors["black"], "MENU")
+        Menu.text(Fonts["Button"], Colors["black"], "MENU")
         SelectedGame = Menu.functionality(mouse, click, ActivateGameLoop("Menu"))
         if SelectedGame: return SelectedGame
     # Exit Button ------------------------------------------------------------------------------------------
-        Exit = Button(Screen, ScreenWidth - 90, ScreenHeight/2 + 90, 65, 40, Colors["NavigationColor"], Colors["NavigationHighlight"])
+        Exit = Button(Screen, ScreenWidth - 90, ScreenHeight/2 + 90, 65, 40, Colors["Navigation"], Colors["NavigationHighlight"])
         Exit.render(mouse)
-        Exit.text(Fonts["ButtonFont"], Colors["black"], "QUIT")
+        Exit.text(Fonts["Button"], Colors["black"], "QUIT")
         SelectedGame = Exit.functionality(mouse, click, ActivateGameLoop("Quit"))
         if SelectedGame: return SelectedGame
 # BOARD ----------------------------------------------------------------------------------------------------
@@ -105,15 +104,15 @@ def Hudoku_GameLoop(ScreenWidth, ScreenHeight, clock):
             grid.PrepareRender()
     # Row/col higlighting ----------------------------------------------------------------------------------
         grid.BoardBackground(Colors["black"])
-        grid.DrawCubes((255, 255, 255), (220, 220, 220))
-        grid.drawH((255,0,0))
-        grid.HiglightLines(Colors["NavigationColor"], mouse)
+        grid.DrawCubes(Colors["Cube"], Colors["Correct"])
+        grid.drawH(Colors["Hudoku_H"])
+        grid.HiglightLines(Colors["Navigation"], mouse)
     # Allow board updates ----------------------------------------------------------------------------------
         grid.SelectCube(mouse, click)       
         grid.Updatecube(key)
     # Print values -----------------------------------------------------------------------------------------
         grid.PrintBoard(Screen)
-        grid.CheckBoard(Screen, Fonts["TitleFont"], (255,0,0))
+        grid.CheckBoard(Screen, Fonts["Message"], Colors["Message"])
 # UPDATE DISPLAY: BOARD ------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
