@@ -48,7 +48,7 @@ def MainMenu(ScreenWidth, ScreenHeight, clock, Images):
         Sudoku.render(mouse)
         Sudoku.text(Fonts["Button"], Colors["black"], "Sudoku")
     # Select Hudoku button
-        Hudoku = Button(Screen, 155, ScreenHeight / 7 + 145, 218, 40, Colors["PuzzleSelector"], Colors["PuzzleHighlight"], SudokuSelected)
+        Hudoku = Button(Screen, 155, ScreenHeight / 7 + 145, 218, 40, Colors["PuzzleSelector"], Colors["PuzzleHighlight"], HudokuSelected)
         Hudoku.render(mouse)
         Hudoku.text(Fonts["Button"], Colors["black"], "Hudoku")
     # Select Binairo button
