@@ -88,13 +88,40 @@ class Value():
     def __init__(self):
         self.Correct = False
         self.Value = 0
-        self.PossibleValues = list(range(1,10))
+        self.PossibleValues = list(range(1,10))   
         self.UserPencil = []
+# Update Values --------------------------------------------------------------------------------------------
     def UpdateValue(self, pNewValue):
         if self.Correct == False: 
             self.Value = pNewValue
     def SetValueAsCorrect(self):
         self.Correct = True
+# Calcuate Possible Values ---------------------------------------------------------------------------------
+    def CalcPossible(self, pBoard, pPosition):
+        self.RemovePossible(pBoard, pPosition)
+        self.AddPossible(pBoard, pPosition)
+
+    def RemovePossible(self, pBoard, pPosition):     
+        for Value in self.PossibleValues:           
+            if (
+                Value in pBoard.board[pPosition[0]].GetRowValues()  # row
+                or Value in Column(pBoard, pPosition[1]).GetColumnValues()  # column
+                or Value in Box(pBoard, pPosition).GetBoxValues()  # box
+            ):
+                self.PossibleValues.remove(Value)
+
+    def AddPossible(self, pBoard, pPosition):
+        for Value in range(1,10) :
+            if (
+                Value not in self.PossibleValues
+                and not Value in pBoard.board[pPosition[0]].GetRowValues()  # row
+                and not Value in Column(pBoard, pPosition[1]).GetColumnValues()  # column
+                and not Value in Box(pBoard, pPosition).GetBoxValues()  # box
+            ):
+                self.PossibleValues.append(Value)
+# Reset Possible Values ------------------------------------------------------------------------------------                
+    def ResetPossible(self):
+        self.PossibleValues = list(range(1,10))     
 
 # test init ================================================================================================
 x = Board((1, 1), 9, 9)
@@ -126,7 +153,7 @@ print(z.GetBoxValues())
 
 # Brute force a solution -----------------------------------------------------------------------------------
 def BruteForce(pBoard):
-    # Find empty positions --------------------------------------------------------------------
+    # Find empty positions ---------------------------------------------------------------------------------
     all_empty = pBoard.FindEmpty()
     if not all_empty:
         # solution found
@@ -135,10 +162,13 @@ def BruteForce(pBoard):
         options = list(range(1,10))
         # Add randomness
         for empty_pos in all_empty:
+            # Check possible Values to use in the bruteforce 
+            pBoard.board[empty_pos[0]].Row[empty_pos[1]].CalcPossible(pBoard, empty_pos)
+            options = pBoard.board[empty_pos[0]].Row[empty_pos[1]].PossibleValues
+
             random.shuffle(options)
         # CHECK POSSIBLE VALUES FOR EMPTY POSITION & UPDATE BOARD IF FOUND ---------------------------------
             for option in options:
-                #pBoard.PrintBoardValues()
                 # search row, column and box
                 if (
                     not option in pBoard.board[empty_pos[0]].GetRowValues()  # row
