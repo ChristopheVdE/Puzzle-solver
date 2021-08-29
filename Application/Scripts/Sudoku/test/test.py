@@ -13,7 +13,7 @@ x = Board((1, 1), 9, 9)
 
 x.CreateEmptyBoard()
 # x.PrintBoardValues()
-#x.board[1].Row[1].UpdateValue(2)
+x.GetRow(1)[1].UpdateValue(2, x, (1,1))
 x.PrintBoardValues()
 
 print('row')
