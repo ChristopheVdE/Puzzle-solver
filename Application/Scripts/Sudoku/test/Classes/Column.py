@@ -9,6 +9,9 @@ class Column():
         self.Column = []
         for RowNr in range(pboard.NumberOfRows):
             self.Column.append(pboard.GetRow(RowNr)[pColumnNumber])
+# Return all Value-Class data for te Column ---------------------------------------------------------------
+    def GetColumn(self):
+        return self.Column
 # Return all Values from the Value-Class data in the Column -----------------------------------------------
     def GetColumnValues(self):
         ColumnValues = []

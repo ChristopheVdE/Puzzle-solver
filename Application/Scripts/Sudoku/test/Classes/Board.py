@@ -21,14 +21,14 @@ class Board():
 # Create empty board ---------------------------------------------------------------------------------------
     def CreateEmptyBoard(self):
         self.board = []
-        for row in range(self.NumberOfRows):
-            self.board.append(Row(self.NumberOfColumns))
+        for RowNr in range(self.NumberOfRows):
+            self.board.append(Row(self.NumberOfColumns, RowNr))
 # Console Print board --------------------------------------------------------------------------------------
     def PrintBoardValues(self):
         print()
         for RowNr in range(self.NumberOfRows):
             print(self.board[RowNr].GetRowValues())
-# Console Print board Possbible -----------------------------------------------------------------------------
+# Console Print board Possible -----------------------------------------------------------------------------
     def PrintBoardPossible(self):
         print()
         for RowNr in range(self.NumberOfRows):

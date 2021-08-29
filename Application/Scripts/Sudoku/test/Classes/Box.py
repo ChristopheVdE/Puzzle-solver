@@ -11,6 +11,9 @@ class Box():
         for RowNr in range(self.RowNr, self.RowNr + 3):
             for ColNr in range(self.ColNr, self.ColNr + 3):
                 self.Box.append(pBoard.GetRow(RowNr)[ColNr])
+# Return all Value-Class data for te Column ---------------------------------------------------------------
+    def GetBox(self):
+        return self.Box
 # Return all Values from the Value-Class data in the box -------------------------------------------------- 
     def GetBoxValues(self):
         BoxValues = []

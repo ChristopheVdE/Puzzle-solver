@@ -8,11 +8,11 @@ from Classes.Value import Value
 
 # Row ======================================================================================================
 class Row():
-    def __init__(self, pNumberOfColumns):
+    def __init__(self, pNumberOfColumns, pRowNr):
         self.NumberOfColumns = pNumberOfColumns
         self.Row = []
-        for value in range(self.NumberOfColumns):
-            self.Row.append(Value())
+        for ColNr in range(self.NumberOfColumns):
+            self.Row.append(Value((pRowNr, ColNr)))
 # Return all Value-Class data for te row ------------------------------------------------------------------
     def GetRowData(self):
         return self.Row
