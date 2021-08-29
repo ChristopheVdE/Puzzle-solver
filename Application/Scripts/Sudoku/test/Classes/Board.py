@@ -36,5 +36,6 @@ class Board():
                 if self.GetRow(RowNr)[ColNr].GetValue() == 0:
                     empty_values.append((RowNr, ColNr))
         return empty_values
+# Return Row Data (Full Class) ----------------------------------------------------------------------------
     def GetRow(self, pRowNr):
         return self.board[pRowNr].GetRowData()

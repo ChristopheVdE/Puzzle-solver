@@ -8,7 +8,7 @@ class Column():
         self.NumberOfRows = pboard.NumberOfRows
         self.Column = []
         for RowNr in range(pboard.NumberOfRows):
-            self.Column.append(pboard.board[RowNr].Row[pColumnNumber])
+            self.Column.append(pboard.GetRow(RowNr)[pColumnNumber])
     def GetColumnValues(self):
         ColumnValues = []
         for RowNr in range(self.NumberOfRows):
