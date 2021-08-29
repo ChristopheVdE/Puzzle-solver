@@ -38,9 +38,12 @@ class Board():
         empty_values = []
         for RowNr in range(self.NumberOfRows):
             for ColNr in range(self.NumberOfColumns):
-                if self.board[RowNr].Row[ColNr].Value == 0:
+                if self.GetRow(RowNr)[ColNr].GetValue() == 0:
                     empty_values.append((RowNr, ColNr))
         return empty_values
+    def GetRow(self, pRowNr):
+        return self.board[pRowNr].GetRowData()
+
 
 # Row ======================================================================================================
 class Row():
@@ -52,8 +55,10 @@ class Row():
     def GetRowValues(self):
         RowValues = []
         for ColNr in range(self.NumberOfColumns):
-            RowValues.append(self.Row[ColNr].Value)                
+            RowValues.append(self.Row[ColNr].GetValue())                
         return RowValues
+    def GetRowData(self):
+        return self.Row
     
 # Column ===================================================================================================
 class Column():
@@ -65,7 +70,7 @@ class Column():
     def GetColumnValues(self):
         ColumnValues = []
         for RowNr in range(self.NumberOfRows):
-            ColumnValues.append(self.Column[RowNr].Value)                
+            ColumnValues.append(self.Column[RowNr].GetValue())                
         return ColumnValues
 
 # 3x3 Box ===============================================================================================
@@ -76,11 +81,11 @@ class Box():
         self.Box = []
         for RowNr in range(self.RowNr, self.RowNr + 3):
             for ColNr in range(self.ColNr, self.ColNr + 3):
-                self.Box.append(pBoard.board[RowNr].Row[ColNr])
+                self.Box.append(pBoard.GetRow(RowNr)[ColNr])
     def GetBoxValues(self):
         BoxValues = []
         for BoxVal in self.Box:
-            BoxValues.append(BoxVal.Value)
+            BoxValues.append(BoxVal.GetValue())
         return BoxValues
         
 # Values ===================================================================================================
@@ -94,9 +99,14 @@ class Value():
     def UpdateValue(self, pNewValue):
         if self.Correct == False: 
             self.Value = pNewValue
+            self.PossibleValues = [pNewValue]
     def SetValueAsCorrect(self):
         self.Correct = True
+    def GetValue(self):
+        return self.Value
 # Calcuate Possible Values ---------------------------------------------------------------------------------
+    def GetPossible(self):
+        return self.PossibleValues
     def CalcPossible(self, pBoard, pPosition):
         self.RemovePossible(pBoard, pPosition)
         self.AddPossible(pBoard, pPosition)
