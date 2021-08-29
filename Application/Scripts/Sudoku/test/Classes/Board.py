@@ -28,6 +28,11 @@ class Board():
         print()
         for RowNr in range(self.NumberOfRows):
             print(self.board[RowNr].GetRowValues())
+# Console Print board Possbible -----------------------------------------------------------------------------
+    def PrintBoardPossible(self):
+        print()
+        for RowNr in range(self.NumberOfRows):
+            print(self.board[RowNr].GetRowPossible())
 # Find all empty positions and return them in a list--------------------------------------------------------
     def FindEmpty(self):
         empty_values = []
