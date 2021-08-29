@@ -26,8 +26,18 @@ class Board():
 # Console Print board --------------------------------------------------------------------------------------
     def PrintBoardValues(self):
         print()
+        # Cycle rows 
         for RowNr in range(self.NumberOfRows):
-            print(self.board[RowNr].GetRowValues())
+            if RowNr % 3 == 0 and RowNr != 0:
+                print("- " * 12)
+            # Cycle Columns
+            for ColNr in range(self.NumberOfColumns):
+                if ColNr % 3 == 0 and ColNr != 0:
+                    print(" |", end="")
+                print(" {}".format(self.GetRow(RowNr)[ColNr].GetValue()), end="")
+                if ColNr == (self.NumberOfColumns - 1):
+                    print()
+
 # Console Print board Possible -----------------------------------------------------------------------------
     def PrintBoardPossible(self):
         print()
