@@ -34,10 +34,12 @@ class Board():
             for ColNr in range(self.NumberOfColumns):
                 if ColNr % 3 == 0 and ColNr != 0:
                     print(" |", end="")
-                print(" {}".format(self.GetRow(RowNr)[ColNr].GetValue()), end="")
+                if self.GetRow(RowNr)[ColNr].GetValue() != 0:
+                    print(" {}".format(self.GetRow(RowNr)[ColNr].GetValue()), end="")
+                else: 
+                    print(" .", end="")
                 if ColNr == (self.NumberOfColumns - 1):
                     print()
-
 # Console Print board Possible -----------------------------------------------------------------------------
     def PrintBoardPossible(self):
         print()
@@ -54,3 +56,16 @@ class Board():
 # Return Row Data (Full Class) ----------------------------------------------------------------------------
     def GetRow(self, pRowNr):
         return self.board[pRowNr].GetRowData()
+# Return Board Dimensions ---------------------------------------------------------------------------------
+    def GetBoardDimensions(self):
+        return (self.NumberOfRows, self.NumberOfColumns)
+# Return Board Values -------------------------------------------------------------------------------------
+    def ReturnRowValuesLists(self):
+        RowValuesList = []
+        # Cycle rows 
+        for RowNr in range(self.NumberOfRows):
+            Row = []
+            for ColNr in range(self.NumberOfColumns):
+                Row.append(self.GetRow(RowNr)[ColNr].GetValue())
+            RowValuesList.append(Row)
+        return RowValuesList

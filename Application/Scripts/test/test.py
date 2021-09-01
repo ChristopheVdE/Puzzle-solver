@@ -6,6 +6,7 @@ from Classes.Box import Box
 from Classes.Column import Column
 # Import Functions -----------------------------------------------------------------------------------------
 from Functions.BruteForce import BruteForce
+from Functions.CreateSolvableState import SolvableState
 # ==========================================================================================================
 
 # test init ================================================================================================
@@ -35,3 +36,6 @@ print(z.GetBoxValues())
 
 BruteForce(x)
 x.PrintBoardValues()
+y = SolvableState(x)
+y.PrintBoardValues()
+
