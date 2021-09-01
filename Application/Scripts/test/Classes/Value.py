@@ -36,7 +36,7 @@ class Value():
             self.RemovePossible(pBoard, pPosition)
             self.AddPossible(pBoard, pPosition)
         else:
-            self.PossibleValues = self.Value
+            self.PossibleValues = [self.Value]
 # Calcuate Possible Values to Remove -----------------------------------------------------------------------
     def RemovePossible(self, pBoard, pPosition):     
         for Value in self.PossibleValues:           
@@ -67,3 +67,4 @@ class Value():
             Value.CalcPossible(pBoard, Value.Position)
         for Value in Box(pBoard, pPosition).GetBox():
             Value.CalcPossible(pBoard, Value.Position)
+
