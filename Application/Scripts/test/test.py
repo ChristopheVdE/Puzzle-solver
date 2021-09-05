@@ -7,6 +7,7 @@ from Classes.Column import Column
 # Import Functions -----------------------------------------------------------------------------------------
 from Functions.BruteForce import BruteForce
 from Functions.CreateSolvableState import SolvableState
+from Functions.GetHint import GetHint
 # ==========================================================================================================
 
 # test init ================================================================================================
@@ -19,6 +20,7 @@ x.PrintBoardValues()
 
 print('row')
 print(x.board[1].GetRowValues())
+
 
 print('column')
 y = Column(x, 1)
@@ -37,5 +39,7 @@ print(z.GetBoxValues())
 BruteForce(x)
 x.PrintBoardValues()
 y = SolvableState(x)
+y.PrintBoardValues()
+y = GetHint(y, 'Sudoku')
 y.PrintBoardValues()
 
