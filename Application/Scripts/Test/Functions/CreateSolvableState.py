@@ -50,6 +50,12 @@ def SolvableState(pSolution):
             EmptiedBoard.GetRow(position[0])[position[1]].UpdateValue(0, EmptiedBoard, position)
             del coords[coords.index(position)]    
 
+    # Set all remaining values a correct ------------------------------------------------------------------------
+    for RowNr in range(EmptiedBoard.GetBoardDimensions()[0]):
+        for ColNr in range(EmptiedBoard.GetBoardDimensions()[1]):
+            if EmptiedBoard.GetRow(RowNr)[ColNr].GetValue() != 0:
+                EmptiedBoard.GetRow(RowNr)[ColNr].SetValueAsCorrect()
+
     # Return final board ----------------------------------------------------------------------------------------
     return EmptiedBoard
 #================================================================================================================
