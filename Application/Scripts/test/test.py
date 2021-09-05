@@ -5,8 +5,8 @@ from Classes.Board import Board
 from Classes.Box import Box
 from Classes.Column import Column
 # Import Functions -----------------------------------------------------------------------------------------
-from Functions.BruteForce import BruteForce
-from Functions.CreateSolvableState import SolvableState
+from Functions.Sudoku.BruteForce import BruteForce
+from Functions.Sudoku.CreateSolvableState import SolvableState
 from Functions.GetHint import GetHint
 # ==========================================================================================================
 
