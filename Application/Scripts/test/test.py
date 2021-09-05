@@ -36,10 +36,14 @@ print(z.GetBoxValues())
 
 # print(y.Column[0].Value)
 
+
+# Create solution
 BruteForce(x)
 x.PrintBoardValues()
+# Create Solvable State
 y = SolvableState(x)
 y.PrintBoardValues()
+# Get Hint (fill in 1 certain value)
 y = GetHint(y, 'Sudoku')
 y.PrintBoardValues()
 
