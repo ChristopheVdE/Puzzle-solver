@@ -6,7 +6,7 @@
 # Import required packages =================================================================================
 import copy
 import random
-from Functions.Sudoku.Solve import Solve
+from Games.Functions.Sudoku.Solve import Solve
 # ==========================================================================================================
 
 # Solvable state ===========================================================================================
