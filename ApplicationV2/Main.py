@@ -9,6 +9,7 @@
 import os
 import sys
 import pygame
+from Settings.Default import ScreenSize
 # ==========================================================================================================
 
 # MAIN GAME LOOP ===========================================================================================
@@ -18,25 +19,25 @@ def mainloop(SelectedGame, ScreenWidth, ScreenHeight, clock, Images):
             if game[0] == "Menu" and game[1] == True:
                 from Games.GameLoops.MainMenu import MainMenu as GameLoop
                 pygame.time.delay(100)
-                SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock, Images)
-            # elif game[0] == "SudokuPlay" and game[1] == True:
-            #     from Scripts.Sudoku.Create import Sudoku_GameLoop as GameLoop
-            #     SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock)
+                SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock, Images)
+            elif game[0] == "SudokuPlay" and game[1] == True:
+                from Games.GameLoops.Sudoku import Sudoku as GameLoop
+                SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock)
             # elif game[0] == "SudokuSolve" and game[1] == True:
             #     from Scripts.Sudoku.Solve import Sudoku_GameLoop as GameLoop
-            #     SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock)
+            #     SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock)
             # elif game[0] == "HudokuPlay" and game[1] == True:
             #     from Scripts.Hudoku.Create import Hudoku_GameLoop as GameLoop
-            #     SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock)
+            #     SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock)
             # elif game[0] == "HudokuSolve" and game[1] == True:
             #     from Scripts.Hudoku.Solve import Hudoku_GameLoop as GameLoop
-            #     SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock)
+            #     SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock)
             # elif game[0] == "BinairoPlay" and game[1] == True:
             #     from Scripts.Binairo.Create import Binairo_GameLoop as GameLoop
-            #     SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock, Images)
+            #     SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock, Images)
             # elif game[0] == "BinairoSolve" and game[1] == True:
             #     from Scripts.Binairo.Solve import Binairo_GameLoop as GameLoop
-            #     SelectedGame = GameLoop(ScreenWidth, ScreenHeight, clock, Images)
+            #     SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock, Images)
             elif game[0] == "Quit" and game[1] == True:
                 pygame.quit()
                 sys.exit()
@@ -46,10 +47,6 @@ def mainloop(SelectedGame, ScreenWidth, ScreenHeight, clock, Images):
 def main():
 # Initialize game ------------------------------------------------------------------------------------------
     pygame.init()
-
-# Display size ---------------------------------------------------------------------------------------------
-    ScreenWidth = 800
-    ScreenHeight = 600
 
 # Caption --------------------------------------------------------------------------------------------------
     pygame.display.set_caption('Puzzle solver')
@@ -66,7 +63,7 @@ def main():
     SelectedGame = [("Menu", True)]
 
 # Start main loop ------------------------------------------------------------------------------------------
-    mainloop(SelectedGame, ScreenWidth, ScreenHeight, clock, Images)
+    mainloop(SelectedGame, ScreenSize['width'], ScreenSize['height'], clock, Images)
 # ==========================================================================================================
 
 # Start Script =============================================================================================
