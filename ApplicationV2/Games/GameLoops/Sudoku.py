@@ -42,7 +42,7 @@ def Sudoku_GameLoop(clock):
         click = pygame.mouse.get_pressed()
 # OPTIONS SUBMENU ------------------------------------------------------------------------------------------
         Screen.OptionsMenu()
-        #Screen.Options.MenuOutline()
+        Screen.Options.MenuOutline()
     # Options ----------------------------------------------------------------------------------------------
         Screen.Options.OptionButtons(mouse)
     # Navigation -------------------------------------------------------------------------------------------
