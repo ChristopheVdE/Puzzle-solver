@@ -44,12 +44,18 @@ def Sudoku_GameLoop(clock):
         SelectedGame = Screen.Options.NavigationButtons(mouse, click)
         if SelectedGame: return SelectedGame
 # BOARD ----------------------------------------------------------------------------------------------------
+    # Initiate board ---------------------------------------------------------------------------------------
         if not Screen.Board or Screen.Options.New.functionality(mouse, click, True):
             pygame.display.update()
             Screen.RenderGameBoard(9, 9 ,40, 1)
             Screen.RenderValueSummary()
+            Screen.Board.CalcBoardSize('Sudoku')
             Screen.Board.CalcBoardCenter()
-            Screen.Board.BoardBackground()
+    # Render board -----------------------------------------------------------------------------------------
+        Screen.Board.BoardBackground()
+        Screen.Board.DrawCubes(Colors['Cube'], Colors['Correct'])
+        Screen.Board.HiglightLines(Colors["Navigation"], mouse)
+        Screen.Board.Rendersurface()
 
 
 
