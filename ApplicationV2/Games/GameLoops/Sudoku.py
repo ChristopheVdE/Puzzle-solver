@@ -9,10 +9,6 @@ import copy
 import pygame
 # -- Display -----------------------------------------------------------------------------------------------
 from Display.Game.GameScreen import GameScreen
-
-# Move to GameSubmenu class
-from Display.General.Button import Button
-from Display.Game.Menu.SubMenu import SubMenu
 # -- Functions ---------------------------------------------------------------------------------------------
 from Games.Functions.ActivateGameLoop import ActivateGameLoop
 from Games.Functions.GetPressedKey import GetPressedKey
@@ -26,7 +22,6 @@ from Settings.Default import Colors, Fonts
 def Sudoku_GameLoop(clock):
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
-    grid = None
 # INITITIALIZE SCREEN --------------------------------------------------------------------------------------
     Screen = GameScreen()
 # MAIN LOOP ------------------------------------------------------------------------------------------------
@@ -41,13 +36,23 @@ def Sudoku_GameLoop(clock):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 # OPTIONS SUBMENU ------------------------------------------------------------------------------------------
-        Screen.OptionsMenu()
+        Screen.RenderOptionsMenu()
         Screen.Options.MenuOutline()
     # Options ----------------------------------------------------------------------------------------------
         Screen.Options.OptionButtons(mouse)
     # Navigation -------------------------------------------------------------------------------------------
         SelectedGame = Screen.Options.NavigationButtons(mouse, click)
         if SelectedGame: return SelectedGame
+# BOARD ----------------------------------------------------------------------------------------------------
+        if not Screen.Board or Screen.Options.New.functionality(mouse, click, True):
+            pygame.display.update()
+            Screen.RenderGameBoard(9, 9 ,40, 1)
+            Screen.RenderValueSummary()
+            Screen.Board.CalcBoardCenter()
+            Screen.Board.BoardBackground()
+
+
+
 # # BOARD --------------------------------------------------------------------------------------------------
 #     # Create new Board -----------------------------------------------------------------------------------
 #         if not grid or New.functionality(mouse, click, True):

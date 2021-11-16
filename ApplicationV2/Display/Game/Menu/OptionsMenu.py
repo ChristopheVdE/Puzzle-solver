@@ -35,24 +35,24 @@ class OptionsMenu():
     def OptionButtons(self, Mouse):
         self.ButtonY = self.Y
     # Create new board -------------------------------------------------------------------------------------
-        New = Button(self.Screen, self.X, self.ButtonY, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
-        New.render(Mouse)
-        New.text(Fonts["Button"], Colors["black"], "New")
+        self.New = Button(self.Screen, self.X, self.ButtonY, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
+        self.New.render(Mouse)
+        self.New.text(Fonts["Button"], Colors["black"], "New")
         self.ButtonY += 45
     # Reset board ------------------------------------------------------------------------------------------
-        Reset = Button(self.Screen, self.X, self.ButtonY, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
-        Reset.render(Mouse)
-        Reset.text(Fonts["Button"], Colors["black"], "Reset")
+        self.Reset = Button(self.Screen, self.X, self.ButtonY, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
+        self.Reset.render(Mouse)
+        self.Reset.text(Fonts["Button"], Colors["black"], "Reset")
         self.ButtonY += 45
     # Get Hint ---------------------------------------------------------------------------------------------
-        Hint = Button(self.Screen, self.X, self.ButtonY, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
-        Hint.render(Mouse)
-        Hint.text(Fonts["Button"], Colors["black"], "Hint")
+        self.Hint = Button(self.Screen, self.X, self.ButtonY, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
+        self.Hint.render(Mouse)
+        self.Hint.text(Fonts["Button"], Colors["black"], "Hint")
         self.ButtonY += 45
     # Check current (partial) board ------------------------------------------------------------------------
-        Check = Button(self.Screen, self.X, self.ButtonY, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
-        Check.render(Mouse)
-        Check.text(Fonts["Button"], Colors["black"], "Check")
+        self.Check = Button(self.Screen, self.X, self.ButtonY, 135, 40, Colors["Options"], Colors["OptionsHighlight"])
+        self.Check.render(Mouse)
+        self.Check.text(Fonts["Button"], Colors["black"], "Check")
         self.ButtonY += 45
 # NAVIGATION BUTTONS ---------------------------------------------------------------------------------------
     def NavigationButtons(self, Mouse, Click):
