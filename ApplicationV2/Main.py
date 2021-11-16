@@ -22,7 +22,7 @@ def mainloop(SelectedGame, ScreenWidth, ScreenHeight, clock, Images):
                 SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock, Images)
             elif game[0] == "SudokuPlay" and game[1] == True:
                 from Games.GameLoops.Sudoku import Sudoku_GameLoop as GameLoop
-                SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock)
+                SelectedGame = GameLoop(clock)
             # elif game[0] == "SudokuSolve" and game[1] == True:
             #     from Scripts.Sudoku.Solve import Sudoku_GameLoop as GameLoop
             #     SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock)
