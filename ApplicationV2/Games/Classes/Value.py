@@ -29,6 +29,7 @@ class Value():
         return self.Value
 # Return Possible Values -----------------------------------------------------------------------------------
     def GetPossible(self):
+        self.PossibleValues.sort()
         return self.PossibleValues
 # Return if Value is correct -------------------------------------------------------------------------------
     def GetCorrect(self):
