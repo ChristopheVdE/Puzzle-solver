@@ -42,7 +42,7 @@ def SolvableState(pSolution):
             if TestBoard.ReturnRowValuesLists() == pSolution.ReturnRowValuesLists():
                 EmptiedBoard.GetRow(position[0])[position[1]].UpdateValue(0, EmptiedBoard, position)
             else:
-                break
+                TestBoard = copy.deepcopy(EmptiedBoard)
 
             # Remove tested position out of coordinates list using the postions index in the coords list
             del coords[coords.index(position)]
