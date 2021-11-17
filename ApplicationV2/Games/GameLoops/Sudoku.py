@@ -52,7 +52,8 @@ def Sudoku_GameLoop(clock):
             Solution = Board(9,9)
             Solution.CreateEmptyBoard()
             BruteForce(Solution)
-            Game = SolvableState(Solution)
+            StartBoard = SolvableState(Solution)
+            Game = copy.deepcopy(StartBoard)
             # Start render
             pygame.display.update()
             Screen.RenderGameBoard(9, 9 ,40, 1)
@@ -62,6 +63,7 @@ def Sudoku_GameLoop(clock):
     # Render board -----------------------------------------------------------------------------------------
         Screen.Board.BoardBackground()
         Screen.Board.DrawCubes(Game, Colors['Cube'], Colors['Correct'])
+        Screen.Board.RenderValues(Game, 'User')
         Screen.Board.HiglightLines(Colors["Navigation"], mouse)
         Screen.Board.Rendersurface()
 

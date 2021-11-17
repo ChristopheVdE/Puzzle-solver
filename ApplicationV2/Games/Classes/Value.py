@@ -31,6 +31,10 @@ class Value():
     def GetPossible(self):
         self.PossibleValues.sort()
         return self.PossibleValues
+# Return User Pencil Values --------------------------------------------------------------------------------
+    def GetUserPencils(self):
+        self.UserPencil.sort()
+        return self.UserPencil
 # Return if Value is correct -------------------------------------------------------------------------------
     def GetCorrect(self):
         return self.Correct
