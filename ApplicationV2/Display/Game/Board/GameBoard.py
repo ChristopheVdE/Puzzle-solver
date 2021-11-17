@@ -4,7 +4,7 @@
 
 # Imports ==================================================================================================
 import pygame
-from Games.Classes.Board import Board
+from Display.General.CenteredText import CenteredText
 from Settings.Default import Colors, ScreenSize
 # ==========================================================================================================
 
@@ -43,7 +43,7 @@ class GameBoard():
         self.BoardSurface = pygame.Surface((self.Width, self.Height), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
         self.BoardSurface.fill(Colors['black'])
 # Draw the empty cubes -------------------------------------------------------------------------------------
-    def DrawCubes(self, CubeColor, CorrectColor):
+    def DrawCubes(self, pBoard, pCubeColor, pCorrectColor):
         # Parameters ---------------------------------------------------------------------------------------
         self.Rows = []      # contains start-coords and size of each row
         self.Cols = []      # contains start-coords and size of each column
@@ -57,10 +57,10 @@ class GameBoard():
                 if col in [3, 6]:
                     CubeX += 1
             # Draw cubes ------------------------------------------------------------------------------------
-                # if (row, col) in self.immutable:    # Value is correct  --> dark background, light font
-                #     pygame.draw.rect(self.BoardSurface, CorrectColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
-                # else:                               # Value is wrong    --> light background, dark font
-                pygame.draw.rect(self.BoardSurface, CubeColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
+                if (row, col) in pBoard.FindCorrect():    # Value is correct  --> dark background, light font
+                    pygame.draw.rect(self.BoardSurface, pCorrectColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
+                else:                               # Value is wrong    --> light background, dark font
+                    pygame.draw.rect(self.BoardSurface, pCubeColor, (CubeX, CubeY, self.CubeSize, self.CubeSize))
             # Save coords of colum --------------------------------------------------------------------------
                 if len(self.Cols) < self.NrColumns:
                     self.Cols.append((CubeX, 3))
@@ -71,7 +71,37 @@ class GameBoard():
             CubeX = 3
             CubeY += self.CubeSize + self.SpaceBetweenCubes
 # Draw the values ------------------------------------------------------------------------------------------
-
+    def RenderValues(self, pBoard):
+    # Print values -----------------------------------------------------------------------------------------
+        for row in range(len(self.Rows)):
+            for col in range(len(self.Cols)):
+                CubeCoords = (self.Cols[col][0], self.Rows[row][1])
+            # Immutabe values ------------------------------------------------------------------------------
+                if self.current[row][col] != "0" and (row, col) in self.immutable:
+                    value = CenteredText(self.current[row][col], Fonts["Immutable"], Colors["Immutable"], (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
+                    value.render(self.BoardSurface)
+            # New values -----------------------------------------------------------------------------------
+                elif self.current[row][col] != "0" and not isinstance(self.current[row][col], list) and not (row, col) in self.immutable:
+                    value = CenteredText(self.current[row][col], Fonts["Certain"], Colors["Certain"], (CubeCoords[0] + self.CubeSize / 2), (CubeCoords[1] + self.CubeSize / 2))
+                    value.render(self.BoardSurface)
+            # Pencil ---------------------------------------------------------------------------------------
+                elif isinstance(self.current[row][col], list) and not (row, col) in self.immutable:
+                    # Coordinates for each value in pencil list
+                    Coords = [
+                        (int(CubeCoords[0] + self.CubeSize * 5/6), int(CubeCoords[1] + self.CubeSize * 1/6)),
+                        (int(CubeCoords[0] + self.CubeSize * 5/6), int(CubeCoords[1] + self.CubeSize * 3/6)),
+                        (int(CubeCoords[0] + self.CubeSize * 5/6), int(CubeCoords[1] + self.CubeSize * 5/6)),
+                        (int(CubeCoords[0] + self.CubeSize * 3/6), int(CubeCoords[1] + self.CubeSize * 1/6)),
+                        (int(CubeCoords[0] + self.CubeSize * 3/6), int(CubeCoords[1] + self.CubeSize * 3/6)),
+                        (int(CubeCoords[0] + self.CubeSize * 3/6), int(CubeCoords[1] + self.CubeSize * 5/6)),
+                        (int(CubeCoords[0] + self.CubeSize * 1/6), int(CubeCoords[1] + self.CubeSize * 1/6)),
+                        (int(CubeCoords[0] + self.CubeSize * 1/6), int(CubeCoords[1] + self.CubeSize * 3/6)),
+                        (int(CubeCoords[0] + self.CubeSize * 1/6), int(CubeCoords[1] + self.CubeSize * 5/6))
+                    ]
+                    # Render
+                    for i in range(len(self.current[row][col])):
+                        value = CenteredText(self.current[row][col][i], Fonts["Pencil"], Colors["Pencil"], Coords[i][0], Coords[i][1])
+                        value.render(self.BoardSurface)
 # Highlight row & col of the location of the mouse ---------------------------------------------------------
     def HiglightLines(self, HighlightColor, mouse):
         # Create new surfaces for the higlights

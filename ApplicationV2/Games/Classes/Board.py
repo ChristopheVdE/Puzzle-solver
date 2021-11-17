@@ -9,14 +9,9 @@ from Games.Classes.Row import Row
 # Board ====================================================================================================
 class Board():
 # Inititalize class ----------------------------------------------------------------------------------------
-    def __init__(self, pStartPos, pNumberOfRows, pNumberOfColumns):
+    def __init__(self, pNumberOfRows, pNumberOfColumns):
         self.NumberOfColumns = pNumberOfColumns
         self.NumberOfRows = pNumberOfRows
-        self.X = int(pStartPos[0])
-        self.Y = int(pStartPos[1])
-        self.CubeSize = 40
-        self.SpaceBetweenCubes = 1
-        self.BoardSize = int((self.NumberOfRows * self.CubeSize) + (self.NumberOfRows * self.SpaceBetweenCubes) + 2 + 5)
         self.Selected = None
 # Create empty board ---------------------------------------------------------------------------------------
     def CreateEmptyBoard(self):
@@ -53,6 +48,14 @@ class Board():
                 if self.GetRow(RowNr)[ColNr].GetValue() == 0:
                     empty_values.append((RowNr, ColNr))
         return empty_values
+# Find all Correct Values and return them in a list -------------------------------------------------------
+    def FindCorrect(self):
+        correct_values = []
+        for RowNr in range(self.NumberOfRows):
+            for ColNr in range(self.NumberOfColumns):
+                if self.GetRow(RowNr)[ColNr].GetCorrect() == True:
+                    correct_values.append((RowNr, ColNr))
+        return correct_values
 # Return Row Data (Full Class) ----------------------------------------------------------------------------
     def GetRow(self, pRowNr):
         return self.board[pRowNr].GetRowData()

@@ -30,6 +30,9 @@ class Value():
 # Return Possible Values -----------------------------------------------------------------------------------
     def GetPossible(self):
         return self.PossibleValues
+# Return if Value is correct -------------------------------------------------------------------------------
+    def GetCorrect(self):
+        return self.Correct
 # Calcuate Possible Values ---------------------------------------------------------------------------------
     def CalcPossible(self, pBoard, pPosition):
         if self.Value == 0:

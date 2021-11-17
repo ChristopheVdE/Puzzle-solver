@@ -12,6 +12,8 @@ from Display.Game.GameScreen import GameScreen
 # -- Functions ---------------------------------------------------------------------------------------------
 from Games.Functions.ActivateGameLoop import ActivateGameLoop
 from Games.Functions.GetPressedKey import GetPressedKey
+from Games.Functions.Sudoku.BruteForce import BruteForce
+from Games.Functions.Sudoku.CreateSolvableState import SolvableState
 # -- Classes -----------------------------------------------------------------------------------------------
 from Games.Classes.Board import Board
 # -- Settings ----------------------------------------------------------------------------------------------
@@ -45,7 +47,13 @@ def Sudoku_GameLoop(clock):
         if SelectedGame: return SelectedGame
 # BOARD ----------------------------------------------------------------------------------------------------
     # Initiate board ---------------------------------------------------------------------------------------
-        if not Screen.Board or Screen.Options.New.functionality(mouse, click, True):
+        if not Screen.Board or not Game or Screen.Options.New.functionality(mouse, click, True):
+            # Create board
+            Solution = Board(9,9)
+            Solution.CreateEmptyBoard()
+            BruteForce(Solution)
+            Game = SolvableState(Solution)
+            # Start render
             pygame.display.update()
             Screen.RenderGameBoard(9, 9 ,40, 1)
             Screen.RenderValueSummary()
@@ -53,7 +61,7 @@ def Sudoku_GameLoop(clock):
             Screen.Board.CalcBoardCenter()
     # Render board -----------------------------------------------------------------------------------------
         Screen.Board.BoardBackground()
-        Screen.Board.DrawCubes(Colors['Cube'], Colors['Correct'])
+        Screen.Board.DrawCubes(Game, Colors['Cube'], Colors['Correct'])
         Screen.Board.HiglightLines(Colors["Navigation"], mouse)
         Screen.Board.Rendersurface()
 
