@@ -3,6 +3,7 @@
 ############################################################################################################
 
 # Imports ==================================================================================================
+from random import seed
 import pygame
 from Display.General.CenteredText import CenteredText
 from Settings.Default import Colors, Fonts
@@ -21,7 +22,6 @@ class GameBoard():
         self.Y = int(Y)
         self.NrRows = NrRows
         self.NrColumns = NrColumns
-        self.Selected = None
 # Calc Board Size: -----------------------------------------------------------------------------------------
     def CalcBoardSize(self, GameType):
         self.BoardBorder = 3
@@ -130,7 +130,24 @@ class GameBoard():
         for row in self.Rows:
             if self.X + row[0] + self.Width -6 > mouse[0] > self.X + row[0] -1 and self.Y + row[1] + self.CubeSize> mouse[1] > self.Y + row[1] -1:
                 self.BoardSurface.blit(RowSurface, (row[0], row[1]))
-
+# Return selected cube -------------------------------------------------------------------------------------
+    def GetSelectedCube(self, mouse, click, pSelectedCube):
+        for row in range(len(self.Rows)):
+            for col in range(len(self.Cols)):
+                BoardPos = (row, col)
+                CubeCoords = (self.Cols[col][0], self.Rows[row][1])
+                if self.X + CubeCoords[0] + self.CubeSize > mouse[0] > self.X + CubeCoords[0] and self.Y + CubeCoords[1] + self.CubeSize > mouse[1] > self.Y + CubeCoords[1]:
+                    if not pSelectedCube or (pSelectedCube[1] != BoardPos):
+                        if not BoardPos in self.CorrectValues:
+                            # Left mouse button to wright a value
+                            if click[0] == 1:
+                                return ("L", BoardPos)
+                            # Right mouse button to write a pencil value
+                            elif click[2] == 1:
+                                return ("R", BoardPos)
+                        else: return None
+                    else: return None
+        return None
 # Render the playboard -------------------------------------------------------------------------------------
     def Rendersurface(self):
         self.Screen.blit(self.BoardSurface, (self.X, self.Y))

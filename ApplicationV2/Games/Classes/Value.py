@@ -21,6 +21,13 @@ class Value():
             self.Value = pNewValue
             self.PossibleValues = [pNewValue]
             self.CalcAllPossible(pBoard, pPosition)
+# Update User pencil ---------------------------------------------------------------------------------------
+    def UpdatePencil(self, pNewValue):
+        if self.Correct == False:
+            if pNewValue in self.UserPencil:
+                self.UserPencil.remove(pNewValue)
+            else:
+                self.UserPencil.append(pNewValue)
 # Set Value as Correct -------------------------------------------------------------------------------------
     def SetValueAsCorrect(self):
         self.Correct = True

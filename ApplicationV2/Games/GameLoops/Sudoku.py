@@ -19,7 +19,7 @@ from Games.Functions.CheckAgaintSolution import CheckAgainstSolution
 # -- Classes -----------------------------------------------------------------------------------------------
 from Games.Classes.Board import Board
 # -- Settings ----------------------------------------------------------------------------------------------
-from Settings.Default import Colors, Fonts
+from Settings.Default import Colors
 # ==========================================================================================================
 
 # GAME LOOP: Sudoku ========================================================================================
@@ -29,16 +29,19 @@ def Sudoku_GameLoop(clock):
     Solution = None
     StartBoard = None
     Game = None
+    key = None
+    SelectedCube = None
 # INITITIALIZE SCREEN --------------------------------------------------------------------------------------
     Screen = GameScreen()
 # MAIN LOOP ------------------------------------------------------------------------------------------------
     while running:
-        key = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            else:
+                break
+            elif event.type == pygame.KEYDOWN:
                 key = GetPressedKey(event)
+                break
 # MOUSE POSITION & CLICKS ----------------------------------------------------------------------------------
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
@@ -81,59 +84,16 @@ def Sudoku_GameLoop(clock):
         Screen.Board.HiglightLines(Colors["Navigation"], mouse)
         Screen.Board.Rendersurface()
     # Update Value -----------------------------------------------------------------------------------------
-
-
-
-
-# # BOARD --------------------------------------------------------------------------------------------------
-#     # Create new Board -----------------------------------------------------------------------------------
-#         if not grid or New.functionality(mouse, click, True):
-#             # Display update
-#             pygame.display.update()
-#             # Initialize board
-#             grid = Board((ScreenWidth, ScreenHeight))
-#             # Create empty board
-#             grid.CreateEmptyBoard()
-#             # BruteForce a solution
-#             grid.BruteForce()
-#             # Create a solvable boardstate for the solution
-#             grid.SolvableState()
-#             # Current board = solvable board
-#             grid.CurrentBoard()
-#             # Make the original values immutable
-#             grid.Immutable()
-#             # Print Background
-#             grid.CenterRectangle(ScreenWidth, ScreenHeight, 175, 0)
-#             # Slight delay (for smaller boards)
-#             pygame.time.delay(100)        
-#     # Reset board ------------------------------------------------------------------------------------------
-#         elif Reset.functionality(mouse, click, True):
-#             grid.CurrentBoard() 
-#             grid.Immutable()
-#             # Slight delay (for smaller boards)
-#             pygame.time.delay(100)
-#     # Check Board ------------------------------------------------------------------------------------------
-#         elif Check.functionality(mouse, click, True):
-#             grid.Immutable()
-#             # Slight delay (for smaller boards)
-#             pygame.time.delay(100)
-#     # Get Hint ---------------------------------------------------------------------------------------------
-#         elif Hint.functionality(mouse, click, True):
-#             grid.Hint()
-#             grid.Immutable()
-#             # Slight delay
-#             pygame.time.delay(200)
-#     # Row/col higlighting ----------------------------------------------------------------------------------
-#         grid.BoardBackground(Colors["black"])
-#         grid.DrawCubes(Colors["Cube"], (220,220,220))
-#         grid.HiglightLines(Colors["Navigation"], mouse)
-#     # Allow board updates ----------------------------------------------------------------------------------
-#         grid.SelectCube(mouse, click)       
-#         grid.Pencil(key)
-#         grid.Updatecube(key)
-#     # Print values -----------------------------------------------------------------------------------------
-#         grid.PrintBoard(Screen)
-#         grid.CheckBoard(Screen, Fonts["Message"], Colors["Message"])
+        SelectedCube = Screen.Board.GetSelectedCube(mouse, click, SelectedCube)
+        if key != None and SelectedCube != None:
+            ClickType = SelectedCube[0]
+            Position = SelectedCube[1]
+            if ClickType == 'L':
+                Game.GetRow(Position[0])[Position[1]].UpdateValue(key, Game, Position)
+            elif ClickType == 'R' and key !=0:
+                Game.GetRow(Position[0])[Position[1]].UpdatePencil(key)
+            key = None
+            SelectedCube = None
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
