@@ -14,6 +14,8 @@ from Games.Functions.ActivateGameLoop import ActivateGameLoop
 from Games.Functions.GetPressedKey import GetPressedKey
 from Games.Functions.Sudoku.BruteForce import BruteForce
 from Games.Functions.Sudoku.CreateSolvableState import SolvableState
+from Games.Functions.GetHint import GetHint
+from Games.Functions.CheckAgaintSolution import CheckAgainstSolution
 # -- Classes -----------------------------------------------------------------------------------------------
 from Games.Classes.Board import Board
 # -- Settings ----------------------------------------------------------------------------------------------
@@ -24,6 +26,9 @@ from Settings.Default import Colors, Fonts
 def Sudoku_GameLoop(clock):
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
+    Solution = None
+    StartBoard = None
+    Game = None
 # INITITIALIZE SCREEN --------------------------------------------------------------------------------------
     Screen = GameScreen()
 # MAIN LOOP ------------------------------------------------------------------------------------------------
@@ -60,12 +65,23 @@ def Sudoku_GameLoop(clock):
             Screen.RenderValueSummary()
             Screen.Board.CalcBoardSize('Sudoku')
             Screen.Board.CalcBoardCenter()
+    # Reset Board ------------------------------------------------------------------------------------------
+        elif Screen.Options.Reset.functionality(mouse, click, True):
+            Game = copy.deepcopy(StartBoard)
+    # Hint -------------------------------------------------------------------------------------------------
+        elif Screen.Options.Hint.functionality(mouse, click, True):
+            Game = GetHint(Game, 'Sudoku')
+    # Check Board ------------------------------------------------------------------------------------------
+        elif Screen.Options.Check.functionality(mouse, click, True):
+            Game = CheckAgainstSolution(Game, Solution)
     # Render board -----------------------------------------------------------------------------------------
         Screen.Board.BoardBackground()
         Screen.Board.DrawCubes(Game, Colors['Cube'], Colors['Correct'])
         Screen.Board.RenderValues(Game, 'User')
         Screen.Board.HiglightLines(Colors["Navigation"], mouse)
         Screen.Board.Rendersurface()
+    # Update Value -----------------------------------------------------------------------------------------
+
 
 
 
