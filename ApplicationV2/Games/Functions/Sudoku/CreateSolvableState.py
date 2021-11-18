@@ -34,21 +34,16 @@ def SolvableState(pSolution):
         TestBoard.GetRow(position[0])[position[1]].UpdateValue(0, TestBoard, position)
         RemovedCoordsCount += 1
 
-        # Start testing if board is still solvable without guessing when 1/3 of the board values have been removed
-        if RemovedCoordsCount >= (pSolution.GetBoardDimensions()[0] * pSolution.GetBoardDimensions()[1]) / 3:
-            # Test if solution of board is still the same (stop board from having multiple solutions)
-            TestBoard = Solve(TestBoard)
-        
-            if TestBoard.ReturnRowValuesLists() == pSolution.ReturnRowValuesLists():
-                EmptiedBoard.GetRow(position[0])[position[1]].UpdateValue(0, EmptiedBoard, position)
-            else:
-                TestBoard = copy.deepcopy(EmptiedBoard)
-
-            # Remove tested position out of coordinates list using the postions index in the coords list
-            del coords[coords.index(position)]
-        else:
+        # Test if solution of board is still the same (stop board from having multiple solutions)
+        TestBoard = Solve(TestBoard)
+    
+        if TestBoard.ReturnRowValuesLists() == pSolution.ReturnRowValuesLists():
             EmptiedBoard.GetRow(position[0])[position[1]].UpdateValue(0, EmptiedBoard, position)
-            del coords[coords.index(position)]    
+        else:
+            TestBoard = copy.deepcopy(EmptiedBoard)
+
+        # Remove tested position out of coordinates list using the postions index in the coords list
+        del coords[coords.index(position)]
 
     # Set all remaining values a correct ------------------------------------------------------------------------
     for RowNr in range(EmptiedBoard.GetBoardDimensions()[0]):
