@@ -9,10 +9,11 @@ from pygame.time import delay
 
 # GetHint ==================================================================================================
 def GetHint(pBoard, pPuzzleType):
-    if pPuzzleType == 'Sudoku':
-        from Games.Functions.Sudoku.Solve import Solve
-        pBoard = Solve(pBoard, True)
-        delay(100)
+    if pBoard.FindEmpty():
+        if pPuzzleType == 'Sudoku':
+            from Games.Functions.Sudoku.Solve import Solve
+            pBoard = Solve(pBoard, True)
+            delay(100)
     return pBoard
 # ==========================================================================================================
             
