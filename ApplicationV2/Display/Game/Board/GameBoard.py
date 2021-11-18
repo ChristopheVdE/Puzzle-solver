@@ -136,8 +136,10 @@ class GameBoard():
             for col in range(len(self.Cols)):
                 BoardPos = (row, col)
                 CubeCoords = (self.Cols[col][0], self.Rows[row][1])
-                if self.X + CubeCoords[0] + self.CubeSize > mouse[0] > self.X + CubeCoords[0] and self.Y + CubeCoords[1] + self.CubeSize > mouse[1] > self.Y + CubeCoords[1]:
-                    if not pSelectedCube or (pSelectedCube[1] != BoardPos):
+                if pSelectedCube and pSelectedCube[1] == BoardPos:
+                    return pSelectedCube
+                else: 
+                    if self.X + CubeCoords[0] + self.CubeSize > mouse[0] > self.X + CubeCoords[0] and self.Y + CubeCoords[1] + self.CubeSize > mouse[1] > self.Y + CubeCoords[1]:
                         if not BoardPos in self.CorrectValues:
                             # Left mouse button to wright a value
                             if click[0] == 1:
@@ -146,7 +148,6 @@ class GameBoard():
                             elif click[2] == 1:
                                 return ("R", BoardPos)
                         else: return None
-                    else: return None
         return None
 # Render the playboard -------------------------------------------------------------------------------------
     def Rendersurface(self):

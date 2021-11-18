@@ -85,7 +85,7 @@ def Sudoku_GameLoop(clock):
         Screen.Board.Rendersurface()
     # Update Value -----------------------------------------------------------------------------------------
         SelectedCube = Screen.Board.GetSelectedCube(mouse, click, SelectedCube)
-        if key != None and SelectedCube != None:
+        if SelectedCube and key:
             ClickType = SelectedCube[0]
             Position = SelectedCube[1]
             if ClickType == 'L':
@@ -93,7 +93,6 @@ def Sudoku_GameLoop(clock):
             elif ClickType == 'R' and key !=0:
                 Game.GetRow(Position[0])[Position[1]].UpdatePencil(key)
             key = None
-            SelectedCube = None
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
