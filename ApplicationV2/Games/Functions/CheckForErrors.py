@@ -1,9 +1,9 @@
 ############################################################################################################
-# Name: CheckAgainstSolution.py
+# Name: CheckForErrors.py
 # Function: check the board against the solution, remove all wrong values and set al correct values as correct
 ############################################################################################################
 
-def CheckAgainstSolution(pCurrentBoard, pSolution):
+def CheckForErrors(pCurrentBoard, pSolution):
     for RowNr in range(pCurrentBoard.NumberOfRows):
         for ColNr in range(pCurrentBoard.NumberOfColumns):
             if pCurrentBoard.GetRow(RowNr)[ColNr].GetValue() == pSolution.GetRow(RowNr)[ColNr].GetValue():

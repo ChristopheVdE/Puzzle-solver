@@ -6,7 +6,8 @@
 import pygame
 from Display.Game.Menu.OptionsMenu import OptionsMenu
 from Display.Game.Board.GameBoard import GameBoard
-from Settings.Default import Colors, ScreenSize
+from Display.General.CenteredText import CenteredText
+from Settings.Default import Colors, ScreenSize, Fonts
 # ==========================================================================================================
 
 # GameScreen ===============================================================================================
@@ -43,4 +44,15 @@ class GameScreen():
         Width = self.ScreenWidth - self.RightReservedSpace
         Height = self.ScreenHeight - self.ValueSummaryHeight
         self.Board = GameBoard(self.Screen, X, Y, Width, Height, NrRows, NrColumns, CubeSize, SpaceBetweenCubes)
+# [Render] Message Solved ---------------------------------------------------------------------------------
+    def RenderMessageSolved(self, pCurrentBoard):
+        X = (self.ScreenWidth - self.RightReservedSpace)/2
+        Y = self.ValueSummaryHeight
+
+        if pCurrentBoard.FindEmpty():
+            Message = CenteredText("Impossible", Fonts["Message"], Colors["Message"], X, Y)
+            Message.render(self.Screen)
+        else:
+            Message = CenteredText("Solved", Fonts["Message"], Colors["Message"], X, Y)
+            Message.render(self.Screen)
 # ==========================================================================================================

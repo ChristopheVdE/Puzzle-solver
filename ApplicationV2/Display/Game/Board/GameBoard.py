@@ -22,7 +22,7 @@ class GameBoard():
         self.Y = int(Y)
         self.NrRows = NrRows
         self.NrColumns = NrColumns
-# Calc Board Size: -----------------------------------------------------------------------------------------
+# [Function] Calc Board Size: ------------------------------------------------------------------------------
     def CalcBoardSize(self, GameType):
         self.BoardBorder = 3
         BoxBorder = 1
@@ -32,17 +32,17 @@ class GameBoard():
         else:
             self.Width = int(self.NrRows *  (self.CubeSize + self.SpaceBetweenCubes) + 2*self.BoardBorder)
             self.Height = int(self.NrColumns *  (self.CubeSize + self.SpaceBetweenCubes) + 2*self.BoardBorder)
-# Calc Board Center ----------------------------------------------------------------------------------------
+# [Function] Calc Board Center -----------------------------------------------------------------------------
     def CalcBoardCenter(self):
         self.CenterX = (self.X + self.MaxWidth)/2
         self.CenterY = (self.Y + self.MaxHeight)/2
         self.X = self.CenterX - (self.Width/2)
         self.Y = self.CenterY - (self.Height/2)
-# Create board surface and fill it (background) ------------------------------------------------------------
+# [Render]Create board surface and fill it (background) ----------------------------------------------------
     def BoardBackground(self):
         self.BoardSurface = pygame.Surface((self.Width, self.Height), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
         self.BoardSurface.fill(Colors['black'])
-# Draw the empty cubes -------------------------------------------------------------------------------------
+# [Render] Draw the empty cubes ----------------------------------------------------------------------------
     def DrawCubes(self, pBoard, pCubeColor, pCorrectColor):
         # Parameters ---------------------------------------------------------------------------------------
         self.Rows = []      # contains start-coords and size of each row
@@ -71,7 +71,7 @@ class GameBoard():
             # Reset positions for new row -------------------------------------------------------------------
             CubeX = 3
             CubeY += self.CubeSize + self.SpaceBetweenCubes
-# Draw the values ------------------------------------------------------------------------------------------
+# [Render] Draw the values ---------------------------------------------------------------------------------
     def RenderValues(self, pCurrentBoard, pPencilType):
     # Print values -----------------------------------------------------------------------------------------
         for row in range(len(self.Rows)):
@@ -102,16 +102,36 @@ class GameBoard():
                         (int(CubeCoords[0] + self.CubeSize * 1/6), int(CubeCoords[1] + self.CubeSize * 3/6)),
                         (int(CubeCoords[0] + self.CubeSize * 1/6), int(CubeCoords[1] + self.CubeSize * 5/6))
                     ]
-                    # Render
+                    # Render Possible values
                     if pPencilType == 'System':
                         for i in range(len(CurrentPossible)):
                             value = CenteredText(str(CurrentPossible[i]), Fonts["Pencil"], Colors["Pencil"], Coords[i][0], Coords[i][1])
                             value.render(self.BoardSurface)
+                    # Render User pencils
                     else:
                         for i in range(len(CurrentPencils)):
                             value = CenteredText(str(CurrentPencils[i]), Fonts["Pencil"], Colors["Pencil"], Coords[i][0], Coords[i][1])
                             value.render(self.BoardSurface)
-# Highlight row & col of the location of the mouse ---------------------------------------------------------
+# [Function] Return selected cube --------------------------------------------------------------------------
+    def GetSelectedCube(self, mouse, click, pSelectedCube):
+        for row in range(len(self.Rows)):
+            for col in range(len(self.Cols)):
+                BoardPos = (row, col)
+                CubeCoords = (self.Cols[col][0], self.Rows[row][1])
+                if self.X + CubeCoords[0] + self.CubeSize > mouse[0] > self.X + CubeCoords[0] and self.Y + CubeCoords[1] + self.CubeSize > mouse[1] > self.Y + CubeCoords[1]:
+                    if pSelectedCube and pSelectedCube[1] == BoardPos:
+                        return pSelectedCube
+                    else: 
+                        if not BoardPos in self.CorrectValues:
+                            # Left mouse button to wright a value
+                            if click[0] == 1:
+                                return ("L", BoardPos)
+                            # Right mouse button to write a pencil value
+                            elif click[2] == 1:
+                                return ("R", BoardPos)
+                        else: return None
+        return None
+# [Render] Highlight row & col of the location of the mouse ------------------------------------------------
     def HiglightLines(self, HighlightColor, mouse):
         # Create new surfaces for the higlights
         RowSurface = pygame.Surface((self.Width -6, self.CubeSize))
@@ -130,26 +150,7 @@ class GameBoard():
         for row in self.Rows:
             if self.X + row[0] + self.Width -6 > mouse[0] > self.X + row[0] -1 and self.Y + row[1] + self.CubeSize> mouse[1] > self.Y + row[1] -1:
                 self.BoardSurface.blit(RowSurface, (row[0], row[1]))
-# Return selected cube -------------------------------------------------------------------------------------
-    def GetSelectedCube(self, mouse, click, pSelectedCube):
-        for row in range(len(self.Rows)):
-            for col in range(len(self.Cols)):
-                BoardPos = (row, col)
-                CubeCoords = (self.Cols[col][0], self.Rows[row][1])
-                if pSelectedCube and pSelectedCube[1] == BoardPos:
-                    return pSelectedCube
-                else: 
-                    if self.X + CubeCoords[0] + self.CubeSize > mouse[0] > self.X + CubeCoords[0] and self.Y + CubeCoords[1] + self.CubeSize > mouse[1] > self.Y + CubeCoords[1]:
-                        if not BoardPos in self.CorrectValues:
-                            # Left mouse button to wright a value
-                            if click[0] == 1:
-                                return ("L", BoardPos)
-                            # Right mouse button to write a pencil value
-                            elif click[2] == 1:
-                                return ("R", BoardPos)
-                        else: return None
-        return None
-# Render the playboard -------------------------------------------------------------------------------------
+# [Render] Render the playboard ----------------------------------------------------------------------------
     def Rendersurface(self):
         self.Screen.blit(self.BoardSurface, (self.X, self.Y))
-# ==========================================================================================================
+# ==========================================================================================================s

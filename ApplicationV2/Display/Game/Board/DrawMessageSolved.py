@@ -1,8 +1,21 @@
+############################################################################################################
+# Function: Render Message: Board solved
+############################################################################################################
+
+# Import ===================================================================================================
+from Display.General.CenteredText import CenteredText
+from Settings.Default import Colors, Fonts
+# ==========================================================================================================
+
 # Check board ----------------------------------------------------------------------------------------------
-    def CheckBoard(self, Screen, TitleFont, TitleColor):
-        if self.current == self.solution and len(find_empty(self.current)) == 0:
-            Message = CenteredText("Solved", TitleFont, TitleColor, self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
-            Message.render(Screen)
-        elif self.current == self.solution and len(find_empty(self.current)) != 0:
-            Message = CenteredText("Impossible", TitleFont, TitleColor, self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
-            Message.render(Screen)
+def RenderMessageSolved(pScreen, pCurrentBoard, pSolution):
+    if pCurrentBoard == pSolution:
+        if pCurrentBoard.FindEmpty():
+            Message = CenteredText("Impossible", Fonts["Message"], Colors["Message"], self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
+            Message.render(pScreen)
+        else:
+            Message = CenteredText("Solved", Fonts["Message"], Colors["Message"], self.X + self.BoardSize/ 2, self.Y + self.BoardSize / 2)
+            Message.render(pScreen)
+        return True
+    else:
+        return False

@@ -15,7 +15,8 @@ from Games.Functions.GetPressedKey import GetPressedKey
 from Games.Functions.Sudoku.BruteForce import BruteForce
 from Games.Functions.Sudoku.CreateSolvableState import SolvableState
 from Games.Functions.GetHint import GetHint
-from Games.Functions.CheckAgaintSolution import CheckAgainstSolution
+from Games.Functions.CheckForErrors import CheckForErrors
+from Games.Functions.CheckSolved import CheckSolved
 # -- Classes -----------------------------------------------------------------------------------------------
 from Games.Classes.Board import Board
 # -- Settings ----------------------------------------------------------------------------------------------
@@ -31,6 +32,7 @@ def Sudoku_GameLoop(clock):
     Game = None
     key = None
     SelectedCube = None
+    Solved = False
 # INITITIALIZE SCREEN --------------------------------------------------------------------------------------
     Screen = GameScreen()
 # MAIN LOOP ------------------------------------------------------------------------------------------------
@@ -76,23 +78,38 @@ def Sudoku_GameLoop(clock):
             Game = GetHint(Game, 'Sudoku')
     # Check Board ------------------------------------------------------------------------------------------
         elif Screen.Options.Check.functionality(mouse, click, True):
-            Game = CheckAgainstSolution(Game, Solution)
+            Game = CheckForErrors(Game, Solution)
     # Render board -----------------------------------------------------------------------------------------
         Screen.Board.BoardBackground()
         Screen.Board.DrawCubes(Game, Colors['Cube'], Colors['Correct'])
         Screen.Board.RenderValues(Game, 'User')
-        Screen.Board.HiglightLines(Colors["Navigation"], mouse)
-        Screen.Board.Rendersurface()
+        if not Solved: Screen.Board.HiglightLines(Colors["Navigation"], mouse)   
     # Update Value -----------------------------------------------------------------------------------------
-        SelectedCube = Screen.Board.GetSelectedCube(mouse, click, SelectedCube)
-        if SelectedCube and key:
-            ClickType = SelectedCube[0]
-            Position = SelectedCube[1]
-            if ClickType == 'L':
-                Game.GetRow(Position[0])[Position[1]].UpdateValue(key, Game, Position)
-            elif ClickType == 'R' and key !=0:
-                Game.GetRow(Position[0])[Position[1]].UpdatePencil(key)
-            key = None
+        if not Solved:
+            SelectedCube = Screen.Board.GetSelectedCube(mouse, click, SelectedCube)
+            if SelectedCube:
+                if key:
+                    ClickType = SelectedCube[0]
+                    Position = SelectedCube[1]
+                    if ClickType == 'L':
+                        Game.GetRow(Position[0])[Position[1]].UpdateValue(key, Game, Position)
+                    elif ClickType == 'R' and key !='0':
+                        Game.GetRow(Position[0])[Position[1]].UpdatePencil(key)
+                    key = None
+            else:
+                key = None
+    # Check Board Solved -----------------------------------------------------------------------------------
+        if Solved:
+            Screen.RenderMessageSolved(Game)   
+        else:
+            Solved = CheckSolved(Game, Solution)
+            if Solved:
+                Game = CheckForErrors(Game, Solution)
+                Screen.RenderMessageSolved(Game)
+            else:
+                if not Game.FindEmpty():
+                    Game = CheckForErrors(Game, Solution)
+        Screen.Board.Rendersurface()
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
         clock.tick(60)
