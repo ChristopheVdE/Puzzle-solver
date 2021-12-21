@@ -23,9 +23,9 @@ def mainloop(SelectedGame, ScreenWidth, ScreenHeight, clock, Images):
             elif game[0] == "SudokuPlay" and game[1] == True:
                 from Games.GameLoops.Play.Sudoku import Sudoku_GameLoop as GameLoop
                 SelectedGame = GameLoop(clock)
-            # elif game[0] == "SudokuSolve" and game[1] == True:
-            #     from Scripts.Sudoku.Solve import Sudoku_GameLoop as GameLoop
-            #     SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock)
+            elif game[0] == "SudokuSolve" and game[1] == True:
+                from Games.GameLoops.Solve.Sudoku import Sudoku_GameLoop as GameLoop
+                SelectedGame = GameLoop(clock)
             # elif game[0] == "HudokuPlay" and game[1] == True:
             #     from Scripts.Hudoku.Create import Hudoku_GameLoop as GameLoop
             #     SelectedGame = GameLoop(ScreenSize['width'], ScreenSize['height'], clock)

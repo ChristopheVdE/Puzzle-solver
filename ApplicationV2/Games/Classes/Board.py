@@ -8,17 +8,17 @@ from Games.Classes.Row import Row
 
 # Board ====================================================================================================
 class Board():
-# Inititalize class ----------------------------------------------------------------------------------------
+# [GENERAL] Inititalize class ------------------------------------------------------------------------------
     def __init__(self, pNumberOfRows, pNumberOfColumns):
         self.NumberOfColumns = pNumberOfColumns
         self.NumberOfRows = pNumberOfRows
         self.Selected = None
-# Create empty board ---------------------------------------------------------------------------------------
+# [GENERAL] Create empty board -----------------------------------------------------------------------------
     def CreateEmptyBoard(self):
         self.board = []
         for RowNr in range(self.NumberOfRows):
             self.board.append(Row(self.NumberOfColumns, RowNr))
-# Console Print board --------------------------------------------------------------------------------------
+# [TERMINAL] Console Print board ---------------------------------------------------------------------------
     def PrintBoardValues(self):
         print()
         # Cycle rows 
@@ -35,12 +35,12 @@ class Board():
                     print(" .", end="")
                 if ColNr == (self.NumberOfColumns - 1):
                     print()
-# Console Print board Possible -----------------------------------------------------------------------------
+# [TERMINAL] Console Print board Possible ------------------------------------------------------------------
     def PrintBoardPossible(self):
         print()
         for RowNr in range(self.NumberOfRows):
             print(self.board[RowNr].GetRowPossible())
-# Find all empty positions and return them in a list--------------------------------------------------------
+# [GENERAL] Find all empty positions and return them in a list----------------------------------------------
     def FindEmpty(self):
         empty_values = []
         for RowNr in range(self.NumberOfRows):
@@ -48,7 +48,7 @@ class Board():
                 if self.GetRow(RowNr)[ColNr].GetValue() == 0:
                     empty_values.append((RowNr, ColNr))
         return empty_values
-# Find all Correct Values and return them in a list -------------------------------------------------------
+# [GENERAL]Find all Correct Values and return them in a list -----------------------------------------------
     def FindCorrect(self):
         correct_values = []
         for RowNr in range(self.NumberOfRows):
@@ -56,13 +56,19 @@ class Board():
                 if self.GetRow(RowNr)[ColNr].GetCorrect() == True:
                     correct_values.append((RowNr, ColNr))
         return correct_values
-# Return Row Data (Full Class) ----------------------------------------------------------------------------
+# [SOLVE] Set player inputted Values as correct -----------------------------------------------------------
+    def SetPlayerValuesCorrect(self):
+        for RowNr in range(self.NumberOfRows):
+            for ColNr in range(self.NumberOfColumns):
+                if self.GetRow(RowNr)[ColNr].GetValue() != 0:
+                    self.GetRow(RowNr)[ColNr].SetValueAsCorrect()
+# [GENERAL] Return Row Data (Full Class) ------------------------------------------------------------------
     def GetRow(self, pRowNr):
         return self.board[pRowNr].GetRowData()
-# Return Board Dimensions ---------------------------------------------------------------------------------
+# [GENERAL] Return Board Dimensions -----------------------------------------------------------------------
     def GetBoardDimensions(self):
         return (self.NumberOfRows, self.NumberOfColumns)
-# Return Board Values -------------------------------------------------------------------------------------
+# [GENERAL] Return Board Values ---------------------------------------------------------------------------
     def ReturnRowValuesLists(self):
         RowValuesList = []
         # Cycle rows 
