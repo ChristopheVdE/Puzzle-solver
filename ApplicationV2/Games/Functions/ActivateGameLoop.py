@@ -4,7 +4,7 @@
 ############################################################################################################
 
 # Activate correct gameloop ================================================================================
-def ActivateGameLoop(gametype):
+def ActivateGameLoop(gametype: str) -> list:
     gameloop = []
     for game in ["Menu", "Quit", "SudokuPlay", "SudokuSolve", "BinairoPlay", "BinairoSolve", "HudokuPlay", "HudokuSolve"]:
         if game == gametype:

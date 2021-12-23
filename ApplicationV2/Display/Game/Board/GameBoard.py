@@ -38,7 +38,7 @@ class GameBoard():
         self.CenterY = (self.Y + self.MaxHeight)/2
         self.X = self.CenterX - (self.Width/2)
         self.Y = self.CenterY - (self.Height/2)
-# [Render]Create board surface and fill it (background) ----------------------------------------------------
+# [Render] Create board surface and fill it (background) ---------------------------------------------------
     def BoardBackground(self):
         self.BoardSurface = pygame.Surface((self.Width, self.Height), pygame.DOUBLEBUF|pygame.HWSURFACE, 32)
         self.BoardSurface.fill(Colors['black'])

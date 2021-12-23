@@ -4,7 +4,7 @@
 
 # 3x3 Box ==================================================================================================
 class Box():
-    def __init__(self, pBoard, pPosition):
+    def __init__(self, pBoard, pPosition: tuple):
         self.RowNr = (pPosition[0] // 3) * 3
         self.ColNr = (pPosition[1] // 3) * 3
         self.Box = []
@@ -12,16 +12,16 @@ class Box():
             for ColNr in range(self.ColNr, self.ColNr + 3):
                 self.Box.append(pBoard.GetRow(RowNr)[ColNr])
 # Return all Value-Class data for te Column ---------------------------------------------------------------
-    def GetBox(self):
+    def GetBox(self) -> list:
         return self.Box
 # Return all Values from the Value-Class data in the box -------------------------------------------------- 
-    def GetBoxValues(self):
+    def GetBoxValues(self) -> list:
         BoxValues = []
         for BoxVal in self.Box:
             BoxValues.append(BoxVal.GetValue())
         return BoxValues
 # Return all Possible Values from the Value-Class data in the Row -----------------------------------------
-    def GetBoxPossible(self):
+    def GetBoxPossible(self) -> list:
         Possible = []
         for BoxVal in self.Box:
             Possible.append(BoxVal.GetPossible())               

@@ -4,22 +4,22 @@
 
 # Column ===================================================================================================
 class Column():
-    def __init__(self, pboard, pColumnNumber):
+    def __init__(self, pboard, pColumnNumber: int):
         self.NumberOfRows = pboard.NumberOfRows
         self.Column = []
         for RowNr in range(pboard.NumberOfRows):
             self.Column.append(pboard.GetRow(RowNr)[pColumnNumber])
 # Return all Value-Class data for te Column ---------------------------------------------------------------
-    def GetColumn(self):
+    def GetColumn(self) -> list:
         return self.Column
 # Return all Values from the Value-Class data in the Column -----------------------------------------------
-    def GetColumnValues(self):
+    def GetColumnValues(self) -> list:
         ColumnValues = []
         for RowNr in range(self.NumberOfRows):
             ColumnValues.append(self.Column[RowNr].GetValue())                
         return ColumnValues
 # Return all Possible Values from the Value-Class data in the Column --------------------------------------
-    def GetColumnPossible(self):
+    def GetColumnPossible(self) -> list:
         Possible = []
         for RowNr in range(self.NumberOfRows):
             Possible.append(self.Column[RowNr].GetPossible())                
