@@ -9,7 +9,7 @@ from Games.Classes.Box import Box
 
 # Values ===================================================================================================
 class Value():
-    def __init__(self, pPosition):
+    def __init__(self, pPosition: tuple):
         self.Correct = False
         self.Value = 0
         self.PossibleValues = list(range(1,10))   
@@ -21,29 +21,29 @@ class Value():
             self.Value = pNewValue
             self.PossibleValues = [pNewValue]
             self.CalcAllPossible(pBoard, pPosition)
-# Update User pencil ---------------------------------------------------------------------------------------
-    def UpdatePencil(self, pNewValue):
+# [GENERAL] Update User pencil -----------------------------------------------------------------------------
+    def UpdatePencil(self, pNewValue: int):
         if self.Correct == False:
             if pNewValue in self.UserPencil:
                 self.UserPencil.remove(pNewValue)
             else:
                 self.UserPencil.append(pNewValue)
-# Set Value as Correct -------------------------------------------------------------------------------------
+# [GENERAL] Set Value as Correct ---------------------------------------------------------------------------
     def SetValueAsCorrect(self):
         self.Correct = True
-# Return Value ---------------------------------------------------------------------------------------------
-    def GetValue(self):
+# [GENERAL] Return Value -----------------------------------------------------------------------------------
+    def GetValue(self) -> int:
         return self.Value
-# Return Possible Values -----------------------------------------------------------------------------------
-    def GetPossible(self):
+# [GENERAL] Return Possible Values -------------------------------------------------------------------------
+    def GetPossible(self) -> list:
         self.PossibleValues.sort()
         return self.PossibleValues
-# Return User Pencil Values --------------------------------------------------------------------------------
-    def GetUserPencils(self):
+# [GENERAL] Return User Pencil Values ----------------------------------------------------------------------
+    def GetUserPencils(self) -> list:
         self.UserPencil.sort()
         return self.UserPencil
-# Return if Value is correct -------------------------------------------------------------------------------
-    def GetCorrect(self):
+# [GENERAL] Return if Value is correct ---------------------------------------------------------------------
+    def GetCorrect(self) -> bool:
         return self.Correct
 # Calcuate Possible Values ---------------------------------------------------------------------------------
     def CalcPossible(self, pBoard, pPosition):

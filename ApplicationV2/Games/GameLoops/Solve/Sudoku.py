@@ -13,10 +13,7 @@ from Display.Game.GameScreen import GameScreen
 from Games.Functions.ActivateGameLoop import ActivateGameLoop
 from Games.Functions.GetPressedKey import GetPressedKey
 from Games.Functions.Sudoku.BruteForce import BruteForce
-from Games.Functions.Sudoku.CreateSolvableState import SolvableState
 from Games.Functions.GetHint import GetHint
-from Games.Functions.CheckForErrors import CheckForErrors
-from Games.Functions.CheckSolved import CheckSolved
 # -- Classes -----------------------------------------------------------------------------------------------
 from Games.Classes.Board import Board
 # -- Settings ----------------------------------------------------------------------------------------------
@@ -63,6 +60,8 @@ def Sudoku_GameLoop(clock):
             Game = Board(9,9)
             Game.CreateEmptyBoard()
             Empty = Game.FindEmpty()
+            # Delete StartBoard
+            StartBoard = None
             # Start render
             pygame.display.update()
             Screen.RenderGameBoard(9, 9 ,40, 1)
@@ -92,7 +91,7 @@ def Sudoku_GameLoop(clock):
     # Render board -----------------------------------------------------------------------------------------
         Screen.Board.BoardBackground()
         Screen.Board.DrawCubes(Game, Colors['Cube'], Colors['Correct'])
-        if StartBoard and Status!='':
+        if StartBoard:
             Screen.Board.RenderValues(Game, 'System')
         else:
             Screen.Board.RenderValues(Game, 'User')
@@ -110,15 +109,15 @@ def Sudoku_GameLoop(clock):
             else:
                 key = None
     # Check Board Solved -----------------------------------------------------------------------------------
-        if Status != '':
-            if Status == 'Solved' and StartBoard:
-                Screen.RenderMessageSolved(Game)   
-            elif Status != 'Solved' and StartBoard:
-                if len(Empty)==0:
-                    Status == 'Solved'
-                    Screen.RenderMessageSolved(Game)
-                if Empty == Game.FindEmpty():
-                    Screen.RenderMessageSolved(Game)
+        if Status == 'Solved' and StartBoard:
+            Screen.RenderMessageSolved(Game)   
+        elif Status != 'Solved' and StartBoard:
+            if len(Empty)==0:
+                Status == 'Solved'
+                Screen.RenderMessageSolved(Game)
+            elif Empty == Game.FindEmpty():
+                Status = 'Solved'
+                Screen.RenderMessageSolved(Game)
         Screen.Board.Rendersurface()
 # UPDATE DISPLAY -------------------------------------------------------------------------------------------
         pygame.display.update()
