@@ -41,15 +41,15 @@ class Board():
         for RowNr in range(self.NumberOfRows):
             print(self.board[RowNr].GetRowPossible())
 # [GENERAL] Find all empty positions and return them in a list----------------------------------------------
-    def FindEmpty(self):
+    def FindEmpty(self) -> list:
         empty_values = []
         for RowNr in range(self.NumberOfRows):
             for ColNr in range(self.NumberOfColumns):
                 if self.GetRow(RowNr)[ColNr].GetValue() == 0:
                     empty_values.append((RowNr, ColNr))
         return empty_values
-# [GENERAL]Find all Correct Values and return them in a list -----------------------------------------------
-    def FindCorrect(self):
+# [GENERAL] Find all Correct Values and return them in a list ----------------------------------------------
+    def FindCorrect(self) -> list:
         correct_values = []
         for RowNr in range(self.NumberOfRows):
             for ColNr in range(self.NumberOfColumns):
@@ -63,13 +63,16 @@ class Board():
                 if self.GetRow(RowNr)[ColNr].GetValue() != 0:
                     self.GetRow(RowNr)[ColNr].SetValueAsCorrect()
 # [GENERAL] Return Row Data (Full Class) ------------------------------------------------------------------
-    def GetRow(self, pRowNr):
+    def GetRow(self, pRowNr: int) -> list:
         return self.board[pRowNr].GetRowData()
+# [GENERAL] Return Row Values -----------------------------------------------------------------------------
+    def GetRowValues(self, pRowNr: int) -> list:
+        return self.board[pRowNr].GetRowValues()
 # [GENERAL] Return Board Dimensions -----------------------------------------------------------------------
-    def GetBoardDimensions(self):
+    def GetBoardDimensions(self) -> tuple:
         return (self.NumberOfRows, self.NumberOfColumns)
 # [GENERAL] Return Board Values ---------------------------------------------------------------------------
-    def ReturnRowValuesLists(self):
+    def ReturnRowValuesLists(self) -> list:
         RowValuesList = []
         # Cycle rows 
         for RowNr in range(self.NumberOfRows):
