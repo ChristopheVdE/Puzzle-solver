@@ -17,6 +17,8 @@ from Games.Functions.Sudoku.CreateSolvableState import SolvableState
 from Games.Functions.GetHint import GetHint
 from Games.Functions.CheckForErrors import CheckForErrors
 from Games.Functions.CheckSolved import CheckSolved
+from Games.Functions.Sudoku.CalcPossible import CalcAllPossible
+from Games.Functions.SetAllPossible import SetAllPossible
 # -- Classes -----------------------------------------------------------------------------------------------
 from Games.Classes.Board import Board
 # -- Settings ----------------------------------------------------------------------------------------------
@@ -61,6 +63,7 @@ def Sudoku_GameLoop(clock):
             # Create board
             Solution = Board(9,9)
             Solution.CreateEmptyBoard()
+            Solution = SetAllPossible(Solution, list(range(1,10)))
             BruteForce(Solution)
             StartBoard = SolvableState(Solution)
             Game = copy.deepcopy(StartBoard)
@@ -89,10 +92,10 @@ def Sudoku_GameLoop(clock):
             SelectedCube = Screen.Board.GetSelectedCube(mouse, click, SelectedCube)
             if SelectedCube:
                 if key:
-                    ClickType = SelectedCube[0]
-                    Position = SelectedCube[1]
+                    ClickType, Position = SelectedCube
                     if ClickType == 'L':
-                        Game.GetRow(Position[0])[Position[1]].UpdateValue(key, Game, Position)
+                        Game.GetRow(Position[0])[Position[1]].UpdateValue(key)
+                        CalcAllPossible(Game, Position)
                     elif ClickType == 'R' and key !='0':
                         Game.GetRow(Position[0])[Position[1]].UpdatePencil(key)
                     key = None

@@ -14,6 +14,8 @@ from Games.Functions.ActivateGameLoop import ActivateGameLoop
 from Games.Functions.GetPressedKey import GetPressedKey
 from Games.Functions.Sudoku.BruteForce import BruteForce
 from Games.Functions.GetHint import GetHint
+from Games.Functions.Sudoku.CalcPossible import CalcAllPossible
+from Games.Functions.SetAllPossible import SetAllPossible
 # -- Classes -----------------------------------------------------------------------------------------------
 from Games.Classes.Board import Board
 # -- Settings ----------------------------------------------------------------------------------------------
@@ -24,7 +26,6 @@ from Settings.Default import Colors
 def Sudoku_GameLoop(clock):
 # VARIABLES ------------------------------------------------------------------------------------------------
     running = True
-    Solution = None
     StartBoard = None
     Game = None
     key = None
@@ -59,6 +60,7 @@ def Sudoku_GameLoop(clock):
             # Create board
             Game = Board(9,9)
             Game.CreateEmptyBoard()
+            SetAllPossible(Game, list(range(1,10)))
             Empty = Game.FindEmpty()
             # Delete StartBoard
             StartBoard = None
@@ -104,7 +106,8 @@ def Sudoku_GameLoop(clock):
                     ClickType = SelectedCube[0]
                     Position = SelectedCube[1]
                     if ClickType == 'L':
-                        Game.GetRow(Position[0])[Position[1]].UpdateValue(key, Game, Position)
+                        Game.GetRow(Position[0])[Position[1]].UpdateValue(key)
+                        CalcAllPossible(Game, Position)
                     key = None
             else:
                 key = None

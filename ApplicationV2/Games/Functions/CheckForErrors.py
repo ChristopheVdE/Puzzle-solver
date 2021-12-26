@@ -9,5 +9,5 @@ def CheckForErrors(pCurrentBoard, pSolution):
             if pCurrentBoard.GetRow(RowNr)[ColNr].GetValue() == pSolution.GetRow(RowNr)[ColNr].GetValue():
                 pCurrentBoard.GetRow(RowNr)[ColNr].SetValueAsCorrect()
             else:
-                pCurrentBoard.GetRow(RowNr)[ColNr].UpdateValue(0, pCurrentBoard, (RowNr, ColNr))
+                pCurrentBoard.GetRow(RowNr)[ColNr].UpdateValue(0)
     return pCurrentBoard

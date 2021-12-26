@@ -35,7 +35,7 @@ def AddPossible(pBoard, pPosition):
 # Calcuate Possible Values ---------------------------------------------------------------------------------
 def CalcPossible(pBoard, pPosition):
     RowNr, ColNr = pPosition
-    if len(pBoard.GetRow(RowNr)[ColNr].GetPossible())>1:
+    if pBoard.GetRow(RowNr)[ColNr].GetValue() == 0:
         RemovePossible(pBoard, pPosition)
         AddPossible(pBoard, pPosition)
     return pBoard

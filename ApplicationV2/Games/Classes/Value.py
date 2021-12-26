@@ -12,15 +12,15 @@ class Value():
     def __init__(self, pPosition: tuple):
         self.Correct = False
         self.Value = 0
-        self.PossibleValues = list(range(1,10))   
+        #self.PossibleValues = list(range(1,10))   
         self.UserPencil = []
         self.Position = pPosition
 # Update Values --------------------------------------------------------------------------------------------
-    def UpdateValue(self, pNewValue, pBoard, pPosition):
+    def UpdateValue(self, pNewValue: int):
         if self.Correct == False: 
             self.Value = pNewValue
-            self.PossibleValues = [pNewValue]
-            self.CalcAllPossible(pBoard, pPosition)
+            #self.PossibleValues = [pNewValue]
+            #self.CalcAllPossible(pBoard, pPosition)
 # [GENERAL] Update User pencil -----------------------------------------------------------------------------
     def UpdatePencil(self, pNewValue: int):
         if self.Correct == False:
@@ -45,6 +45,7 @@ class Value():
 # [GENERAL] Return if Value is correct ---------------------------------------------------------------------
     def GetCorrect(self) -> bool:
         return self.Correct
+    """
 # Calcuate Possible Values ---------------------------------------------------------------------------------
     def CalcPossible(self, pBoard, pPosition):
         if self.Value == 0:
@@ -71,9 +72,17 @@ class Value():
                 and not Value in Box(pBoard, pPosition).GetBoxValues()  # box
             ):
                 self.PossibleValues.append(Value)
+    """
 # Reset Possible Values ------------------------------------------------------------------------------------                
-    def ResetPossible(self):
-        self.PossibleValues = list(range(1,10))     
+    def SetPossible(self, pPossible: list):
+        self.PossibleValues = pPossible   
+# Add Possible ---------------------------------------------------------------------------------------------
+    def AddPossible(self, Value: int):
+        self.PossibleValues.append(Value)
+# Remove Possible ------------------------------------------------------------------------------------------
+    def RemovePossible(self, Value: int):
+        self.PossibleValues.remove(Value)
+    """
 # Calc All relevant Possible Values ------------------------------------------------------------------------
     def CalcAllPossible(self, pBoard, pPosition):
         for Value in pBoard.GetRow(pPosition[0]):
@@ -82,4 +91,4 @@ class Value():
             Value.CalcPossible(pBoard, Value.Position)
         for Value in Box(pBoard, pPosition).GetBox():
             Value.CalcPossible(pBoard, Value.Position)
-
+    """
